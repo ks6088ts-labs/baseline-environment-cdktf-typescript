@@ -35,5 +35,6 @@ make deploy
 
 - [Install CDK for Terraform and run a quick start demo](https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install)
 - [Building Azure Resources with TypeScript Using the CDK for Terraform](https://www.hashicorp.com/ja/blog/building-azure-resources-with-typescript-using-the-cdk-for-terraform)
+- [Developer/Terraform/CDK for Terraform/Unit Tests](https://developer.hashicorp.com/terraform/cdktf/test/unit-tests)
 - [CDK for Terraform](https://github.com/hashicorp/terraform-cdk)
 - [CDKTF prebuilt bindings for hashicorp/azurerm provider](https://github.com/cdktf/cdktf-provider-azurerm)

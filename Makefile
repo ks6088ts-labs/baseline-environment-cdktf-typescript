@@ -36,6 +36,10 @@ build: ## build applications
 .PHONY: ci-test
 ci-test: install-deps-dev lint build test ## run CI test
 
+.PHONY: plan
+plan: ## perform a diff (terraform plan) for the given stack
+	cdktf diff
+
 .PHONY: deploy
 deploy: ## deploy the given stacks
 	cdktf deploy --auto-approve
