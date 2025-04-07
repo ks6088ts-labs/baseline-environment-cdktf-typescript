@@ -12,6 +12,7 @@ install-deps-dev: ## install dependencies for development
 	@# https://pnpm.io/installation
 	@which pnpm || npm install -g pnpm
 	pnpm install
+	pnpm run get
 
 .PHONY: fix
 fix: ## fix code style
