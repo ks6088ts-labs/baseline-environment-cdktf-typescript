@@ -11,6 +11,8 @@ help:
 install-deps-dev: ## install dependencies for development
 	@# https://pnpm.io/installation
 	@which pnpm || npm install -g pnpm
+	@# https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install
+	@which cdktf || npm install -g cdktf-cli
 	pnpm install
 	pnpm run get
 
