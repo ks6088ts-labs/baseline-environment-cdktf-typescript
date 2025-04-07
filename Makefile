@@ -29,6 +29,15 @@ test: ## run tests
 .PHONY: build
 build: ## build applications
 	pnpm run build
+	pnpm run synth
 
 .PHONY: ci-test
 ci-test: install-deps-dev lint build test ## run CI test
+
+.PHONY: deploy
+deploy: ## deploy the given stacks
+	cdktf deploy --auto-approve
+
+.PHONY: destroy
+destroy: ## destroy the given stacks
+	cdktf destroy --auto-approve
