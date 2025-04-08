@@ -1,17 +1,16 @@
 import { Construct } from "constructs";
 import { App, TerraformStack, TerraformOutput } from "cdktf";
-import { AzurermProvider } from "../.gen/providers/azurerm/provider";
-import { ResourceGroup } from "../.gen/providers/azurerm/resource-group";
+import { provider, resourceGroup } from "@cdktf/provider-azurerm";
 
 export class MyStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    new AzurermProvider(this, "azurerm", {
+    new provider.AzurermProvider(this, "azurerm", {
       features: [{}],
     });
 
-    const rg = new ResourceGroup(this, "rg", {
+    const rg = new resourceGroup.ResourceGroup(this, "rg", {
       name: "rg-baseline-environment-on-azure-cdktf-typescript",
       location: "japaneast",
     });
