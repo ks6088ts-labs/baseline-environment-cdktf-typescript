@@ -4,7 +4,10 @@ import { PlaygroundStack } from "../lib/playground-stack"; // Could be a class e
 describe("Unit testing using assertions", () => {
   it("should contain resource group", () => {
     const app = Testing.app();
-    const stack = new PlaygroundStack(app, "my-app");
+    const stack = new PlaygroundStack(app, "my-app", {
+      location: "japaneast",
+      resourceGroupName: "rg-baseline-environment-on-azure-cdktf-typescript",
+    });
     const synthesized = Testing.synth(stack);
 
     // FIXME: TORIAEZU

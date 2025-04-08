@@ -2,8 +2,13 @@ import { Construct } from "constructs";
 import { TerraformStack, TerraformOutput } from "cdktf";
 import { provider, resourceGroup } from "@cdktf/provider-azurerm";
 
+export interface PlaygroundStackProps {
+  resourceGroupName: string;
+  location: string;
+}
+
 export class PlaygroundStack extends TerraformStack {
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: PlaygroundStackProps) {
     super(scope, id);
 
     new provider.AzurermProvider(this, "azurerm", {
@@ -11,8 +16,8 @@ export class PlaygroundStack extends TerraformStack {
     });
 
     const rg = new resourceGroup.ResourceGroup(this, "rg", {
-      name: "rg-baseline-environment-on-azure-cdktf-typescript",
-      location: "japaneast",
+      name: props.resourceGroupName,
+      location: props.location,
     });
 
     new TerraformOutput(this, "rg_name", {
