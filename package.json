@@ -6,8 +6,8 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
-    "fix:prettier": "prettier --write src",
-    "lint:prettier": "prettier --check src",
+    "fix:prettier": "prettier --write bin lib __tests__",
+    "lint:prettier": "prettier --check bin lib __tests__",
     "get": "cdktf get",
     "build": "tsc",
     "synth": "cdktf synth",

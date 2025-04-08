@@ -1,10 +1,10 @@
 import { Testing } from "cdktf";
-import { MyStack } from "../src/main"; // Could be a class extending from Construct
+import { PlaygroundStack } from "../lib/playground-stack"; // Could be a class extending from Construct
 
 describe("Unit testing using assertions", () => {
   it("should contain resource group", () => {
     const app = Testing.app();
-    const stack = new MyStack(app, "my-app");
+    const stack = new PlaygroundStack(app, "my-app");
     const synthesized = Testing.synth(stack);
 
     // FIXME: TORIAEZU

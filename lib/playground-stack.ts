@@ -1,8 +1,8 @@
 import { Construct } from "constructs";
-import { App, TerraformStack, TerraformOutput } from "cdktf";
+import { TerraformStack, TerraformOutput } from "cdktf";
 import { provider, resourceGroup } from "@cdktf/provider-azurerm";
 
-export class MyStack extends TerraformStack {
+export class PlaygroundStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
@@ -20,7 +20,3 @@ export class MyStack extends TerraformStack {
     });
   }
 }
-
-const app = new App();
-new MyStack(app, "baseline-environment-on-azure-cdktf-typescript");
-app.synth();

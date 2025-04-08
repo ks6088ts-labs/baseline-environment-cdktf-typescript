@@ -40,8 +40,8 @@ ci-test: install-deps-dev lint build test ## run CI test
 plan: ## perform a diff (terraform plan) for the given stack
 	cdktf diff
 
-.PHONY: deploy
-deploy: ## deploy the given stacks
+.PHONY: apply
+apply: ## create or update the given stacks
 	cdktf deploy --auto-approve
 
 .PHONY: destroy

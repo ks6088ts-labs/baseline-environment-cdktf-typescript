@@ -27,8 +27,8 @@ az login
 # Set the subscription
 export ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 
-# Deploy the stack
-make deploy
+# Create or update the given stacks
+make apply
 ```
 
 # References
@@ -38,3 +38,4 @@ make deploy
 - [Developer/Terraform/CDK for Terraform/Unit Tests](https://developer.hashicorp.com/terraform/cdktf/test/unit-tests)
 - [CDK for Terraform](https://github.com/hashicorp/terraform-cdk)
 - [CDKTF prebuilt bindings for hashicorp/azurerm provider](https://github.com/cdktf/cdktf-provider-azurerm)
+- [hashicorp/terraform-cdk/examples/typescript](https://github.com/hashicorp/terraform-cdk/tree/main/examples/typescript)
