@@ -1,12 +1,12 @@
 import { Testing } from "cdktf";
-import { PlaygroundStack } from "../lib/playground-stack"; // Could be a class extending from Construct
+import { ResourceGroupStack } from "../lib/resource-group-stack";
 
 describe("Unit testing using assertions", () => {
   it("should contain resource group", () => {
     const app = Testing.app();
-    const stack = new PlaygroundStack(app, "my-app", {
+    const stack = new ResourceGroupStack(app, "my-app", {
+      name: "baseline-environment-on-azure-cdktf-typescript",
       location: "japaneast",
-      resourceGroupName: "rg-baseline-environment-on-azure-cdktf-typescript",
     });
     const synthesized = Testing.synth(stack);
 

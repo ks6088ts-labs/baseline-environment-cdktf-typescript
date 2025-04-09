@@ -28,7 +28,7 @@ az login
 export ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 
 # Create or update the given stacks
-make apply
+make deploy
 ```
 
 # References
