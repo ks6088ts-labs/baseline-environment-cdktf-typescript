@@ -14,9 +14,7 @@
     "compile": "tsc --pretty",
     "watch": "tsc -w",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "upgrade": "npm i cdktf@latest cdktf-cli@latest",
-    "upgrade:next": "npm i cdktf@next cdktf-cli@next"
+    "test:watch": "jest --watch"
   },
   "engines": {
     "node": ">=18.0"
@@ -25,6 +23,7 @@
     "@cdktf/provider-azuread": "13.3.0",
     "@cdktf/provider-azurerm": "13.25.0",
     "cdktf": "^0.20.11",
+    "cdktf-cli": "^0.20.11",
     "constructs": "^10.4.2"
   },
   "devDependencies": {

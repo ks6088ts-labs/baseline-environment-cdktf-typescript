@@ -50,3 +50,7 @@ apply: ## create or update the given stacks
 .PHONY: destroy
 destroy: ## destroy the given stacks
 	cdktf destroy --auto-approve
+
+.PHONY: update
+update: ## update dependencies
+	pnpm update
