@@ -34,6 +34,7 @@ make apply
 # References
 
 - [Install CDK for Terraform and run a quick start demo](https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install)
+- [HCL Interoperability](https://developer.hashicorp.com/terraform/cdktf/concepts/hcl-interoperability)
 - [Building Azure Resources with TypeScript Using the CDK for Terraform](https://www.hashicorp.com/ja/blog/building-azure-resources-with-typescript-using-the-cdk-for-terraform)
 - [Developer/Terraform/CDK for Terraform/Unit Tests](https://developer.hashicorp.com/terraform/cdktf/test/unit-tests)
 - [CDK for Terraform](https://github.com/hashicorp/terraform-cdk)

@@ -31,10 +31,13 @@ test: ## run tests
 .PHONY: build
 build: ## build applications
 	pnpm run build
-	pnpm run synth
+
+.PHONY: synth
+synth: ## synthesize the given stacks
+	cdktf synth --hcl
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint build test ## run CI test
+ci-test: install-deps-dev lint build synth test ## run CI test
 
 .PHONY: plan
 plan: ## perform a diff (terraform plan) for the given stack
