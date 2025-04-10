@@ -40,6 +40,10 @@ fix: ## fix code style
 lint: ## lint
 	pnpm run lint:prettier
 
+.PHONY: trivy
+trivy: ## scan Terraform files with Trivy
+	trivy config ./cdktf.out/stacks
+
 .PHONY: test
 test: ## run tests
 	pnpm run test
@@ -57,7 +61,7 @@ synth: clean ## synthesize the given stacks
 	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf synth --hcl
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint build synth test ## run CI test
+ci-test: install-deps-dev lint build synth trivy test ## run CI test
 
 .PHONY: plan
 plan: ## perform a diff (terraform plan) for the given stack
