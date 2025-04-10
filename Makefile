@@ -7,7 +7,7 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
-STACKS ?= ResourceGroupStack AiServicesStack
+STACKS ?= ResourceGroupStack AiServicesStack ContainerAppEnvironmentStack ContainerAppStack
 CDKTF_ENVIRONMENT ?= dev
 
 .PHONY: help
@@ -53,7 +53,7 @@ clean: ## clean up the project
 	rm -rf cdktf.out
 
 .PHONY: synth
-synth: ## synthesize the given stacks
+synth: clean ## synthesize the given stacks
 	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf synth --hcl
 
 .PHONY: ci-test
@@ -68,7 +68,7 @@ deploy: clean ## create or update the given stacks
 	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf deploy --auto-approve $(STACKS)
 
 .PHONY: destroy
-destroy: ## destroy the given stacks
+destroy: clean ## destroy the given stacks
 	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf destroy --auto-approve $(STACKS)
 
 .PHONY: update

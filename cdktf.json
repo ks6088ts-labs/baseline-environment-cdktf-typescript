@@ -43,7 +43,23 @@
           }
         ]
       },
-      "ContainerAppEnvironmentStack": {}
+      "ContainerAppEnvironmentStack": {},
+      "ContainerAppStack": {
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:latest",
+            "cpu": 0.25,
+            "memory": "0.5Gi",
+            "env": [
+              {
+                "name": "ENV_VAR",
+                "value": "Hello Dev"
+              }
+            ]
+          }
+        ]
+      }
     },
     "prod": {
       "name": "cdktf-typescript",
@@ -78,7 +94,23 @@
           }
         ]
       },
-      "ContainerAppEnvironmentStack": {}
+      "ContainerAppEnvironmentStack": {},
+      "ContainerAppStack": {
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:latest",
+            "cpu": 0.25,
+            "memory": "0.5Gi",
+            "env": [
+              {
+                "name": "ENV_VAR",
+                "value": "Hello Prod"
+              }
+            ]
+          }
+        ]
+      }
     }
   }
 }

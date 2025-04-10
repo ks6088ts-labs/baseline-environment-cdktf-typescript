@@ -10,6 +10,8 @@ interface ContainerAppEnvironmentStackProps {
 }
 
 export class ContainerAppEnvironmentStack extends TerraformStack {
+  public readonly containerAppEnvironment: containerAppEnvironment.ContainerAppEnvironment;
+
   constructor(
     scope: Construct,
     id: string,
@@ -23,15 +25,16 @@ export class ContainerAppEnvironmentStack extends TerraformStack {
     });
 
     // Resources
-    new containerAppEnvironment.ContainerAppEnvironment(
-      this,
-      'container_app_environment',
-      {
-        name: `cae-${props.name}`,
-        location: props.location,
-        resourceGroupName: props.resourceGroupName,
-        tags: props.tags,
-      },
-    );
+    this.containerAppEnvironment =
+      new containerAppEnvironment.ContainerAppEnvironment(
+        this,
+        'container_app_environment',
+        {
+          name: props.name,
+          location: props.location,
+          resourceGroupName: props.resourceGroupName,
+          tags: props.tags,
+        },
+      );
   }
 }
