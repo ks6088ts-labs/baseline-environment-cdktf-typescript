@@ -1,10 +1,10 @@
-import { Construct } from "constructs";
-import { TerraformStack } from "cdktf";
+import { Construct } from 'constructs';
+import { TerraformStack } from 'cdktf';
 import {
   provider,
   aiServices,
   cognitiveDeployment,
-} from "@cdktf/provider-azurerm";
+} from '@cdktf/provider-azurerm';
 
 interface AiServicesDeployment {
   name: string;
@@ -36,12 +36,12 @@ export class AiServicesStack extends TerraformStack {
     super(scope, id);
 
     // Providers
-    new provider.AzurermProvider(this, "azurerm", {
+    new provider.AzurermProvider(this, 'azurerm', {
       features: [{}],
     });
 
     // Resources
-    this.aiServices = new aiServices.AiServices(this, "ai_services", {
+    this.aiServices = new aiServices.AiServices(this, 'ai_services', {
       name: props.name,
       location: props.location,
       tags: props.tags,
@@ -50,7 +50,7 @@ export class AiServicesStack extends TerraformStack {
       skuName: props.skuName,
       publicNetworkAccess: props.publicNetworkAccess,
       identity: {
-        type: "SystemAssigned",
+        type: 'SystemAssigned',
       },
     });
 
@@ -59,7 +59,7 @@ export class AiServicesStack extends TerraformStack {
         name: deployment.name,
         cognitiveAccountId: this.aiServices.id,
         model: {
-          format: "OpenAI",
+          format: 'OpenAI',
           name: deployment.model.name,
           version: deployment.model.version,
         },
