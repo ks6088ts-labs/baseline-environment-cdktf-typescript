@@ -24,7 +24,7 @@ export class ResourceGroupStack extends TerraformStack {
       this,
       'resource_group',
       {
-        name: `rg-${props.name}`,
+        name: props.name,
         location: props.location,
         tags: props.tags,
       },
