@@ -27,7 +27,7 @@ export class ResourceGroupStack extends TerraformStack {
         name: `rg-${props.name}`,
         location: props.location,
         tags: props.tags,
-      },
+      }
     );
   }
 }
