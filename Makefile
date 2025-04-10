@@ -7,6 +7,8 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
+STACKS ?= aiServicesStack resourceGroupStack
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -62,11 +64,11 @@ plan: ## perform a diff (terraform plan) for the given stack
 
 .PHONY: deploy
 deploy: clean ## create or update the given stacks
-	cdktf deploy --auto-approve
+	cdktf deploy --auto-approve $(STACKS)
 
 .PHONY: destroy
 destroy: ## destroy the given stacks
-	cdktf destroy --auto-approve
+	cdktf destroy --auto-approve $(STACKS)
 
 .PHONY: update
 update: ## update dependencies

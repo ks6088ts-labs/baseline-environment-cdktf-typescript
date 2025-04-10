@@ -1,6 +1,6 @@
-import { Construct } from "constructs";
-import { TerraformStack } from "cdktf";
-import { provider, resourceGroup } from "@cdktf/provider-azurerm";
+import { Construct } from 'constructs';
+import { TerraformStack } from 'cdktf';
+import { provider, resourceGroup } from '@cdktf/provider-azurerm';
 
 export interface ResourceGroupStackProps {
   name: string;
@@ -15,14 +15,14 @@ export class ResourceGroupStack extends TerraformStack {
     super(scope, id);
 
     // Providers
-    new provider.AzurermProvider(this, "azurerm", {
+    new provider.AzurermProvider(this, 'azurerm', {
       features: [{}],
     });
 
     // Resources
     this.resourceGroup = new resourceGroup.ResourceGroup(
       this,
-      "resource_group",
+      'resource_group',
       {
         name: `rg-${props.name}`,
         location: props.location,
