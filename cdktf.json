@@ -42,7 +42,8 @@
             }
           }
         ]
-      }
+      },
+      "ContainerAppEnvironmentStack": {}
     },
     "prod": {
       "name": "cdktf-typescript",
@@ -76,7 +77,8 @@
             }
           }
         ]
-      }
+      },
+      "ContainerAppEnvironmentStack": {}
     }
   }
 }

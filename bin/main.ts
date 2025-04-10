@@ -2,6 +2,7 @@
 import { App } from 'cdktf';
 import { ResourceGroupStack } from '../lib/resource-group-stack';
 import { AiServicesStack } from '../lib/ai-services-stack';
+import { ContainerAppEnvironmentStack } from '../lib/container-app-environment';
 
 const app = new App();
 
@@ -38,6 +39,13 @@ new AiServicesStack(app, `AiServicesStack`, {
   skuName: 'S0',
   publicNetworkAccess: 'Enabled',
   deployments: envVals['AiServicesStack']['deployments'] || [],
+});
+
+new ContainerAppEnvironmentStack(app, `ContainerAppEnvironmentStack`, {
+  name: `container-app-env-${name}`,
+  location: envVals['ContainerAppEnvironmentStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
 });
 
 app.synth();
