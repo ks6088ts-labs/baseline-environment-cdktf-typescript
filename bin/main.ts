@@ -6,6 +6,7 @@ import { ContainerAppEnvironmentStack } from '../lib/container-app-environment-s
 import { ContainerAppStack } from '../lib/container-app-stack';
 import { ApiManagementStack } from '../lib/api-management-stack';
 import { StorageAccountStack } from '../lib/storage-account-stack';
+import { KeyVaultStack } from '../lib/key-vault-stack';
 
 const app = new App();
 
@@ -104,6 +105,16 @@ new StorageAccountStack(app, `StorageAccountStack`, {
   accountTier: envVals['StorageAccountStack']['accountTier'] || 'Standard',
   accountReplicationType:
     envVals['StorageAccountStack']['accountReplicationType'] || 'LRS',
+});
+
+new KeyVaultStack(app, `KeyVaultStack`, {
+  name: convertName(`kv-${name}`, 24),
+  location: envVals['KeyVaultStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  skuName: envVals['KeyVaultStack']['skuName'] || 'standard',
+  purgeProtectionEnabled:
+    envVals['KeyVaultStack']['purgeProtectionEnabled'] || false,
 });
 
 app.synth();
