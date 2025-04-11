@@ -40,9 +40,15 @@ fix: ## fix code style
 lint: ## lint
 	pnpm run lint:prettier
 
-.PHONY: trivy
-trivy: ## scan Terraform files with Trivy
+.PHONY: lint-hcl
+lint-hcl: ## run static analysis on HCL files
 	trivy config ./cdktf.out/stacks
+	tflint --init
+	tflint \
+		--chdir ./cdktf.out/stacks/ \
+		--disable-rule=terraform_deprecated_interpolation \
+		--disable-rule=terraform_required_version \
+		--recursive
 
 .PHONY: test
 test: ## run tests
@@ -61,7 +67,7 @@ synth: clean ## synthesize the given stacks
 	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf synth --hcl
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint build synth trivy test ## run CI test
+ci-test: install-deps-dev lint build synth lint-hcl test ## run CI test
 
 .PHONY: plan
 plan: ## perform a diff (terraform plan) for the given stack
