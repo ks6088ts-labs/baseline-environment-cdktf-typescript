@@ -9,6 +9,8 @@ import { StorageAccountStack } from '../lib/storage-account-stack';
 import { KeyVaultStack } from '../lib/key-vault-stack';
 import { AiFoundryStack } from '../lib/ai-foundry-stack';
 import { AiFoundryProjectStack } from '../lib/ai-foundry-project-stack';
+import { KubernetesClusterStack } from '../lib/kubernetes-cluster-stack';
+import { ContainerRegistryStack } from '../lib/container-registry-stack';
 
 const app = new App();
 
@@ -89,6 +91,24 @@ new ContainerAppStack(app, `ContainerAppStack`, {
     envVals['ContainerAppStack']['containers'] || [],
 });
 
+new KubernetesClusterStack(app, `KubernetesClusterStack`, {
+  name: `k8s-${name}`,
+  location: envVals['KubernetesClusterStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  nodeCount: envVals['KubernetesClusterStack']['nodeCount'] || 1,
+  vmSize: envVals['KubernetesClusterStack']['vmSize'] || 'Standard_DS2_v2',
+});
+
+new ContainerRegistryStack(app, `ContainerRegistryStack`, {
+  name: convertName(`acr-${name}`),
+  location: envVals['ContainerRegistryStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  sku: envVals['ContainerRegistryStack']['sku'] || 'Basic',
+  adminEnabled: envVals['ContainerRegistryStack']['adminEnabled'] || false,
+});
+
 new ApiManagementStack(app, `ApiManagementStack`, {
   name: `apim-${name}`,
   location: envVals['ApiManagementStack']['location'] || location,
@@ -136,7 +156,6 @@ new AiFoundryProjectStack(app, `AiFoundryProjectStack`, {
   name: `afp-${name}`,
   location: envVals['AiFoundryProjectStack']['location'] || location,
   tags: tags,
-  resourceGroupName: resourceGroupStack.resourceGroup.name,
   aiServicesHubId: aiFoundryStack.aiFoundry.id,
 });
 

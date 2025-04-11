@@ -74,7 +74,16 @@
         "skuName": "standard"
       },
       "AiFoundryStack": {},
-      "AiFoundryProjectStack": {}
+      "AiFoundryProjectStack": {},
+      "KubernetesClusterStack": {
+        "nodeCount": 1,
+        "vmSize": "Standard_DS2_v2"
+      },
+      "ContainerRegistryStack": {
+        "location": "japaneast",
+        "sku": "Basic",
+        "adminEnabled": true
+      }
     },
     "prod": {
       "name": "cdktf-typescript",
@@ -140,7 +149,16 @@
         "skuName": "standard"
       },
       "AiFoundryStack": {},
-      "AiFoundryProjectStack": {}
+      "AiFoundryProjectStack": {},
+      "KubernetesClusterStack": {
+        "nodeCount": 2,
+        "vmSize": "Standard_DS2_v2"
+      },
+      "ContainerRegistryStack": {
+        "location": "japaneast",
+        "sku": "Standard",
+        "adminEnabled": true
+      }
     }
   }
 }
