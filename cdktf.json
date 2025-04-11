@@ -73,7 +73,8 @@
       "KeyVaultStack": {
         "skuName": "standard"
       },
-      "AiFoundryStack": {}
+      "AiFoundryStack": {},
+      "AiFoundryProjectStack": {}
     },
     "prod": {
       "name": "cdktf-typescript",
@@ -138,7 +139,8 @@
       "KeyVaultStack": {
         "skuName": "standard"
       },
-      "AiFoundryStack": {}
+      "AiFoundryStack": {},
+      "AiFoundryProjectStack": {}
     }
   }
 }

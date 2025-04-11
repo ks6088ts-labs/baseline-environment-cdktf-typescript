@@ -8,6 +8,7 @@ import { ApiManagementStack } from '../lib/api-management-stack';
 import { StorageAccountStack } from '../lib/storage-account-stack';
 import { KeyVaultStack } from '../lib/key-vault-stack';
 import { AiFoundryStack } from '../lib/ai-foundry-stack';
+import { AiFoundryProjectStack } from '../lib/ai-foundry-project-stack';
 
 const app = new App();
 
@@ -122,13 +123,21 @@ const keyVaultStack = new KeyVaultStack(app, `KeyVaultStack`, {
     envVals['KeyVaultStack']['purgeProtectionEnabled'] || false,
 });
 
-new AiFoundryStack(app, `AiFoundryStack`, {
+const aiFoundryStack = new AiFoundryStack(app, `AiFoundryStack`, {
   name: `af-${name}`,
   location: envVals['AiFoundryStack']['location'] || location,
   tags: tags,
   resourceGroupName: resourceGroupStack.resourceGroup.name,
   storageAccountId: storageAccountStack.storageAccount.id,
   keyVaultId: keyVaultStack.keyVault.id,
+});
+
+new AiFoundryProjectStack(app, `AiFoundryProjectStack`, {
+  name: `afp-${name}`,
+  location: envVals['AiFoundryProjectStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  aiServicesHubId: aiFoundryStack.aiFoundry.id,
 });
 
 app.synth();
