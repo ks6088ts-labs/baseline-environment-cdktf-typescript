@@ -59,6 +59,12 @@
             ]
           }
         ]
+      },
+      "ApiManagementStack": {
+        "location": "japaneast",
+        "publisherEmail": "hello@example.com",
+        "publisherName": "Example Publisher",
+        "skuName": "Consumption_0"
       }
     },
     "prod": {
@@ -110,6 +116,12 @@
             ]
           }
         ]
+      },
+      "ApiManagementStack": {
+        "location": "japaneast",
+        "publisherEmail": "hello@example.com",
+        "publisherName": "Example Publisher",
+        "skuName": "Consumption_0"
       }
     }
   }
