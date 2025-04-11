@@ -74,7 +74,11 @@
         "skuName": "standard"
       },
       "AiFoundryStack": {},
-      "AiFoundryProjectStack": {}
+      "AiFoundryProjectStack": {},
+      "KubernetesClusterStack": {
+        "nodeCount": 1,
+        "vmSize": "Standard_DS2_v2"
+      }
     },
     "prod": {
       "name": "cdktf-typescript",
@@ -140,7 +144,11 @@
         "skuName": "standard"
       },
       "AiFoundryStack": {},
-      "AiFoundryProjectStack": {}
+      "AiFoundryProjectStack": {},
+      "KubernetesClusterStack": {
+        "nodeCount": 2,
+        "vmSize": "Standard_DS2_v2"
+      }
     }
   }
 }

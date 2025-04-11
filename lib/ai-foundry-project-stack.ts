@@ -6,7 +6,6 @@ export interface AiFoundryProjectStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
-  resourceGroupName: string;
   aiServicesHubId: string;
 }
 
