@@ -65,7 +65,16 @@
         "publisherEmail": "hello@example.com",
         "publisherName": "Example Publisher",
         "skuName": "Consumption_0"
-      }
+      },
+      "StorageAccountStack": {
+        "accountTier": "Standard",
+        "accountReplicationType": "LRS"
+      },
+      "KeyVaultStack": {
+        "skuName": "standard"
+      },
+      "AiFoundryStack": {},
+      "AiFoundryProjectStack": {}
     },
     "prod": {
       "name": "cdktf-typescript",
@@ -122,7 +131,16 @@
         "publisherEmail": "hello@example.com",
         "publisherName": "Example Publisher",
         "skuName": "Consumption_0"
-      }
+      },
+      "StorageAccountStack": {
+        "accountTier": "Standard",
+        "accountReplicationType": "LRS"
+      },
+      "KeyVaultStack": {
+        "skuName": "standard"
+      },
+      "AiFoundryStack": {},
+      "AiFoundryProjectStack": {}
     }
   }
 }

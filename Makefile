@@ -7,7 +7,7 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
-STACKS ?= ResourceGroupStack AiServicesStack ApiManagementStack ContainerAppEnvironmentStack ContainerAppStack
+STACKS ?= ResourceGroupStack StorageAccountStack KeyVaultStack AiFoundryStack AiFoundryProjectStack AiServicesStack ApiManagementStack ContainerAppEnvironmentStack ContainerAppStack
 CDKTF_ENVIRONMENT ?= dev
 
 .PHONY: help

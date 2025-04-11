@@ -2,9 +2,13 @@
 import { App } from 'cdktf';
 import { ResourceGroupStack } from '../lib/resource-group-stack';
 import { AiServicesStack } from '../lib/ai-services-stack';
-import { ContainerAppEnvironmentStack } from '../lib/container-app-environment';
-import { ContainerAppStack } from '../lib/container-app';
-import { ApiManagementStack } from '../lib/api-management';
+import { ContainerAppEnvironmentStack } from '../lib/container-app-environment-stack';
+import { ContainerAppStack } from '../lib/container-app-stack';
+import { ApiManagementStack } from '../lib/api-management-stack';
+import { StorageAccountStack } from '../lib/storage-account-stack';
+import { KeyVaultStack } from '../lib/key-vault-stack';
+import { AiFoundryStack } from '../lib/ai-foundry-stack';
+import { AiFoundryProjectStack } from '../lib/ai-foundry-project-stack';
 
 const app = new App();
 
@@ -36,6 +40,15 @@ const randomIdentifier = (envKey + location)
 
 const name = `${envVals['name']}-${envKey}-${randomIdentifier}`;
 
+// ----------------------- Functions ------------------------------
+// Function to create container app name with proper formatting
+function convertName(name: string, length: number = 32): string {
+  return name
+    .replace(/[^a-z0-9]/g, '')
+    .toLowerCase()
+    .substring(0, length);
+}
+
 // ----------------------- Create stacks ------------------------------
 const resourceGroupStack = new ResourceGroupStack(app, `ResourceGroupStack`, {
   name: envVals['ResourceGroupStack']['name'] || `rg-${name}`,
@@ -66,11 +79,7 @@ const containerAppEnvironmentStack = new ContainerAppEnvironmentStack(
 );
 
 new ContainerAppStack(app, `ContainerAppStack`, {
-  // "name" must consist of lower case alphanumeric characters or '-', start with an alphabetic character, and end with an alphanumeric character and cannot have '--'. The length must not be more than 32 characters
-  name: `ca-${name}`
-    .replace(/[^a-z0-9]/g, '')
-    .toLowerCase()
-    .substring(0, 32),
+  name: convertName(`ca-${name}`),
   location: envVals['ContainerAppStack']['location'] || location,
   tags: tags,
   resourceGroupName: resourceGroupStack.resourceGroup.name,
@@ -88,6 +97,47 @@ new ApiManagementStack(app, `ApiManagementStack`, {
   publisherEmail: envVals['ApiManagementStack']['publisherEmail'],
   publisherName: envVals['ApiManagementStack']['publisherName'],
   sku_name: envVals['ApiManagementStack']['sku_name'] || 'Consumption_0',
+});
+
+const storageAccountStack = new StorageAccountStack(
+  app,
+  `StorageAccountStack`,
+  {
+    name: convertName(`st-${name}`, 24),
+    location: envVals['StorageAccountStack']['location'] || location,
+    tags: tags,
+    resourceGroupName: resourceGroupStack.resourceGroup.name,
+    accountTier: envVals['StorageAccountStack']['accountTier'] || 'Standard',
+    accountReplicationType:
+      envVals['StorageAccountStack']['accountReplicationType'] || 'LRS',
+  },
+);
+
+const keyVaultStack = new KeyVaultStack(app, `KeyVaultStack`, {
+  name: convertName(`kv-${name}`, 24),
+  location: envVals['KeyVaultStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  skuName: envVals['KeyVaultStack']['skuName'] || 'standard',
+  purgeProtectionEnabled:
+    envVals['KeyVaultStack']['purgeProtectionEnabled'] || false,
+});
+
+const aiFoundryStack = new AiFoundryStack(app, `AiFoundryStack`, {
+  name: `af-${name}`,
+  location: envVals['AiFoundryStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  storageAccountId: storageAccountStack.storageAccount.id,
+  keyVaultId: keyVaultStack.keyVault.id,
+});
+
+new AiFoundryProjectStack(app, `AiFoundryProjectStack`, {
+  name: `afp-${name}`,
+  location: envVals['AiFoundryProjectStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  aiServicesHubId: aiFoundryStack.aiFoundry.id,
 });
 
 app.synth();
