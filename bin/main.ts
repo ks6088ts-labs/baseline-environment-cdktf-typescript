@@ -7,6 +7,7 @@ import { ContainerAppStack } from '../lib/container-app-stack';
 import { ApiManagementStack } from '../lib/api-management-stack';
 import { StorageAccountStack } from '../lib/storage-account-stack';
 import { KeyVaultStack } from '../lib/key-vault-stack';
+import { AiFoundryStack } from '../lib/ai-foundry-stack';
 
 const app = new App();
 
@@ -97,17 +98,21 @@ new ApiManagementStack(app, `ApiManagementStack`, {
   sku_name: envVals['ApiManagementStack']['sku_name'] || 'Consumption_0',
 });
 
-new StorageAccountStack(app, `StorageAccountStack`, {
-  name: convertName(`st-${name}`, 24),
-  location: envVals['StorageAccountStack']['location'] || location,
-  tags: tags,
-  resourceGroupName: resourceGroupStack.resourceGroup.name,
-  accountTier: envVals['StorageAccountStack']['accountTier'] || 'Standard',
-  accountReplicationType:
-    envVals['StorageAccountStack']['accountReplicationType'] || 'LRS',
-});
+const storageAccountStack = new StorageAccountStack(
+  app,
+  `StorageAccountStack`,
+  {
+    name: convertName(`st-${name}`, 24),
+    location: envVals['StorageAccountStack']['location'] || location,
+    tags: tags,
+    resourceGroupName: resourceGroupStack.resourceGroup.name,
+    accountTier: envVals['StorageAccountStack']['accountTier'] || 'Standard',
+    accountReplicationType:
+      envVals['StorageAccountStack']['accountReplicationType'] || 'LRS',
+  },
+);
 
-new KeyVaultStack(app, `KeyVaultStack`, {
+const keyVaultStack = new KeyVaultStack(app, `KeyVaultStack`, {
   name: convertName(`kv-${name}`, 24),
   location: envVals['KeyVaultStack']['location'] || location,
   tags: tags,
@@ -115,6 +120,15 @@ new KeyVaultStack(app, `KeyVaultStack`, {
   skuName: envVals['KeyVaultStack']['skuName'] || 'standard',
   purgeProtectionEnabled:
     envVals['KeyVaultStack']['purgeProtectionEnabled'] || false,
+});
+
+new AiFoundryStack(app, `AiFoundryStack`, {
+  name: `af-${name}`,
+  location: envVals['AiFoundryStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  storageAccountId: storageAccountStack.storageAccount.id,
+  keyVaultId: keyVaultStack.keyVault.id,
 });
 
 app.synth();
