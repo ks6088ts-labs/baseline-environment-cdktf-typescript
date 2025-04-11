@@ -78,6 +78,11 @@
       "KubernetesClusterStack": {
         "nodeCount": 1,
         "vmSize": "Standard_DS2_v2"
+      },
+      "ContainerRegistryStack": {
+        "location": "japaneast",
+        "sku": "Basic",
+        "adminEnabled": true
       }
     },
     "prod": {
@@ -148,6 +153,11 @@
       "KubernetesClusterStack": {
         "nodeCount": 2,
         "vmSize": "Standard_DS2_v2"
+      },
+      "ContainerRegistryStack": {
+        "location": "japaneast",
+        "sku": "Standard",
+        "adminEnabled": true
       }
     }
   }
