@@ -52,13 +52,17 @@ function convertName(name: string, length: number = 32): string {
 }
 
 // ----------------------- Create stacks ------------------------------
-const resourceGroupStack = new ResourceGroupStack(app, `ResourceGroupStack`, {
-  name: envVals['ResourceGroupStack']['name'] || `rg-${name}`,
-  location: envVals['ResourceGroupStack']['location'] || location,
-  tags: envVals['ResourceGroupStack']['tags'] || tags,
-});
+const resourceGroupStack = new ResourceGroupStack(
+  app,
+  `ResourceGroupStack-${envKey}`,
+  {
+    name: envVals['ResourceGroupStack']['name'] || `rg-${name}`,
+    location: envVals['ResourceGroupStack']['location'] || location,
+    tags: envVals['ResourceGroupStack']['tags'] || tags,
+  },
+);
 
-new AiServicesStack(app, `AiServicesStack`, {
+new AiServicesStack(app, `AiServicesStack-${envKey}`, {
   name: `ai-services-${name}`,
   location: envVals['AiServicesStack']['location'] || location,
   tags: tags,
@@ -71,7 +75,7 @@ new AiServicesStack(app, `AiServicesStack`, {
 
 const containerAppEnvironmentStack = new ContainerAppEnvironmentStack(
   app,
-  `ContainerAppEnvironmentStack`,
+  `ContainerAppEnvironmentStack-${envKey}`,
   {
     name: `container-app-env-${name}`,
     location: envVals['ContainerAppEnvironmentStack']['location'] || location,
@@ -80,7 +84,7 @@ const containerAppEnvironmentStack = new ContainerAppEnvironmentStack(
   },
 );
 
-new ContainerAppStack(app, `ContainerAppStack`, {
+new ContainerAppStack(app, `ContainerAppStack-${envKey}`, {
   name: convertName(`ca-${name}`),
   location: envVals['ContainerAppStack']['location'] || location,
   tags: tags,
@@ -91,7 +95,7 @@ new ContainerAppStack(app, `ContainerAppStack`, {
     envVals['ContainerAppStack']['containers'] || [],
 });
 
-new KubernetesClusterStack(app, `KubernetesClusterStack`, {
+new KubernetesClusterStack(app, `KubernetesClusterStack-${envKey}`, {
   name: `k8s-${name}`,
   location: envVals['KubernetesClusterStack']['location'] || location,
   tags: tags,
@@ -100,7 +104,7 @@ new KubernetesClusterStack(app, `KubernetesClusterStack`, {
   vmSize: envVals['KubernetesClusterStack']['vmSize'] || 'Standard_DS2_v2',
 });
 
-new ContainerRegistryStack(app, `ContainerRegistryStack`, {
+new ContainerRegistryStack(app, `ContainerRegistryStack-${envKey}`, {
   name: convertName(`acr-${name}`),
   location: envVals['ContainerRegistryStack']['location'] || location,
   tags: tags,
@@ -109,7 +113,7 @@ new ContainerRegistryStack(app, `ContainerRegistryStack`, {
   adminEnabled: envVals['ContainerRegistryStack']['adminEnabled'] || false,
 });
 
-new ApiManagementStack(app, `ApiManagementStack`, {
+new ApiManagementStack(app, `ApiManagementStack-${envKey}`, {
   name: `apim-${name}`,
   location: envVals['ApiManagementStack']['location'] || location,
   tags: tags,
@@ -121,7 +125,7 @@ new ApiManagementStack(app, `ApiManagementStack`, {
 
 const storageAccountStack = new StorageAccountStack(
   app,
-  `StorageAccountStack`,
+  `StorageAccountStack-${envKey}`,
   {
     name: convertName(`st-${name}`, 24),
     location: envVals['StorageAccountStack']['location'] || location,
@@ -133,7 +137,7 @@ const storageAccountStack = new StorageAccountStack(
   },
 );
 
-const keyVaultStack = new KeyVaultStack(app, `KeyVaultStack`, {
+const keyVaultStack = new KeyVaultStack(app, `KeyVaultStack-${envKey}`, {
   name: convertName(`kv-${name}`, 24),
   location: envVals['KeyVaultStack']['location'] || location,
   tags: tags,
@@ -143,7 +147,7 @@ const keyVaultStack = new KeyVaultStack(app, `KeyVaultStack`, {
     envVals['KeyVaultStack']['purgeProtectionEnabled'] || false,
 });
 
-const aiFoundryStack = new AiFoundryStack(app, `AiFoundryStack`, {
+const aiFoundryStack = new AiFoundryStack(app, `AiFoundryStack-${envKey}`, {
   name: `af-${name}`,
   location: envVals['AiFoundryStack']['location'] || location,
   tags: tags,
@@ -152,7 +156,7 @@ const aiFoundryStack = new AiFoundryStack(app, `AiFoundryStack`, {
   keyVaultId: keyVaultStack.keyVault.id,
 });
 
-new AiFoundryProjectStack(app, `AiFoundryProjectStack`, {
+new AiFoundryProjectStack(app, `AiFoundryProjectStack-${envKey}`, {
   name: `afp-${name}`,
   location: envVals['AiFoundryProjectStack']['location'] || location,
   tags: tags,
