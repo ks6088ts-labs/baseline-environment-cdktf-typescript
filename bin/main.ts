@@ -4,6 +4,7 @@ import { ResourceGroupStack } from '../lib/resource-group-stack';
 import { AiServicesStack } from '../lib/ai-services-stack';
 import { ContainerAppEnvironmentStack } from '../lib/container-app-environment';
 import { ContainerAppStack } from '../lib/container-app';
+import { ApiManagementStack } from '../lib/api-management';
 
 const app = new App();
 
@@ -77,6 +78,16 @@ new ContainerAppStack(app, `ContainerAppStack`, {
     containerAppEnvironmentStack.containerAppEnvironment.id,
   containerAppTemplateContainers:
     envVals['ContainerAppStack']['containers'] || [],
+});
+
+new ApiManagementStack(app, `ApiManagementStack`, {
+  name: `apim-${name}`,
+  location: envVals['ApiManagementStack']['location'] || location,
+  tags: tags,
+  resourceGroupName: resourceGroupStack.resourceGroup.name,
+  publisherEmail: envVals['ApiManagementStack']['publisherEmail'],
+  publisherName: envVals['ApiManagementStack']['publisherName'],
+  sku_name: envVals['ApiManagementStack']['sku_name'] || 'Consumption_0',
 });
 
 app.synth();
