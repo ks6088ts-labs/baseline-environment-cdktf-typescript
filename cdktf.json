@@ -65,6 +65,10 @@
         "publisherEmail": "hello@example.com",
         "publisherName": "Example Publisher",
         "skuName": "Consumption_0"
+      },
+      "StorageAccountStack": {
+        "accountTier": "Standard",
+        "accountReplicationType": "LRS"
       }
     },
     "prod": {
@@ -122,6 +126,10 @@
         "publisherEmail": "hello@example.com",
         "publisherName": "Example Publisher",
         "skuName": "Consumption_0"
+      },
+      "StorageAccountStack": {
+        "accountTier": "Standard",
+        "accountReplicationType": "LRS"
       }
     }
   }
