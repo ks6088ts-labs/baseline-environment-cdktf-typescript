@@ -1,8 +1,7 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import { provider, containerApp } from '@cdktf/provider-azurerm';
+import { containerApp } from '@cdktf/provider-azurerm';
 
-interface ContainerAppStackProps {
+interface ContainerAppProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -11,14 +10,9 @@ interface ContainerAppStackProps {
   containerAppTemplateContainers: containerApp.ContainerAppTemplateContainer[];
 }
 
-export class ContainerAppStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: ContainerAppStackProps) {
+export class ContainerApp extends Construct {
+  constructor(scope: Construct, id: string, props: ContainerAppProps) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     new containerApp.ContainerApp(this, 'container_app', {

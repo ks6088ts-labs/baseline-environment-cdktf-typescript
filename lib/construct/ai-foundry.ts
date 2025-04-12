@@ -1,8 +1,7 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import { provider, aiFoundry } from '@cdktf/provider-azurerm';
+import { aiFoundry } from '@cdktf/provider-azurerm';
 
-export interface AiFoundryStackProps {
+export interface AiFoundryProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -11,15 +10,10 @@ export interface AiFoundryStackProps {
   keyVaultId: string;
 }
 
-export class AiFoundryStack extends TerraformStack {
+export class AiFoundry extends Construct {
   public readonly aiFoundry: aiFoundry.AiFoundry;
-  constructor(scope: Construct, id: string, props: AiFoundryStackProps) {
+  constructor(scope: Construct, id: string, props: AiFoundryProps) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     this.aiFoundry = new aiFoundry.AiFoundry(this, 'ai_foundry', {

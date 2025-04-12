@@ -1,8 +1,7 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import { provider, storageAccount } from '@cdktf/provider-azurerm';
+import { storageAccount } from '@cdktf/provider-azurerm';
 
-export interface StorageAccountStackProps {
+export interface StorageAccountProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -11,16 +10,11 @@ export interface StorageAccountStackProps {
   accountReplicationType: string;
 }
 
-export class StorageAccountStack extends TerraformStack {
+export class StorageAccount extends Construct {
   public readonly storageAccount: storageAccount.StorageAccount;
 
-  constructor(scope: Construct, id: string, props: StorageAccountStackProps) {
+  constructor(scope: Construct, id: string, props: StorageAccountProps) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     this.storageAccount = new storageAccount.StorageAccount(

@@ -1,13 +1,15 @@
 import { Testing } from 'cdktf';
-import { ResourceGroupStack } from '../lib/resource-group-stack';
+import { PlaygroundStack } from '../lib/stack/playground-stack';
+import { devPlaygroundStackParameter } from '../parameter';
 
 describe('Unit testing using assertions', () => {
   it('should contain resource group', () => {
     const app = Testing.app();
-    const stack = new ResourceGroupStack(app, 'my-app', {
-      name: 'baseline-environment-on-azure-cdktf-typescript',
-      location: 'japaneast',
-    });
+    const stack = new PlaygroundStack(
+      app,
+      'my-app',
+      devPlaygroundStackParameter,
+    );
     const synthesized = Testing.synth(stack);
 
     // FIXME: TORIAEZU

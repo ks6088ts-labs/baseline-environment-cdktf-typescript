@@ -1,25 +1,19 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import { provider, apiManagement } from '@cdktf/provider-azurerm';
+import { apiManagement } from '@cdktf/provider-azurerm';
 
-interface ApiManagementStackProps {
+interface ApiManagementProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
   resourceGroupName: string;
   publisherEmail: string;
   publisherName: string;
-  sku_name: string;
+  skuName: string;
 }
 
-export class ApiManagementStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: ApiManagementStackProps) {
+export class ApiManagement extends Construct {
+  constructor(scope: Construct, id: string, props: ApiManagementProps) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     new apiManagement.ApiManagement(this, 'api_management', {
@@ -29,7 +23,7 @@ export class ApiManagementStack extends TerraformStack {
       tags: props.tags,
       publisherEmail: props.publisherEmail,
       publisherName: props.publisherName,
-      skuName: props.sku_name,
+      skuName: props.skuName,
       identity: {
         type: 'SystemAssigned',
       },

@@ -1,28 +1,22 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import { provider, containerAppEnvironment } from '@cdktf/provider-azurerm';
+import { containerAppEnvironment } from '@cdktf/provider-azurerm';
 
-interface ContainerAppEnvironmentStackProps {
+interface ContainerAppEnvironmentProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
   resourceGroupName: string;
 }
 
-export class ContainerAppEnvironmentStack extends TerraformStack {
+export class ContainerAppEnvironment extends Construct {
   public readonly containerAppEnvironment: containerAppEnvironment.ContainerAppEnvironment;
 
   constructor(
     scope: Construct,
     id: string,
-    props: ContainerAppEnvironmentStackProps,
+    props: ContainerAppEnvironmentProps,
   ) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     this.containerAppEnvironment =
