@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
+import { TerraformStack, AzurermBackend } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
 import { AiFoundryProject } from '../construct/ai-foundry-project';
 import { AiFoundry } from '../construct/ai-foundry';
@@ -37,6 +37,12 @@ export interface PlaygroundStackProps {
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
+  backend?: {
+    resourceGroupName: string;
+    storageAccountName: string;
+    containerName: string;
+    key: string;
+  };
   aiServices: {
     location: string;
     deployments?: AiServicesDeployment[];
@@ -87,6 +93,15 @@ export interface PlaygroundStackProps {
 export class PlaygroundStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: PlaygroundStackProps) {
     super(scope, id);
+
+    if (props.backend) {
+      new AzurermBackend(this, {
+        resourceGroupName: props.backend.resourceGroupName,
+        storageAccountName: props.backend.storageAccountName,
+        containerName: props.backend.containerName,
+        key: props.backend.key,
+      });
+    }
 
     // Providers
     new provider.AzurermProvider(this, 'azurerm', {

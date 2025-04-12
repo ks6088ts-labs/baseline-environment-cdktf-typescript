@@ -97,6 +97,12 @@ export const prodPlaygroundStackParameter: PlaygroundStackProps = {
   tags: {
     owner: 'ks6088ts',
   },
+  backend: {
+    resourceGroupName: 'rg-your-backend',
+    storageAccountName: 'yourstorageaccount',
+    containerName: 'tfstate',
+    key: 'prod.terraform.tfstate',
+  },
   resourceGroup: {},
   aiServices: {
     location: 'japaneast',
