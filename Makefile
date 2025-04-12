@@ -7,8 +7,7 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
-CDKTF_ENVIRONMENT ?= Dev
-STACKS ?= $(CDKTF_ENVIRONMENT)-PlaygroundStack
+STACKS ?= Dev-PlaygroundStack Dev-BackendStack
 
 .PHONY: help
 help:
@@ -64,22 +63,22 @@ clean: ## clean up the project
 
 .PHONY: synth
 synth: clean ## synthesize the given stacks
-	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf synth --hcl
+	cdktf synth --hcl
 
 .PHONY: ci-test
 ci-test: install-deps-dev lint build synth lint-hcl test ## run CI test
 
-.PHONY: plan
-plan: ## perform a diff (terraform plan) for the given stack
-	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf diff
+.PHONY: diff
+diff: ## perform a diff (terraform plan) for the given stack
+	cdktf diff $(STACKS)
 
 .PHONY: deploy
 deploy: clean ## create or update the given stacks
-	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf deploy --auto-approve $(STACKS)
+	cdktf deploy --auto-approve $(STACKS)
 
 .PHONY: destroy
 destroy: clean ## destroy the given stacks
-	CDKTF_ENVIRONMENT=$(CDKTF_ENVIRONMENT) cdktf destroy --auto-approve $(STACKS)
+	cdktf destroy --auto-approve $(STACKS)
 
 .PHONY: update
 update: ## update dependencies

@@ -1,4 +1,5 @@
 import { PlaygroundStackProps } from './lib/stack/playground-stack';
+import { BackendStackProps } from './lib/stack/backend-stack';
 
 function getRandomIdentifier(content: string): string {
   const randomIdentifier = content
@@ -13,12 +14,18 @@ function getRandomIdentifier(content: string): string {
 }
 
 // Development Environment
-export const devPlaygroundStackParameter: PlaygroundStackProps = {
+export const devPlaygroundStackProps: PlaygroundStackProps = {
   name: `Dev-PlaygroundStack-${getRandomIdentifier('Dev-PlaygroundStack')}`,
-  location: 'swedencentral',
+  location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
   },
+  // backend: {
+  //   resourceGroupName: 'rg-your-backend',
+  //   storageAccountName: 'yourstorageaccount',
+  //   containerName: 'tfstate',
+  //   key: 'dev.terraform.tfstate',
+  // },
   resourceGroup: {},
   aiServices: {
     location: 'swedencentral',
@@ -64,12 +71,12 @@ export const devPlaygroundStackParameter: PlaygroundStackProps = {
       },
     ],
   },
-  apiManagement: {
-    location: 'swedencentral',
-    publisherEmail: 'owner@example.com',
-    publisherName: 'Owner Name',
-    skuName: 'Consumption_0',
-  },
+  // apiManagement: {
+  //   location: 'japaneast',
+  //   publisherEmail: 'owner@example.com',
+  //   publisherName: 'Owner Name',
+  //   skuName: 'Consumption_0',
+  // },
   storageAccount: {
     accountTier: 'Standard',
     accountReplicationType: 'LRS',
@@ -90,8 +97,24 @@ export const devPlaygroundStackParameter: PlaygroundStackProps = {
   },
 };
 
+export const devBackendStackProps: BackendStackProps = {
+  name: `Dev-BackendStackProps-${getRandomIdentifier('Dev-BackendStackProps')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  accountTier: 'Standard',
+  accountReplicationType: 'LRS',
+  storageContainers: [
+    {
+      name: 'tfstate',
+      containerAccessType: 'private',
+    },
+  ],
+};
+
 // Production Environment
-export const prodPlaygroundStackParameter: PlaygroundStackProps = {
+export const prodPlaygroundStackProps: PlaygroundStackProps = {
   name: `Prod-PlaygroundStack-${getRandomIdentifier('Prod-PlaygroundStack')}`,
   location: 'japaneast',
   tags: {
@@ -172,4 +195,20 @@ export const prodPlaygroundStackParameter: PlaygroundStackProps = {
     sku: 'Basic',
     adminEnabled: true,
   },
+};
+
+export const prodBackendStackProps: BackendStackProps = {
+  name: `Prod-BackendStackProps-${getRandomIdentifier('Prod-BackendStackProps')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  accountTier: 'Standard',
+  accountReplicationType: 'LRS',
+  storageContainers: [
+    {
+      name: 'tfstate',
+      containerAccessType: 'private',
+    },
+  ],
 };

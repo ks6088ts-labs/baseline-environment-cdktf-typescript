@@ -12,13 +12,7 @@ import { KeyVault } from '../construct/key-vault';
 import { KubernetesCluster } from '../construct/kubernetes-cluster';
 import { ResourceGroup } from '../construct/resource-group';
 import { StorageAccount } from '../construct/storage-account';
-
-function convertName(name: string, length: number = 32): string {
-  return name
-    .replace(/[^a-z0-9]/g, '')
-    .toLowerCase()
-    .substring(0, length);
-}
+import { convertName } from '../utils';
 
 interface AiServicesDeployment {
   name: string;
@@ -64,7 +58,7 @@ export interface PlaygroundStackProps {
       },
     ];
   };
-  apiManagement: {
+  apiManagement?: {
     location: string;
     publisherEmail: string;
     publisherName: string;
@@ -164,15 +158,17 @@ export class PlaygroundStack extends TerraformStack {
       adminEnabled: props.containerRegistry.adminEnabled,
     });
 
-    new ApiManagement(this, `ApiManagementStack`, {
-      name: `apim-${props.name}`,
-      location: props.apiManagement.location,
-      tags: props.tags,
-      resourceGroupName: resourceGroupStack.resourceGroup.name,
-      publisherEmail: props.apiManagement.publisherEmail,
-      publisherName: props.apiManagement.publisherName,
-      skuName: props.apiManagement.skuName,
-    });
+    if (props.apiManagement) {
+      new ApiManagement(this, `ApiManagementStack`, {
+        name: `apim-${props.name}`,
+        location: props.apiManagement.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroupStack.resourceGroup.name,
+        publisherEmail: props.apiManagement.publisherEmail,
+        publisherName: props.apiManagement.publisherName,
+        skuName: props.apiManagement.skuName,
+      });
+    }
 
     const storageAccountStack = new StorageAccount(
       this,
