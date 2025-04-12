@@ -1,12 +1,7 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import {
-  provider,
-  keyVault,
-  dataAzurermClientConfig,
-} from '@cdktf/provider-azurerm';
+import { keyVault, dataAzurermClientConfig } from '@cdktf/provider-azurerm';
 
-export interface KeyVaultStackProps {
+export interface KeyVaultProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -15,10 +10,10 @@ export interface KeyVaultStackProps {
   purgeProtectionEnabled: boolean;
 }
 
-export class KeyVaultStack extends TerraformStack {
+export class KeyVault extends Construct {
   public readonly keyVault: keyVault.KeyVault;
 
-  constructor(scope: Construct, id: string, props: KeyVaultStackProps) {
+  constructor(scope: Construct, id: string, props: KeyVaultProps) {
     super(scope, id);
 
     // Data Sources
@@ -27,11 +22,6 @@ export class KeyVaultStack extends TerraformStack {
       'client_config',
       {},
     );
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     this.keyVault = new keyVault.KeyVault(this, 'key_vault', {

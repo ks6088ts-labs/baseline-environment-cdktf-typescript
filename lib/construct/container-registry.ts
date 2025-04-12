@@ -1,8 +1,7 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import { provider, containerRegistry } from '@cdktf/provider-azurerm';
+import { containerRegistry } from '@cdktf/provider-azurerm';
 
-export interface ContainerRegistryStackProps {
+export interface ContainerRegistryProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -11,18 +10,9 @@ export interface ContainerRegistryStackProps {
   adminEnabled?: boolean;
 }
 
-export class ContainerRegistryStack extends TerraformStack {
-  constructor(
-    scope: Construct,
-    id: string,
-    props: ContainerRegistryStackProps,
-  ) {
+export class ContainerRegistry extends Construct {
+  constructor(scope: Construct, id: string, props: ContainerRegistryProps) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     new containerRegistry.ContainerRegistry(this, 'container_registry', {

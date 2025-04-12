@@ -1,8 +1,7 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import { provider, kubernetesCluster } from '@cdktf/provider-azurerm';
+import { kubernetesCluster } from '@cdktf/provider-azurerm';
 
-export interface KubernetesClusterStackProps {
+export interface KubernetesClusterProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -11,18 +10,9 @@ export interface KubernetesClusterStackProps {
   vmSize: string;
 }
 
-export class KubernetesClusterStack extends TerraformStack {
-  constructor(
-    scope: Construct,
-    id: string,
-    props: KubernetesClusterStackProps,
-  ) {
+export class KubernetesCluster extends Construct {
+  constructor(scope: Construct, id: string, props: KubernetesClusterProps) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     new kubernetesCluster.KubernetesCluster(this, 'kubernetes_cluster', {

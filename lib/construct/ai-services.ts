@@ -1,10 +1,5 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
-import {
-  provider,
-  aiServices,
-  cognitiveDeployment,
-} from '@cdktf/provider-azurerm';
+import { aiServices, cognitiveDeployment } from '@cdktf/provider-azurerm';
 
 interface AiServicesDeployment {
   name: string;
@@ -18,7 +13,7 @@ interface AiServicesDeployment {
   };
 }
 
-export interface AiServicesStackProps {
+export interface AiServicesProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -29,16 +24,11 @@ export interface AiServicesStackProps {
   deployments?: AiServicesDeployment[];
 }
 
-export class AiServicesStack extends TerraformStack {
+export class AiServices extends Construct {
   public readonly aiServices: aiServices.AiServices;
 
-  constructor(scope: Construct, id: string, props: AiServicesStackProps) {
+  constructor(scope: Construct, id: string, props: AiServicesProps) {
     super(scope, id);
-
-    // Providers
-    new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
-    });
 
     // Resources
     this.aiServices = new aiServices.AiServices(this, 'ai_services', {

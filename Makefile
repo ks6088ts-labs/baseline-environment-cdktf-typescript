@@ -7,20 +7,8 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
-CDKTF_ENVIRONMENT ?= dev
-STACKS ?= \
-	ResourceGroupStack-$(CDKTF_ENVIRONMENT) \
-	KubernetesClusterStack-$(CDKTF_ENVIRONMENT) \
-	ContainerRegistryStack-$(CDKTF_ENVIRONMENT) \
-	StorageAccountStack-$(CDKTF_ENVIRONMENT) \
-	KeyVaultStack-$(CDKTF_ENVIRONMENT) \
-	AiFoundryStack-$(CDKTF_ENVIRONMENT) \
-	AiFoundryProjectStack-$(CDKTF_ENVIRONMENT) \
-	AiServicesStack-$(CDKTF_ENVIRONMENT) \
-	ApiManagementStack-$(CDKTF_ENVIRONMENT) \
-	ContainerAppEnvironmentStack-$(CDKTF_ENVIRONMENT) \
-	ContainerAppStack-$(CDKTF_ENVIRONMENT)
-
+CDKTF_ENVIRONMENT ?= Dev
+STACKS ?= $(CDKTF_ENVIRONMENT)-PlaygroundStack
 
 .PHONY: help
 help:
