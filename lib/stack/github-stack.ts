@@ -10,6 +10,7 @@ export interface GithubStackProps {
   repositoryName: string;
   visibility?: string;
   environment: string;
+  organization: string;
   secrets?: { [key: string]: string };
 }
 
@@ -17,16 +18,24 @@ export const devGithubStackProps: GithubStackProps = {
   repositoryName: `Dev-GithubStack-${getRandomIdentifier('Dev-GithubStack')}`,
   visibility: 'public',
   environment: 'ci',
+  organization: 'your-organization-name',
   secrets: {
-    hello: 'world',
+    ARM_CLIENT_ID: 'your-client-id',
+    ARM_SUBSCRIPTION_ID: 'your-subscription-id',
+    ARM_TENANT_ID: 'your-tenant-id',
+    ARM_USE_OIDC: 'true',
   },
 };
 
 export const prodGithubStackProps: GithubStackProps = {
   repositoryName: `Prod-GithubStack-${getRandomIdentifier('Prod-GithubStack')}`,
   environment: 'ci',
+  organization: 'your-organization-name',
   secrets: {
-    hello: 'world',
+    ARM_CLIENT_ID: 'your-client-id',
+    ARM_SUBSCRIPTION_ID: 'your-subscription-id',
+    ARM_TENANT_ID: 'your-tenant-id',
+    ARM_USE_OIDC: 'true',
   },
 };
 
