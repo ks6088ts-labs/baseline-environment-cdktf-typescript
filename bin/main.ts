@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 import { App } from 'cdktf';
-import { PlaygroundStack } from '../lib/stack/playground-stack';
-import { BackendStack } from '../lib/stack/backend-stack';
-import { AzureadStack } from '../lib/stack/azuread-stack';
 import {
+  PlaygroundStack,
   devPlaygroundStackProps,
-  devBackendStackProps,
-  devAzureadStackProps,
   prodPlaygroundStackProps,
+} from '../lib/stack/playground-stack';
+import {
+  BackendStack,
+  devBackendStackProps,
   prodBackendStackProps,
+} from '../lib/stack/backend-stack';
+import {
+  AzureadStack,
+  devAzureadStackProps,
   prodAzureadStackProps,
-} from '../parameter';
+} from '../lib/stack/azuread-stack';
 
 const app = new App();
 

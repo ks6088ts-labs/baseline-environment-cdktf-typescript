@@ -1,7 +1,9 @@
 import { Testing } from 'cdktf';
-import { PlaygroundStack } from '../lib/stack/playground-stack';
-import { BackendStack } from '../lib/stack/backend-stack';
-import { devBackendStackProps, devPlaygroundStackProps } from '../parameter';
+import {
+  PlaygroundStack,
+  devPlaygroundStackProps,
+} from '../lib/stack/playground-stack';
+import { BackendStack, devBackendStackProps } from '../lib/stack/backend-stack';
 
 describe('Unit testing using assertions', () => {
   it('Test PlaygroundStack', () => {
