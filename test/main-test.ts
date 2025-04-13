@@ -5,6 +5,7 @@ import {
 } from '../lib/stack/playground-stack';
 import { BackendStack, devBackendStackProps } from '../lib/stack/backend-stack';
 import { AzureadStack, devAzureadStackProps } from '../lib/stack/azuread-stack';
+import { GithubStack, devGithubStackProps } from '../lib/stack/github-stack';
 
 describe('Unit testing using assertions', () => {
   it('Test PlaygroundStack', () => {
@@ -20,6 +21,7 @@ describe('Unit testing using assertions', () => {
     expect(synthesized).toMatch(/"azurerm_resource_group"/);
     console.log(synthesized);
   });
+
   it('Test BackendStack', () => {
     const app = Testing.app();
     const stack = new BackendStack(app, 'backendStack', devBackendStackProps);
@@ -29,6 +31,7 @@ describe('Unit testing using assertions', () => {
     expect(synthesized).toMatch(/"azurerm_resource_group"/);
     console.log(synthesized);
   });
+
   it('Test AzureadStack', () => {
     const app = Testing.app();
     const stack = new AzureadStack(app, 'azureadStack', devAzureadStackProps);
@@ -36,6 +39,16 @@ describe('Unit testing using assertions', () => {
 
     // FIXME: TORIAEZU
     expect(synthesized).toMatch(/"azuread"/);
+    console.log(synthesized);
+  });
+
+  it('Test GithubStack', () => {
+    const app = Testing.app();
+    const stack = new GithubStack(app, 'githubStack', devGithubStackProps);
+    const synthesized = Testing.synth(stack);
+
+    // FIXME: TORIAEZU
+    expect(synthesized).toMatch(/"github"/);
     console.log(synthesized);
   });
 });
