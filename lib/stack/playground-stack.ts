@@ -1,18 +1,18 @@
 import { Construct } from 'constructs';
 import { TerraformStack, AzurermBackend } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
-import { AiFoundryProject } from '../construct/ai-foundry-project';
-import { AiFoundry } from '../construct/ai-foundry';
-import { AiServices } from '../construct/ai-services';
-import { ContainerAppEnvironment } from '../construct/container-app-environment';
-import { ContainerApp } from '../construct/container-app';
-import { ContainerRegistry } from '../construct/container-registry';
-import { ApiManagement } from '../construct/api-management';
-import { KeyVault } from '../construct/key-vault';
-import { KubernetesCluster } from '../construct/kubernetes-cluster';
-import { ResourceGroup } from '../construct/resource-group';
-import { StorageAccount } from '../construct/storage-account';
-import { convertName } from '../utils';
+import { AiFoundryProject } from '../construct/azurerm/ai-foundry-project';
+import { AiFoundry } from '../construct/azurerm/ai-foundry';
+import { AiServices } from '../construct/azurerm/ai-services';
+import { ContainerAppEnvironment } from '../construct/azurerm/container-app-environment';
+import { ContainerApp } from '../construct/azurerm/container-app';
+import { ContainerRegistry } from '../construct/azurerm/container-registry';
+import { ApiManagement } from '../construct/azurerm/api-management';
+import { KeyVault } from '../construct/azurerm/key-vault';
+import { KubernetesCluster } from '../construct/azurerm/kubernetes-cluster';
+import { ResourceGroup } from '../construct/azurerm/resource-group';
+import { StorageAccount } from '../construct/azurerm/storage-account';
+import { convertName, getRandomIdentifier } from '../utils';
 
 interface AiServicesDeployment {
   name: string;
@@ -83,6 +83,172 @@ export interface PlaygroundStackProps {
     adminEnabled: boolean;
   };
 }
+
+export const devPlaygroundStackProps: PlaygroundStackProps = {
+  name: `Dev-PlaygroundStack-${getRandomIdentifier('Dev-PlaygroundStack')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  // backend: {
+  //   resourceGroupName: 'rg-your-backend',
+  //   storageAccountName: 'yourstorageaccount',
+  //   containerName: 'tfstate',
+  //   key: 'dev.terraform.tfstate',
+  // },
+  resourceGroup: {},
+  // aiServices: {
+  //   location: 'swedencentral',
+  //   deployments: [
+  //     {
+  //       name: 'gpt-4o',
+  //       model: {
+  //         name: 'gpt-4o',
+  //         version: '2024-08-06',
+  //       },
+  //       sku: {
+  //         name: 'GlobalStandard',
+  //         capacity: 450,
+  //       },
+  //     },
+  //     {
+  //       name: 'gpt-4o-mini',
+  //       model: {
+  //         name: 'gpt-4o-mini',
+  //         version: '2024-07-18',
+  //       },
+  //       sku: {
+  //         name: 'GlobalStandard',
+  //         capacity: 2000,
+  //       },
+  //     },
+  //   ],
+  // },
+  // containerAppEnvironment: {},
+  // containerApp: {
+  //   containers: [
+  //     {
+  //       name: 'nginx',
+  //       image: 'nginx:latest',
+  //       cpu: 0.5,
+  //       memory: '1.0Gi',
+  //       env: [
+  //         {
+  //           name: 'ENV_VAR1',
+  //           value: 'value1',
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
+  // apiManagement: {
+  //   location: 'japaneast',
+  //   publisherEmail: 'owner@example.com',
+  //   publisherName: 'Owner Name',
+  //   skuName: 'Consumption_0',
+  // },
+  // storageAccount: {
+  //   accountTier: 'Standard',
+  //   accountReplicationType: 'LRS',
+  // },
+  // keyVault: {
+  //   skuName: 'standard',
+  // },
+  // aiFoundry: {},
+  // aiFoundryProject: {},
+  // kubernetesCluster: {
+  //   nodeCount: 1,
+  //   vmSize: 'Standard_DS2_v2',
+  // },
+  // containerRegistry: {
+  //   location: 'japaneast',
+  //   sku: 'Basic',
+  //   adminEnabled: true,
+  // },
+};
+
+export const prodPlaygroundStackProps: PlaygroundStackProps = {
+  name: `Prod-PlaygroundStack-${getRandomIdentifier('Prod-PlaygroundStack')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  backend: {
+    resourceGroupName: 'rg-your-backend',
+    storageAccountName: 'yourstorageaccount',
+    containerName: 'tfstate',
+    key: 'prod.terraform.tfstate',
+  },
+  resourceGroup: {},
+  aiServices: {
+    location: 'japaneast',
+    deployments: [
+      {
+        name: 'gpt-4o',
+        model: {
+          name: 'gpt-4o',
+          version: '2024-08-06',
+        },
+        sku: {
+          name: 'GlobalStandard',
+          capacity: 450,
+        },
+      },
+      {
+        name: 'gpt-4o-mini',
+        model: {
+          name: 'gpt-4o-mini',
+          version: '2024-07-18',
+        },
+        sku: {
+          name: 'GlobalStandard',
+          capacity: 2000,
+        },
+      },
+    ],
+  },
+  containerAppEnvironment: {},
+  containerApp: {
+    containers: [
+      {
+        name: 'container1',
+        image: 'myregistry.azurecr.io/myapp:latest',
+        cpu: 0.5,
+        memory: '1.0Gi',
+        env: [
+          {
+            name: 'ENV_VAR1',
+            value: 'value1',
+          },
+        ],
+      },
+    ],
+  },
+  apiManagement: {
+    location: 'swedencentral',
+    publisherEmail: 'owner@example.com',
+    publisherName: 'Owner Name',
+    skuName: 'Consumption_0',
+  },
+  storageAccount: {
+    accountTier: 'Standard',
+    accountReplicationType: 'LRS',
+  },
+  keyVault: {
+    skuName: 'standard',
+  },
+  aiFoundry: {},
+  aiFoundryProject: {},
+  kubernetesCluster: {
+    nodeCount: 1,
+    vmSize: 'Standard_DS2_v2',
+  },
+  containerRegistry: {
+    location: 'japaneast',
+    sku: 'Basic',
+    adminEnabled: true,
+  },
+};
 
 export class PlaygroundStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: PlaygroundStackProps) {

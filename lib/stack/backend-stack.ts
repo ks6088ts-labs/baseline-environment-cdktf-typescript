@@ -1,9 +1,9 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
-import { ResourceGroup } from '../construct/resource-group';
-import { StorageAccount } from '../construct/storage-account';
-import { convertName } from '../utils';
+import { ResourceGroup } from '../construct/azurerm/resource-group';
+import { StorageAccount } from '../construct/azurerm/storage-account';
+import { convertName, getRandomIdentifier } from '../utils';
 
 interface StorageContainerProps {
   name: string;
@@ -18,6 +18,38 @@ export interface BackendStackProps {
   accountReplicationType: string;
   storageContainers?: StorageContainerProps[];
 }
+
+export const devBackendStackProps: BackendStackProps = {
+  name: `Dev-BackendStackProps-${getRandomIdentifier('Dev-BackendStackProps')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  accountTier: 'Standard',
+  accountReplicationType: 'LRS',
+  storageContainers: [
+    {
+      name: 'tfstate',
+      containerAccessType: 'private',
+    },
+  ],
+};
+
+export const prodBackendStackProps: BackendStackProps = {
+  name: `Prod-BackendStackProps-${getRandomIdentifier('Prod-BackendStackProps')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  accountTier: 'Standard',
+  accountReplicationType: 'LRS',
+  storageContainers: [
+    {
+      name: 'tfstate',
+      containerAccessType: 'private',
+    },
+  ],
+};
 
 export class BackendStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: BackendStackProps) {

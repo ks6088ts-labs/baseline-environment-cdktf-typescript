@@ -1,22 +1,31 @@
 #!/usr/bin/env node
 import { App } from 'cdktf';
-import { PlaygroundStack } from '../lib/stack/playground-stack';
-import { BackendStack } from '../lib/stack/backend-stack';
 import {
+  PlaygroundStack,
   devPlaygroundStackProps,
-  devBackendStackProps,
   prodPlaygroundStackProps,
+} from '../lib/stack/playground-stack';
+import {
+  BackendStack,
+  devBackendStackProps,
   prodBackendStackProps,
-} from '../parameter';
+} from '../lib/stack/backend-stack';
+import {
+  AzureadStack,
+  devAzureadStackProps,
+  prodAzureadStackProps,
+} from '../lib/stack/azuread-stack';
 
 const app = new App();
 
 // Development Environment
 new PlaygroundStack(app, `Dev-PlaygroundStack`, devPlaygroundStackProps);
 new BackendStack(app, `Dev-BackendStack`, devBackendStackProps);
+new AzureadStack(app, `Dev-AzureadStack`, devAzureadStackProps);
 
 // Production Environment
 new PlaygroundStack(app, `Prod-PlaygroundStack`, prodPlaygroundStackProps);
 new BackendStack(app, `Prod-BackendStack`, prodBackendStackProps);
+new AzureadStack(app, `Prod-AzureadStack`, prodAzureadStackProps);
 
 app.synth();
