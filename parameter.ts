@@ -1,5 +1,6 @@
 import { PlaygroundStackProps } from './lib/stack/playground-stack';
 import { BackendStackProps } from './lib/stack/backend-stack';
+import { AzureadStackProps } from './lib/stack/azuread-stack';
 
 function getRandomIdentifier(content: string): string {
   const randomIdentifier = content
@@ -113,6 +114,10 @@ export const devBackendStackProps: BackendStackProps = {
   ],
 };
 
+export const devAzureadStackProps: AzureadStackProps = {
+  groupName: `Dev-Group-${getRandomIdentifier('Dev-Group')}`,
+};
+
 // Production Environment
 export const prodPlaygroundStackProps: PlaygroundStackProps = {
   name: `Prod-PlaygroundStack-${getRandomIdentifier('Prod-PlaygroundStack')}`,
@@ -211,4 +216,8 @@ export const prodBackendStackProps: BackendStackProps = {
       containerAccessType: 'private',
     },
   ],
+};
+
+export const prodAzureadStackProps: AzureadStackProps = {
+  groupName: `Prod-Group-${getRandomIdentifier('Prod-Group')}`,
 };

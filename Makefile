@@ -7,7 +7,7 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
-STACKS ?= Dev-PlaygroundStack Dev-BackendStack
+STACKS ?= Dev-PlaygroundStack Dev-BackendStack Dev-AzureadStack
 
 .PHONY: help
 help:

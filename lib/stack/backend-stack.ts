@@ -1,8 +1,8 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
-import { ResourceGroup } from '../construct/resource-group';
-import { StorageAccount } from '../construct/storage-account';
+import { ResourceGroup } from '../construct/azurerm/resource-group';
+import { StorageAccount } from '../construct/azurerm/storage-account';
 import { convertName } from '../utils';
 
 interface StorageContainerProps {

@@ -1,17 +1,17 @@
 import { Construct } from 'constructs';
 import { TerraformStack, AzurermBackend } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
-import { AiFoundryProject } from '../construct/ai-foundry-project';
-import { AiFoundry } from '../construct/ai-foundry';
-import { AiServices } from '../construct/ai-services';
-import { ContainerAppEnvironment } from '../construct/container-app-environment';
-import { ContainerApp } from '../construct/container-app';
-import { ContainerRegistry } from '../construct/container-registry';
-import { ApiManagement } from '../construct/api-management';
-import { KeyVault } from '../construct/key-vault';
-import { KubernetesCluster } from '../construct/kubernetes-cluster';
-import { ResourceGroup } from '../construct/resource-group';
-import { StorageAccount } from '../construct/storage-account';
+import { AiFoundryProject } from '../construct/azurerm/ai-foundry-project';
+import { AiFoundry } from '../construct/azurerm/ai-foundry';
+import { AiServices } from '../construct/azurerm/ai-services';
+import { ContainerAppEnvironment } from '../construct/azurerm/container-app-environment';
+import { ContainerApp } from '../construct/azurerm/container-app';
+import { ContainerRegistry } from '../construct/azurerm/container-registry';
+import { ApiManagement } from '../construct/azurerm/api-management';
+import { KeyVault } from '../construct/azurerm/key-vault';
+import { KubernetesCluster } from '../construct/azurerm/kubernetes-cluster';
+import { ResourceGroup } from '../construct/azurerm/resource-group';
+import { StorageAccount } from '../construct/azurerm/storage-account';
 import { convertName } from '../utils';
 
 interface AiServicesDeployment {
