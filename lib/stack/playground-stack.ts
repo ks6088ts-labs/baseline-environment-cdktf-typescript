@@ -85,15 +85,38 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     owner: 'ks6088ts',
   },
   resourceGroup: {},
+  // ref. https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions
   aiServices: [
     {
       location: 'japaneast',
       deployments: [
         {
+          name: 'o3-mini',
+          model: {
+            name: 'o3-mini',
+            version: '2025-01-31',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'o1',
+          model: {
+            name: 'o1',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
           name: 'gpt-4o',
           model: {
             name: 'gpt-4o',
-            version: '2024-08-06',
+            version: '2024-11-20',
           },
           sku: {
             name: 'GlobalStandard',
@@ -139,6 +162,28 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
       location: 'eastus',
       deployments: [
         {
+          name: 'o3-mini',
+          model: {
+            name: 'o3-mini',
+            version: '2025-01-31',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'o1',
+          model: {
+            name: 'o1',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
           name: 'gpt-4o',
           model: {
             name: 'gpt-4o',
@@ -182,22 +227,77 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
             capacity: 350,
           },
         },
-        {
-          name: 'dall-e-3',
-          model: {
-            name: 'dall-e-3',
-            version: '3.0',
-          },
-          sku: {
-            name: 'Standard',
-            capacity: 2,
-          },
-        },
       ],
     },
     {
       location: 'eastus2',
       deployments: [
+        {
+          name: 'gpt-4.1',
+          model: {
+            name: 'gpt-4.1',
+            version: '2025-04-14',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'gpt-4.5-preview',
+          model: {
+            name: 'gpt-4.5-preview',
+            version: '2025-02-27',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 150,
+          },
+        },
+        {
+          name: 'o3-mini',
+          model: {
+            name: 'o3-mini',
+            version: '2025-01-31',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'o1',
+          model: {
+            name: 'o1',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-4o-mini',
+          model: {
+            name: 'gpt-4o-mini',
+            version: '2024-07-18',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
         {
           name: 'gpt-4o-mini-realtime-preview',
           model: {
@@ -221,6 +321,28 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           },
         },
         {
+          name: 'text-embedding-3-large',
+          model: {
+            name: 'text-embedding-3-large',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'text-embedding-3-small',
+          model: {
+            name: 'text-embedding-3-small',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
           name: 'whisper',
           model: {
             name: 'whisper',
@@ -229,17 +351,6 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           sku: {
             name: 'Standard',
             capacity: 3,
-          },
-        },
-        {
-          name: 'o1-mini',
-          model: {
-            name: 'o1-mini',
-            version: '2024-09-12',
-          },
-          sku: {
-            name: 'GlobalStandard',
-            capacity: 500,
           },
         },
       ],
