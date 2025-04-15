@@ -20,6 +20,11 @@ import {
   devGithubStackProps,
   prodGithubStackProps,
 } from '../lib/stack/github-stack';
+import {
+  ServicePrincipalStack,
+  devServicePrincipalStackProps,
+  prodServicePrincipalStackProps,
+} from '../lib/stack/service-principal-stack';
 
 const app = new App();
 
@@ -28,11 +33,21 @@ new PlaygroundStack(app, `Dev-PlaygroundStack`, devPlaygroundStackProps);
 new BackendStack(app, `Dev-BackendStack`, devBackendStackProps);
 new AzureadStack(app, `Dev-AzureadStack`, devAzureadStackProps);
 new GithubStack(app, `Dev-GithubStack`, devGithubStackProps);
+new ServicePrincipalStack(
+  app,
+  `Dev-ServicePrincipalStack`,
+  devServicePrincipalStackProps,
+);
 
 // Production Environment
 new PlaygroundStack(app, `Prod-PlaygroundStack`, prodPlaygroundStackProps);
 new BackendStack(app, `Prod-BackendStack`, prodBackendStackProps);
 new AzureadStack(app, `Prod-AzureadStack`, prodAzureadStackProps);
 new GithubStack(app, `Prod-GithubStack`, prodGithubStackProps);
+new ServicePrincipalStack(
+  app,
+  `Prod-ServicePrincipalStack`,
+  prodServicePrincipalStackProps,
+);
 
 app.synth();
