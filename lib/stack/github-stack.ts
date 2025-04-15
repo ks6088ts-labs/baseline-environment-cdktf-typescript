@@ -4,9 +4,10 @@ import { provider } from '@cdktf/provider-github';
 import { Repository } from '../construct/github/repository';
 import { RepositoryEnvironment } from '../construct/github/repositoryEnvironment';
 import { ActionsEnvironmentSecret } from '../construct/github/actionsEnvironmentSecret';
-import { getRandomIdentifier } from '../utils';
+import { createBackend } from '../utils';
 
 export interface GithubStackProps {
+  createRepository: boolean;
   repositoryName: string;
   visibility?: string;
   environment: string;
@@ -15,10 +16,11 @@ export interface GithubStackProps {
 }
 
 export const devGithubStackProps: GithubStackProps = {
-  repositoryName: `Dev-GithubStack-${getRandomIdentifier('Dev-GithubStack')}`,
+  createRepository: false,
+  repositoryName: 'baseline-environment-on-azure-cdktf-typescript',
   visibility: 'public',
   environment: 'ci',
-  organization: 'your-organization-name',
+  organization: 'ks6088ts-labs',
   secrets: {
     ARM_CLIENT_ID: 'your-client-id',
     ARM_SUBSCRIPTION_ID: 'your-subscription-id',
@@ -28,29 +30,31 @@ export const devGithubStackProps: GithubStackProps = {
 };
 
 export const prodGithubStackProps: GithubStackProps = {
-  repositoryName: `Prod-GithubStack-${getRandomIdentifier('Prod-GithubStack')}`,
+  createRepository: false,
+  repositoryName: 'baseline-environment-on-azure-cdktf-typescript',
   environment: 'ci',
-  organization: 'your-organization-name',
-  secrets: {
-    ARM_CLIENT_ID: 'your-client-id',
-    ARM_SUBSCRIPTION_ID: 'your-subscription-id',
-    ARM_TENANT_ID: 'your-tenant-id',
-    ARM_USE_OIDC: 'true',
-  },
+  organization: 'ks6088ts-labs',
 };
 
 export class GithubStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: GithubStackProps) {
     super(scope, id);
 
+    // Backend
+    createBackend(this, 'GithubStack');
+
     // Providers
-    new provider.GithubProvider(this, 'Github', {});
+    new provider.GithubProvider(this, 'Github', {
+      owner: props.organization,
+    });
 
     // Resources
-    new Repository(this, 'Repository', {
-      name: props.repositoryName,
-      visibility: props.visibility,
-    });
+    if (props.createRepository) {
+      new Repository(this, 'Repository', {
+        name: props.repositoryName,
+        visibility: props.visibility,
+      });
+    }
 
     new RepositoryEnvironment(this, 'RepositoryEnvironment', {
       environment: props.environment,

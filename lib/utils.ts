@@ -1,3 +1,18 @@
+import { TerraformStack, AzurermBackend } from 'cdktf';
+
+export function createBackend(stack: TerraformStack, key: string) {
+  const useRemoteBackend = false; // When set to true, it will use the remote backend
+
+  if (useRemoteBackend) {
+    new AzurermBackend(stack, {
+      resourceGroupName: 'rg-tfstate',
+      storageAccountName: 'ks6088tstfstate',
+      containerName: 'dev',
+      key: `${key}.tfstate`,
+    });
+  }
+}
+
 export function convertName(name: string, length: number = 32): string {
   return name
     .replace(/[^a-z0-9]/g, '')

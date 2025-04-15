@@ -3,7 +3,7 @@ import { TerraformStack } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
 import { StorageAccount } from '../construct/azurerm/storage-account';
-import { convertName, getRandomIdentifier } from '../utils';
+import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
 interface StorageContainerProps {
   name: string;
@@ -20,7 +20,7 @@ export interface BackendStackProps {
 }
 
 export const devBackendStackProps: BackendStackProps = {
-  name: `Dev-BackendStackProps-${getRandomIdentifier('Dev-BackendStackProps')}`,
+  name: `Dev-BackendStack-${getRandomIdentifier('Dev-BackendStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -36,7 +36,7 @@ export const devBackendStackProps: BackendStackProps = {
 };
 
 export const prodBackendStackProps: BackendStackProps = {
-  name: `Prod-BackendStackProps-${getRandomIdentifier('Prod-BackendStackProps')}`,
+  name: `Prod-BackendStack-${getRandomIdentifier('Prod-BackendStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -54,6 +54,9 @@ export const prodBackendStackProps: BackendStackProps = {
 export class BackendStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: BackendStackProps) {
     super(scope, id);
+
+    // Backend
+    createBackend(this, 'BackendStack');
 
     // Providers
     new provider.AzurermProvider(this, 'azurerm', {
