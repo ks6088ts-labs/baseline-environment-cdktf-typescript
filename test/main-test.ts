@@ -6,6 +6,10 @@ import {
 import { BackendStack, devBackendStackProps } from '../lib/stack/backend-stack';
 import { AzureadStack, devAzureadStackProps } from '../lib/stack/azuread-stack';
 import { GithubStack, devGithubStackProps } from '../lib/stack/github-stack';
+import {
+  ServicePrincipalStack,
+  devServicePrincipalStackProps,
+} from '../lib/stack/service-principal-stack';
 
 describe('Unit testing using assertions', () => {
   it('Test PlaygroundStack', () => {
@@ -49,6 +53,20 @@ describe('Unit testing using assertions', () => {
 
     // FIXME: TORIAEZU
     expect(synthesized).toMatch(/"github"/);
+    console.log(synthesized);
+  });
+
+  it('Test ServicePrincipalStack', () => {
+    const app = Testing.app();
+    const stack = new ServicePrincipalStack(
+      app,
+      'servicePrincipalStack',
+      devServicePrincipalStackProps,
+    );
+    const synthesized = Testing.synth(stack);
+
+    // FIXME: TORIAEZU
+    expect(synthesized).toMatch(/"subscription"/);
     console.log(synthesized);
   });
 });
