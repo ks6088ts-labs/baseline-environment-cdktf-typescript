@@ -8,6 +8,7 @@ SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
 # Backend: azurerm, local
+OUTPUT_DIR ?= $(PWD)/cdktf.out
 TF_BACKEND ?= local
 STACKS ?= \
 	Dev-AzureadStack \
@@ -48,10 +49,10 @@ lint: ## lint
 
 .PHONY: lint-hcl
 lint-hcl: ## run static analysis on HCL files
-	trivy config ./cdktf.out/stacks
+	trivy config $(OUTPUT_DIR)/tf
 	tflint --init
 	tflint \
-		--chdir ./cdktf.out/stacks/ \
+		--chdir $(OUTPUT_DIR)/tf \
 		--disable-rule=terraform_deprecated_interpolation \
 		--disable-rule=terraform_required_version \
 		--recursive
@@ -64,31 +65,37 @@ test: ## run tests
 build: ## build applications
 	pnpm run build
 
-.PHONY: clean
-clean: ## clean up the project
-	rm -rf cdktf.out
-
 .PHONY: synth
 synth: ## synthesize the given stacks
-	cdktf synth --hcl
+	mkdir -p $(OUTPUT_DIR)/tf
+	cdktf synth \
+		--hcl \
+		--output $(OUTPUT_DIR)/tf
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint build test diff clean synth lint-hcl ## run CI test
+ci-test: install-deps-dev lint build test synth lint-hcl diff ## run CI test
 
 .PHONY: diff
-diff: ## perform a diff (terraform plan) for the given stack
+diff: synth ## perform a diff (terraform plan) for the given stack
 	@for stack in $(STACKS); do \
 		echo "Running tests for stack: $$stack"; \
-		TF_BACKEND=$(TF_BACKEND) cdktf diff $$stack & \
+		TF_BACKEND=$(TF_BACKEND) cdktf diff $$stack --output $(OUTPUT_DIR)/tf --skip-synth & \
 	done
 
 .PHONY: deploy
 deploy: ## create or update the given stacks
-	TF_BACKEND=$(TF_BACKEND) cdktf deploy --auto-approve $(STACKS)
+	mkdir -p $(OUTPUT_DIR)/json
+	TF_BACKEND=$(TF_BACKEND) cdktf deploy \
+		--output $(OUTPUT_DIR)/json \
+		--auto-approve \
+		$(STACKS)
 
 .PHONY: destroy
 destroy: ## destroy the given stacks
-	TF_BACKEND=$(TF_BACKEND) cdktf destroy --auto-approve $(STACKS)
+	TF_BACKEND=$(TF_BACKEND) cdktf destroy \
+		--output $(OUTPUT_DIR)/json \
+		--auto-approve \
+		$(STACKS)
 
 .PHONY: update
 update: ## update dependencies
