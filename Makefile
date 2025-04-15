@@ -79,7 +79,7 @@ ci-test: install-deps-dev lint build test synth lint-hcl diff ## run CI test
 diff: synth ## perform a diff (terraform plan) for the given stack
 	@for stack in $(STACKS); do \
 		echo "Running tests for stack: $$stack"; \
-		TF_BACKEND=$(TF_BACKEND) cdktf diff $$stack --output $(OUTPUT_DIR)/tf --skip-synth & \
+		TF_BACKEND=$(TF_BACKEND) cdktf diff $$stack --output $(OUTPUT_DIR)/tf --skip-synth; \
 	done
 
 .PHONY: deploy

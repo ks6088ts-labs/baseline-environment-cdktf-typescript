@@ -137,7 +137,7 @@ export class ServicePrincipalStack extends TerraformStack {
 
     new roleAssignment.RoleAssignment(this, 'roleAssignment', {
       scope: subscription.id,
-      roleDefinitionName: 'Reader',
+      roleDefinitionName: 'Contributor',
       principalId: servicePrincipalResource.objectId,
     });
 
