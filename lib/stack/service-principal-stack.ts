@@ -22,7 +22,7 @@ export interface ServicePrincipalStackProps {
   githubOrganization: string;
   githubRepository: string;
   githubEnvironment: string;
-  resourceAccess: { name: string; type: string }[];
+  resourceAccess?: { name: string; type: string }[];
 }
 
 export const devServicePrincipalStackProps: ServicePrincipalStackProps = {
@@ -54,6 +54,14 @@ export const prodServicePrincipalStackProps: ServicePrincipalStackProps = {
   resourceAccess: [
     {
       name: 'Directory.Read.All',
+      type: 'Role',
+    },
+    {
+      name: 'User.Read.All',
+      type: 'Role',
+    },
+    {
+      name: 'Group.Read.All',
       type: 'Role',
     },
   ],
@@ -105,18 +113,20 @@ export class ServicePrincipalStack extends TerraformStack {
       {
         displayName: props.name,
         owners: [clientConfig.objectId],
-        requiredResourceAccess: [
-          {
-            resourceAppId:
-              applicationPublishedAppIds.result.lookup('MicrosoftGraph'),
-            resourceAccess: props.resourceAccess.map((resource) => ({
-              id: servicePrincipalMicrosoftGraph.appRoleIds.lookup(
-                resource.name,
-              ),
-              type: resource.type,
-            })),
-          },
-        ],
+        requiredResourceAccess: props.resourceAccess
+          ? [
+              {
+                resourceAppId:
+                  applicationPublishedAppIds.result.lookup('MicrosoftGraph'),
+                resourceAccess: props.resourceAccess.map((resourceAccess) => ({
+                  id: servicePrincipalMicrosoftGraph.appRoleIds.lookup(
+                    resourceAccess.name,
+                  ),
+                  type: resourceAccess.type,
+                })),
+              },
+            ]
+          : undefined,
       },
     );
 
