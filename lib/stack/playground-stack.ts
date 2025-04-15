@@ -40,7 +40,7 @@ export interface PlaygroundStackProps {
   aiServices?: {
     location: string;
     deployments?: AiServicesDeployment[];
-  };
+  }[];
   containerAppEnvironment?: {};
   containerApp?: {
     containers: [
@@ -97,33 +97,166 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   //   key: 'dev.terraform.tfstate',
   // },
   resourceGroup: {},
-  // aiServices: {
-  //   location: 'swedencentral',
-  //   deployments: [
-  //     {
-  //       name: 'gpt-4o',
-  //       model: {
-  //         name: 'gpt-4o',
-  //         version: '2024-08-06',
-  //       },
-  //       sku: {
-  //         name: 'GlobalStandard',
-  //         capacity: 450,
-  //       },
-  //     },
-  //     {
-  //       name: 'gpt-4o-mini',
-  //       model: {
-  //         name: 'gpt-4o-mini',
-  //         version: '2024-07-18',
-  //       },
-  //       sku: {
-  //         name: 'GlobalStandard',
-  //         capacity: 2000,
-  //       },
-  //     },
-  //   ],
-  // },
+  aiServices: [
+    {
+      location: 'japaneast',
+      deployments: [
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-08-06',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-4o-mini',
+          model: {
+            name: 'gpt-4o-mini',
+            version: '2024-07-18',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
+        {
+          name: 'text-embedding-3-large',
+          model: {
+            name: 'text-embedding-3-large',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'text-embedding-3-small',
+          model: {
+            name: 'text-embedding-3-small',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+      ],
+    },
+    {
+      location: 'eastus',
+      deployments: [
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-4o-mini',
+          model: {
+            name: 'gpt-4o-mini',
+            version: '2024-07-18',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
+        {
+          name: 'text-embedding-3-large',
+          model: {
+            name: 'text-embedding-3-large',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'text-embedding-3-small',
+          model: {
+            name: 'text-embedding-3-small',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'dall-e-3',
+          model: {
+            name: 'dall-e-3',
+            version: '3.0',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 2,
+          },
+        },
+      ],
+    },
+    {
+      location: 'eastus2',
+      deployments: [
+        {
+          name: 'gpt-4o-mini-realtime-preview',
+          model: {
+            name: 'gpt-4o-mini-realtime-preview',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 6,
+          },
+        },
+        {
+          name: 'gpt-4o-mini-audio-preview',
+          model: {
+            name: 'gpt-4o-mini-audio-preview',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
+        {
+          name: 'whisper',
+          model: {
+            name: 'whisper',
+            version: '001',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 3,
+          },
+        },
+        {
+          name: 'o1-mini',
+          model: {
+            name: 'o1-mini',
+            version: '2024-09-12',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+      ],
+    },
+  ],
   // containerAppEnvironment: {},
   // containerApp: {
   //   containers: [
@@ -180,33 +313,35 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     key: 'prod.terraform.tfstate',
   },
   resourceGroup: {},
-  aiServices: {
-    location: 'japaneast',
-    deployments: [
-      {
-        name: 'gpt-4o',
-        model: {
+  aiServices: [
+    {
+      location: 'japaneast',
+      deployments: [
+        {
           name: 'gpt-4o',
-          version: '2024-08-06',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-08-06',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
         },
-        sku: {
-          name: 'GlobalStandard',
-          capacity: 450,
-        },
-      },
-      {
-        name: 'gpt-4o-mini',
-        model: {
+        {
           name: 'gpt-4o-mini',
-          version: '2024-07-18',
+          model: {
+            name: 'gpt-4o-mini',
+            version: '2024-07-18',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
         },
-        sku: {
-          name: 'GlobalStandard',
-          capacity: 2000,
-        },
-      },
-    ],
-  },
+      ],
+    },
+  ],
   containerAppEnvironment: {},
   containerApp: {
     containers: [
@@ -276,16 +411,18 @@ export class PlaygroundStack extends TerraformStack {
       tags: props.tags,
     });
 
-    if (props.aiServices) {
-      new AiServices(this, `AiServices`, {
-        name: `ai-services-${props.name}`,
-        location: props.aiServices.location,
+    const aiServicesArray = props.aiServices || [];
+    for (let i = 0; i < aiServicesArray.length; i++) {
+      const aiServices = aiServicesArray[i];
+      new AiServices(this, `AiServices-${aiServices.location}-${i}`, {
+        name: `ai-services-${props.name}-${aiServices.location}`,
+        location: aiServices.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
-        customSubdomainName: `ai-services-${props.name}`,
+        customSubdomainName: `ai-services-${props.name}-${i}`,
         skuName: 'S0',
         publicNetworkAccess: 'Enabled',
-        deployments: props.aiServices.deployments,
+        deployments: aiServices.deployments,
       });
     }
 
