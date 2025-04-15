@@ -15,7 +15,7 @@ import {
   applicationFederatedIdentityCredential,
 } from '@cdktf/provider-azuread';
 
-import { getRandomIdentifier } from '../utils';
+import { getRandomIdentifier, createBackend } from '../utils';
 
 export interface ServicePrincipalStackProps {
   name: string;
@@ -70,6 +70,9 @@ export const prodServicePrincipalStackProps: ServicePrincipalStackProps = {
 export class ServicePrincipalStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: ServicePrincipalStackProps) {
     super(scope, id);
+
+    // Backend
+    createBackend(this, 'ServicePrincipalStack');
 
     // Providers
     new azurermProvider.AzurermProvider(this, 'azurerm', {

@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { TerraformStack, AzurermBackend } from 'cdktf';
+import { TerraformStack } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
 import { AiFoundryProject } from '../construct/azurerm/ai-foundry-project';
 import { AiFoundry } from '../construct/azurerm/ai-foundry';
@@ -12,7 +12,7 @@ import { KeyVault } from '../construct/azurerm/key-vault';
 import { KubernetesCluster } from '../construct/azurerm/kubernetes-cluster';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
 import { StorageAccount } from '../construct/azurerm/storage-account';
-import { convertName, getRandomIdentifier } from '../utils';
+import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
 interface AiServicesDeployment {
   name: string;
@@ -31,12 +31,6 @@ export interface PlaygroundStackProps {
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
-  backend?: {
-    resourceGroupName: string;
-    storageAccountName: string;
-    containerName: string;
-    key: string;
-  };
   aiServices?: {
     location: string;
     deployments?: AiServicesDeployment[];
@@ -90,12 +84,6 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   tags: {
     owner: 'ks6088ts',
   },
-  // backend: {
-  //   resourceGroupName: 'rg-your-backend',
-  //   storageAccountName: 'yourstorageaccount',
-  //   containerName: 'tfstate',
-  //   key: 'dev.terraform.tfstate',
-  // },
   resourceGroup: {},
   aiServices: [
     {
@@ -257,97 +245,12 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
       ],
     },
   ],
-  // containerAppEnvironment: {},
-  // containerApp: {
-  //   containers: [
-  //     {
-  //       name: 'nginx',
-  //       image: 'nginx:latest',
-  //       cpu: 0.5,
-  //       memory: '1.0Gi',
-  //       env: [
-  //         {
-  //           name: 'ENV_VAR1',
-  //           value: 'value1',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // apiManagement: {
-  //   location: 'japaneast',
-  //   publisherEmail: 'owner@example.com',
-  //   publisherName: 'Owner Name',
-  //   skuName: 'Consumption_0',
-  // },
-  // storageAccount: {
-  //   accountTier: 'Standard',
-  //   accountReplicationType: 'LRS',
-  // },
-  // keyVault: {
-  //   skuName: 'standard',
-  // },
-  // aiFoundry: {},
-  // aiFoundryProject: {},
-  // kubernetesCluster: {
-  //   nodeCount: 1,
-  //   vmSize: 'Standard_DS2_v2',
-  // },
-  // containerRegistry: {
-  //   location: 'japaneast',
-  //   sku: 'Basic',
-  //   adminEnabled: true,
-  // },
-};
-
-export const prodPlaygroundStackProps: PlaygroundStackProps = {
-  name: `Prod-PlaygroundStack-${getRandomIdentifier('Prod-PlaygroundStack')}`,
-  location: 'japaneast',
-  tags: {
-    owner: 'ks6088ts',
-  },
-  backend: {
-    resourceGroupName: 'rg-your-backend',
-    storageAccountName: 'yourstorageaccount',
-    containerName: 'tfstate',
-    key: 'prod.terraform.tfstate',
-  },
-  resourceGroup: {},
-  aiServices: [
-    {
-      location: 'japaneast',
-      deployments: [
-        {
-          name: 'gpt-4o',
-          model: {
-            name: 'gpt-4o',
-            version: '2024-08-06',
-          },
-          sku: {
-            name: 'GlobalStandard',
-            capacity: 450,
-          },
-        },
-        {
-          name: 'gpt-4o-mini',
-          model: {
-            name: 'gpt-4o-mini',
-            version: '2024-07-18',
-          },
-          sku: {
-            name: 'GlobalStandard',
-            capacity: 2000,
-          },
-        },
-      ],
-    },
-  ],
   containerAppEnvironment: {},
   containerApp: {
     containers: [
       {
-        name: 'container1',
-        image: 'myregistry.azurecr.io/myapp:latest',
+        name: 'nginx',
+        image: 'nginx:latest',
         cpu: 0.5,
         memory: '1.0Gi',
         env: [
@@ -360,7 +263,7 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     ],
   },
   apiManagement: {
-    location: 'swedencentral',
+    location: 'japaneast',
     publisherEmail: 'owner@example.com',
     publisherName: 'Owner Name',
     skuName: 'Consumption_0',
@@ -385,19 +288,21 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
   },
 };
 
+export const prodPlaygroundStackProps: PlaygroundStackProps = {
+  name: `Prod-PlaygroundStack-${getRandomIdentifier('Prod-PlaygroundStack')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  resourceGroup: {},
+};
+
 export class PlaygroundStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: PlaygroundStackProps) {
     super(scope, id);
 
     // Backend
-    if (props.backend) {
-      new AzurermBackend(this, {
-        resourceGroupName: props.backend.resourceGroupName,
-        storageAccountName: props.backend.storageAccountName,
-        containerName: props.backend.containerName,
-        key: props.backend.key,
-      });
-    }
+    createBackend(this, 'PlaygroundStack');
 
     // Providers
     new provider.AzurermProvider(this, 'azurerm', {
