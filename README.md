@@ -2,7 +2,7 @@
 
 # baseline-environment-on-azure-cdktf-typescript
 
-Baseline Environment on Azure in CDK for Terraform in TypeScript
+Baseline Environment on Azure in CDK for Terraform using TypeScript
 
 ## Prerequisites
 
@@ -33,51 +33,12 @@ cdktf destroy --auto-approve Dev-BackendStack
 
 ### Use remote backend
 
-To use a remote backend, you need to set up a storage account and a container in Azure. You can do this using the Azure CLI or the Azure portal.
+To use a remote backend, you need to set up a storage account and a container in Azure.
+Then, you can select the backend configurations by setting the `TF_BACKEND` environment variable such as `azurerm` or `local`. The actual implementation of the backend is in the [lib/utils.ts](./lib/utils.ts) file.
+
+For example, to use the remote backend, you can run the following command:
 
 ```shell
-RESOURCE_GROUP_NAME=rg-tfstate
-STORAGE_ACCOUNT_NAME=ks6088tstfstate
-CONTAINER_NAME=dev
-LOCATION=japaneast
-
-# Login to Azure
-az login
-
-# Set the subscription
-az account set --subscription <your-subscription-id>
-
-# Create a resource group
-az group create \
-    --name $RESOURCE_GROUP_NAME \
-    --location $LOCATION
-
-# Create a storage account
-az storage account create \
-    --name $STORAGE_ACCOUNT_NAME \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --location $LOCATION \
-    --sku Standard_LRS
-
-# Create a container
-az storage container create \
-    --name $CONTAINER_NAME \
-    --account-name $STORAGE_ACCOUNT_NAME
-```
-
-Then, you can set the backend configuration in the [lib/utils.ts](./lib/utils.ts) file.
-
-```typescript
-export function createBackend(stack: TerraformStack, key: string) {
-  const useRemoteBackend = false; // When set to true, it will use the remote backend
-
-  if (useRemoteBackend) {
-    new AzurermBackend(stack, {
-      resourceGroupName: 'rg-tfstate',
-      storageAccountName: 'ks6088tstfstate',
-      containerName: 'dev',
-      key: `${key}.tfstate`,
-    });
-  }
-}
+# Deploy all the stacks with remote backend
+make deploy TF_BACKEND=azurerm
 ```

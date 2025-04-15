@@ -7,7 +7,14 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
-STACKS ?= Dev-PlaygroundStack Dev-BackendStack Dev-AzureadStack Dev-GithubStack Dev-ServicePrincipalStack
+# Backend: azurerm, local
+TF_BACKEND ?= local
+STACKS ?= \
+	Dev-AzureadStack \
+	Dev-BackendStack \
+	Dev-GithubStack \
+	Dev-PlaygroundStack \
+	Dev-ServicePrincipalStack
 
 .PHONY: help
 help:
@@ -62,23 +69,26 @@ clean: ## clean up the project
 	rm -rf cdktf.out
 
 .PHONY: synth
-synth: clean ## synthesize the given stacks
+synth: ## synthesize the given stacks
 	cdktf synth --hcl
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint build synth lint-hcl test ## run CI test
+ci-test: install-deps-dev lint build test diff clean synth lint-hcl ## run CI test
 
 .PHONY: diff
 diff: ## perform a diff (terraform plan) for the given stack
-	cdktf diff $(STACKS)
+	@for stack in $(STACKS); do \
+		echo "Running tests for stack: $$stack"; \
+		TF_BACKEND=$(TF_BACKEND) cdktf diff $$stack; \
+	done
 
 .PHONY: deploy
-deploy: clean ## create or update the given stacks
-	cdktf deploy --auto-approve $(STACKS)
+deploy: ## create or update the given stacks
+	TF_BACKEND=$(TF_BACKEND) cdktf deploy --auto-approve $(STACKS)
 
 .PHONY: destroy
-destroy: clean ## destroy the given stacks
-	cdktf destroy --auto-approve $(STACKS)
+destroy: ## destroy the given stacks
+	TF_BACKEND=$(TF_BACKEND) cdktf destroy --auto-approve $(STACKS)
 
 .PHONY: update
 update: ## update dependencies

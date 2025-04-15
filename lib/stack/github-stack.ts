@@ -19,7 +19,7 @@ export const devGithubStackProps: GithubStackProps = {
   createRepository: false,
   repositoryName: 'baseline-environment-on-azure-cdktf-typescript',
   visibility: 'public',
-  environment: 'ci',
+  environment: 'dev',
   organization: 'ks6088ts-labs',
   secrets: {
     ARM_CLIENT_ID: 'your-client-id',
@@ -32,7 +32,7 @@ export const devGithubStackProps: GithubStackProps = {
 export const prodGithubStackProps: GithubStackProps = {
   createRepository: false,
   repositoryName: 'baseline-environment-on-azure-cdktf-typescript',
-  environment: 'ci',
+  environment: 'prod',
   organization: 'ks6088ts-labs',
 };
 

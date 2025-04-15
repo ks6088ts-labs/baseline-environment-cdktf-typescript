@@ -15,7 +15,7 @@ import {
   applicationFederatedIdentityCredential,
 } from '@cdktf/provider-azuread';
 
-import { getRandomIdentifier, createBackend } from '../utils';
+import { createBackend } from '../utils';
 
 export interface ServicePrincipalStackProps {
   name: string;
@@ -26,42 +26,34 @@ export interface ServicePrincipalStackProps {
 }
 
 export const devServicePrincipalStackProps: ServicePrincipalStackProps = {
-  name: `Dev-ServicePrincipalStack-${getRandomIdentifier('Dev-ServicePrincipalStack')}`,
+  name: 'baseline-environment-on-azure-cdktf-typescript_dev',
   githubOrganization: 'ks6088ts-labs',
   githubRepository: 'baseline-environment-on-azure-cdktf-typescript',
-  githubEnvironment: 'ci',
+  githubEnvironment: 'dev',
   resourceAccess: [
     {
       name: 'Directory.Read.All',
       type: 'Role',
     },
     {
-      name: 'User.Read.All',
-      type: 'Role',
-    },
-    {
-      name: 'Group.Read.All',
+      name: 'Application.Read.All',
       type: 'Role',
     },
   ],
 };
 
 export const prodServicePrincipalStackProps: ServicePrincipalStackProps = {
-  name: `Prod-ServicePrincipalStack-${getRandomIdentifier('Prod-ServicePrincipalStack')}`,
+  name: 'baseline-environment-on-azure-cdktf-typescript_prod',
   githubOrganization: 'ks6088ts-labs',
   githubRepository: 'baseline-environment-on-azure-cdktf-typescript',
-  githubEnvironment: 'ci',
+  githubEnvironment: 'prod',
   resourceAccess: [
     {
       name: 'Directory.Read.All',
       type: 'Role',
     },
     {
-      name: 'User.Read.All',
-      type: 'Role',
-    },
-    {
-      name: 'Group.Read.All',
+      name: 'Application.Read.All',
       type: 'Role',
     },
   ],
