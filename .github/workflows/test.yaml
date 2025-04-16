@@ -11,6 +11,14 @@ on:
   schedule:
     - cron: '00 00 * * 3'
   workflow_dispatch:
+    inputs:
+      tfBackend:
+        type: choice
+        description: Specify the backend to use
+        default: 'local'
+        options:
+          - local
+          - azurerm
 
 permissions:
   id-token: write
@@ -33,6 +41,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_USE_OIDC: ${{secrets.ARM_USE_OIDC}}
+      TF_BACKEND: ${{ github.event.inputs.tfBackend || 'local' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,7 +66,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      - name: Run CI tests
+      - name: Run CI tests with backend=${{ github.event.inputs.tfBackend || 'local' }}
         shell: bash
         run: |
           make ci-test
