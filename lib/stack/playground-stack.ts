@@ -306,7 +306,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           },
           sku: {
             name: 'GlobalStandard',
-            capacity: 16000,
+            capacity: 800,
           },
         },
         {
@@ -328,7 +328,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           },
           sku: {
             name: 'GlobalStandard',
-            capacity: 16000,
+            capacity: 800,
           },
         },
         {
@@ -339,7 +339,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           },
           sku: {
             name: 'GlobalStandard',
-            capacity: 16000,
+            capacity: 800,
           },
         },
         {
