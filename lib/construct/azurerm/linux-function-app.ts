@@ -9,6 +9,7 @@ export interface LinuxFunctionAppProps {
   storageAccountName: string;
   storageAccountAccessKey: string;
   servicePlanId: string;
+  applicationStack?: linuxFunctionApp.LinuxFunctionAppSiteConfigApplicationStack;
 }
 
 export class LinuxFunctionApp extends Construct {
@@ -29,7 +30,10 @@ export class LinuxFunctionApp extends Construct {
         storageAccountName: props.storageAccountName,
         storageAccountAccessKey: props.storageAccountAccessKey,
         servicePlanId: props.servicePlanId,
-        siteConfig: {},
+        siteConfig: {
+          alwaysOn: true,
+          applicationStack: props.applicationStack,
+        },
         identity: {
           type: 'SystemAssigned',
         },

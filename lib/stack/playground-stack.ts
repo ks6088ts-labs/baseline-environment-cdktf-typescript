@@ -1,6 +1,10 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
-import { provider } from '@cdktf/provider-azurerm';
+import {
+  provider,
+  linuxFunctionApp,
+  functionAppFunction,
+} from '@cdktf/provider-azurerm';
 import { AiFoundryProject } from '../construct/azurerm/ai-foundry-project';
 import { AiFoundry } from '../construct/azurerm/ai-foundry';
 import { AiServices } from '../construct/azurerm/ai-services';
@@ -14,6 +18,7 @@ import { ResourceGroup } from '../construct/azurerm/resource-group';
 import { StorageAccount } from '../construct/azurerm/storage-account';
 import { ServicePlan } from '../construct/azurerm/service-plan';
 import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
+import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
 interface AiServicesDeployment {
@@ -83,7 +88,16 @@ export interface PlaygroundStackProps {
     osType: string;
     skuName: string;
   };
-  linuxFunctionApp?: {};
+  linuxFunctionApp?: {
+    applicationStack?: linuxFunctionApp.LinuxFunctionAppSiteConfigApplicationStack;
+  };
+  functionAppFunction?: {
+    name: string;
+    language: string;
+    file: functionAppFunction.FunctionAppFunctionFile[];
+    testData: string;
+    configJson: string;
+  };
 }
 
 export const devPlaygroundStackProps: PlaygroundStackProps = {
@@ -454,7 +468,56 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     osType: 'Linux',
     skuName: 'B1',
   },
-  linuxFunctionApp: {},
+  linuxFunctionApp: {
+    applicationStack: {
+      pythonVersion: '3.11',
+    },
+  },
+  functionAppFunction: {
+    name: 'helloFunction',
+    language: 'Python',
+    file: [
+      {
+        name: '__init__.py',
+        content: `
+import logging
+import azure.functions as func
+
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function processed a request.')
+    name = req.params.get('name')
+    if not name:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            name = req_body.get('name')
+    if name:
+        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    else:
+        return func.HttpResponse(
+             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             status_code=200
+        )
+`,
+      },
+    ],
+    testData: JSON.stringify({
+      name: 'Azure',
+    }),
+    configJson: JSON.stringify({
+      bindings: [
+        {
+          type: 'httpTrigger',
+          direction: 'in',
+          authLevel: 'function',
+          route: 'helloFunction',
+        },
+      ],
+      disabled: false,
+    }),
+  },
 };
 
 export const prodPlaygroundStackProps: PlaygroundStackProps = {
@@ -614,16 +677,30 @@ export class PlaygroundStack extends TerraformStack {
       });
 
       if (props.linuxFunctionApp && storageAccount) {
-        new LinuxFunctionApp(this, `LinuxFunctionApp`, {
-          name: `fa-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          storageAccountName: storageAccount.storageAccount.name,
-          storageAccountAccessKey:
-            storageAccount.storageAccount.primaryAccessKey,
-          servicePlanId: servicePlan.servicePlan.id,
-        });
+        const linuxFunctionApp = new LinuxFunctionApp(
+          this,
+          `LinuxFunctionApp`,
+          {
+            name: `fa-${props.name}`,
+            location: props.location,
+            tags: props.tags,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            storageAccountName: storageAccount.storageAccount.name,
+            storageAccountAccessKey:
+              storageAccount.storageAccount.primaryAccessKey,
+            servicePlanId: servicePlan.servicePlan.id,
+            applicationStack: props.linuxFunctionApp.applicationStack,
+          },
+        );
+
+        if (props.functionAppFunction) {
+          new FunctionAppFunction(this, `FunctionAppFunction`, {
+            name: `py-${props.name}`,
+            functionAppId: linuxFunctionApp.linuxFunctionApp.id,
+            language: props.functionAppFunction.language,
+            file: props.functionAppFunction.file,
+          });
+        }
       }
     }
   }
