@@ -255,6 +255,17 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           },
         },
         {
+          name: 'o4-mini',
+          model: {
+            name: 'o4-mini',
+            version: '2025-04-16',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
           name: 'o3-mini',
           model: {
             name: 'o3-mini',
@@ -288,6 +299,17 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           },
         },
         {
+          name: 'gpt-4o-transcribe',
+          model: {
+            name: 'gpt-4o-transcribe',
+            version: '2025-03-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 800,
+          },
+        },
+        {
           name: 'gpt-4o-mini',
           model: {
             name: 'gpt-4o-mini',
@@ -296,6 +318,28 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           sku: {
             name: 'GlobalStandard',
             capacity: 2000,
+          },
+        },
+        {
+          name: 'gpt-4o-mini-tts',
+          model: {
+            name: 'gpt-4o-mini-tts',
+            version: '2025-03-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 800,
+          },
+        },
+        {
+          name: 'gpt-4o-mini-transcribe',
+          model: {
+            name: 'gpt-4o-mini-transcribe',
+            version: '2025-03-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 800,
           },
         },
         {
