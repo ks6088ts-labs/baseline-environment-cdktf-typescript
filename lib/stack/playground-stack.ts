@@ -507,12 +507,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
       name: 'Azure',
     }),
     configJson: JSON.stringify({
+      scriptFile: '__init__.py',
       bindings: [
         {
-          type: 'httpTrigger',
-          direction: 'in',
           authLevel: 'function',
-          route: 'helloFunction',
+          direction: 'in',
+          methods: ['get', 'post'],
+          name: 'req',
+          type: 'httpTrigger',
+        },
+        {
+          direction: 'out',
+          name: '$return',
+          type: 'http',
         },
       ],
       disabled: false,
@@ -699,6 +706,8 @@ export class PlaygroundStack extends TerraformStack {
             functionAppId: linuxFunctionApp.linuxFunctionApp.id,
             language: props.functionAppFunction.language,
             file: props.functionAppFunction.file,
+            testData: props.functionAppFunction.testData,
+            configJson: props.functionAppFunction.configJson,
           });
         }
       }

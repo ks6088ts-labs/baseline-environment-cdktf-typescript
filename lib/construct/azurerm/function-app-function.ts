@@ -6,8 +6,8 @@ export interface FunctionAppFunctionProps {
   functionAppId: string;
   language: string;
   file: functionAppFunction.FunctionAppFunctionFile[];
-  testData?: string;
-  configJson?: string;
+  testData: string;
+  configJson: string;
 }
 
 export class FunctionAppFunction extends Construct {
@@ -20,20 +20,8 @@ export class FunctionAppFunction extends Construct {
       functionAppId: props.functionAppId,
       language: props.language,
       file: props.file,
-      testData: JSON.stringify({
-        name: 'Azure',
-      }),
-      configJson: JSON.stringify({
-        bindings: [
-          {
-            type: 'httpTrigger',
-            direction: 'in',
-            authLevel: 'function',
-            route: props.name,
-          },
-        ],
-        disabled: false,
-      }),
+      testData: props.testData,
+      configJson: props.configJson,
     });
   }
 }
