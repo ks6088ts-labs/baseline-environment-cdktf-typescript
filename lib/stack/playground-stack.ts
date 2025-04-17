@@ -12,6 +12,8 @@ import { KeyVault } from '../construct/azurerm/key-vault';
 import { KubernetesCluster } from '../construct/azurerm/kubernetes-cluster';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
 import { StorageAccount } from '../construct/azurerm/storage-account';
+import { ServicePlan } from '../construct/azurerm/service-plan';
+import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
 interface AiServicesDeployment {
@@ -76,6 +78,12 @@ export interface PlaygroundStackProps {
     sku: string;
     adminEnabled: boolean;
   };
+  servicePlan?: {
+    location: string;
+    osType: string;
+    skuName: string;
+  };
+  linuxFunctionApp?: {};
 }
 
 export const devPlaygroundStackProps: PlaygroundStackProps = {
@@ -441,6 +449,12 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     sku: 'Basic',
     adminEnabled: true,
   },
+  servicePlan: {
+    location: 'japaneast',
+    osType: 'Linux',
+    skuName: 'B1',
+  },
+  linuxFunctionApp: {},
 };
 
 export const prodPlaygroundStackProps: PlaygroundStackProps = {
@@ -585,6 +599,30 @@ export class PlaygroundStack extends TerraformStack {
           location: props.location,
           tags: props.tags,
           aiServicesHubId: aiFoundry.aiFoundry.id,
+        });
+      }
+    }
+
+    if (props.servicePlan) {
+      const servicePlan = new ServicePlan(this, `ServicePlan`, {
+        name: `asp-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        osType: props.servicePlan.osType,
+        skuName: props.servicePlan.skuName,
+      });
+
+      if (props.linuxFunctionApp && storageAccount) {
+        new LinuxFunctionApp(this, `LinuxFunctionApp`, {
+          name: `fa-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          storageAccountName: storageAccount.storageAccount.name,
+          storageAccountAccessKey:
+            storageAccount.storageAccount.primaryAccessKey,
+          servicePlanId: servicePlan.servicePlan.id,
         });
       }
     }
