@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { storageAccount, storageContainer } from '@cdktf/provider-azurerm';
 
-interface StorageContainerProps {
+export interface StorageContainerProps {
   name: string;
   containerAccessType: string;
 }
@@ -18,6 +18,7 @@ export interface StorageAccountProps {
 
 export class StorageAccount extends Construct {
   public readonly storageAccount: storageAccount.StorageAccount;
+  public readonly storageContainers: storageContainer.StorageContainer[];
 
   constructor(scope: Construct, id: string, props: StorageAccountProps) {
     super(scope, id);
@@ -39,12 +40,18 @@ export class StorageAccount extends Construct {
       },
     );
 
+    this.storageContainers = [];
     for (const container of props.storageContainers || []) {
-      new storageContainer.StorageContainer(this, container.name, {
-        name: container.name,
-        storageAccountId: this.storageAccount.id,
-        containerAccessType: container.containerAccessType,
-      });
+      const containerResource = new storageContainer.StorageContainer(
+        this,
+        container.name,
+        {
+          name: container.name,
+          storageAccountId: this.storageAccount.id,
+          containerAccessType: container.containerAccessType,
+        },
+      );
+      this.storageContainers.push(containerResource);
     }
   }
 }
