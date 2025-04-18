@@ -15,10 +15,14 @@ import { ApiManagement } from '../construct/azurerm/api-management';
 import { KeyVault } from '../construct/azurerm/key-vault';
 import { KubernetesCluster } from '../construct/azurerm/kubernetes-cluster';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
-import { StorageAccount } from '../construct/azurerm/storage-account';
+import {
+  StorageAccount,
+  StorageContainerProps,
+} from '../construct/azurerm/storage-account';
 import { ServicePlan } from '../construct/azurerm/service-plan';
 import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
+import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
 interface AiServicesDeployment {
@@ -68,6 +72,7 @@ export interface PlaygroundStackProps {
   storageAccount?: {
     accountTier: string;
     accountReplicationType: string;
+    storageContainers?: StorageContainerProps[];
   };
   keyVault?: {
     skuName: string;
@@ -98,7 +103,69 @@ export interface PlaygroundStackProps {
     testData: string;
     configJson: string;
   };
+  servicePlanFlexConsumption?: {
+    location: string;
+    osType: string;
+    skuName: string;
+  };
+  functionAppFlexConsumption?: {
+    runtimeName: string;
+    runtimeVersion: string;
+  };
+  functionAppFunctionFlexConsumption?: {
+    name: string;
+    language: string;
+    file: functionAppFunction.FunctionAppFunctionFile[];
+    testData: string;
+    configJson: string;
+  };
 }
+
+const pythonFunctionCode = `
+import logging
+import azure.functions as func
+
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function processed a request.')
+    name = req.params.get('name')
+    if not name:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            name = req_body.get('name')
+    if name:
+        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    else:
+        return func.HttpResponse(
+             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             status_code=200
+        )
+`;
+
+const testData = JSON.stringify({
+  name: 'Azure',
+});
+
+const configJson = JSON.stringify({
+  scriptFile: '__init__.py',
+  bindings: [
+    {
+      authLevel: 'function',
+      direction: 'in',
+      methods: ['get', 'post'],
+      name: 'req',
+      type: 'httpTrigger',
+    },
+    {
+      direction: 'out',
+      name: '$return',
+      type: 'http',
+    },
+  ],
+  disabled: false,
+});
 
 export const devPlaygroundStackProps: PlaygroundStackProps = {
   name: `Dev-PlaygroundStack-${getRandomIdentifier('Dev-PlaygroundStack')}`,
@@ -448,6 +515,16 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   storageAccount: {
     accountTier: 'Standard',
     accountReplicationType: 'LRS',
+    storageContainers: [
+      {
+        name: 'container1',
+        containerAccessType: 'private',
+      },
+      {
+        name: 'container2',
+        containerAccessType: 'private',
+      },
+    ],
   },
   keyVault: {
     skuName: 'standard',
@@ -479,52 +556,36 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     file: [
       {
         name: '__init__.py',
-        content: `
-import logging
-import azure.functions as func
-
-def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
-`,
+        content: pythonFunctionCode,
       },
     ],
-    testData: JSON.stringify({
-      name: 'Azure',
-    }),
-    configJson: JSON.stringify({
-      scriptFile: '__init__.py',
-      bindings: [
-        {
-          authLevel: 'function',
-          direction: 'in',
-          methods: ['get', 'post'],
-          name: 'req',
-          type: 'httpTrigger',
-        },
-        {
-          direction: 'out',
-          name: '$return',
-          type: 'http',
-        },
-      ],
-      disabled: false,
-    }),
+    testData: testData,
+    configJson: configJson,
   },
+  // FIXME: Uncomment the following lines to enable Flex Consumption
+  // servicePlanFlexConsumption: {
+  //   // View currently supported regions: https://learn.microsoft.com/en-us/azure/azure-functions/flex-consumption-how-to?tabs=azure-cli%2Cvs-code-publish&pivots=programming-language-csharp#view-currently-supported-regions
+  //   // $ az functionapp list-flexconsumption-locations --output table
+  //   location: 'eastus',
+  //   osType: 'Linux',
+  //   skuName: 'FC1',
+  // },
+  // functionAppFlexConsumption: {
+  //   runtimeName: 'python',
+  //   runtimeVersion: '3.11',
+  // },
+  // functionAppFunctionFlexConsumption: {
+  //   name: 'helloFunction',
+  //   language: 'Python',
+  //   file: [
+  //     {
+  //       name: '__init__.py',
+  //       content: pythonFunctionCode,
+  //     },
+  //   ],
+  //   testData: testData,
+  //   configJson: configJson,
+  // },
 };
 
 export const prodPlaygroundStackProps: PlaygroundStackProps = {
@@ -676,7 +737,7 @@ export class PlaygroundStack extends TerraformStack {
     if (props.servicePlan) {
       const servicePlan = new ServicePlan(this, `ServicePlan`, {
         name: `asp-${props.name}`,
-        location: props.location,
+        location: props.servicePlan.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
         osType: props.servicePlan.osType,
@@ -708,6 +769,47 @@ export class PlaygroundStack extends TerraformStack {
             file: props.functionAppFunction.file,
             testData: props.functionAppFunction.testData,
             configJson: props.functionAppFunction.configJson,
+          });
+        }
+      }
+    }
+
+    if (props.servicePlanFlexConsumption) {
+      const servicePlan = new ServicePlan(this, `ServicePlanFlexConsumption`, {
+        name: `aspfc-${props.name}`,
+        location: props.servicePlanFlexConsumption.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        osType: props.servicePlanFlexConsumption.osType,
+        skuName: props.servicePlanFlexConsumption.skuName,
+      });
+
+      if (props.functionAppFlexConsumption && storageAccount) {
+        const functionAppFlexConsumption = new FunctionAppFlexConsumption(
+          this,
+          `FunctionAppFlexConsumption`,
+          {
+            name: `fafc-${props.name}`,
+            location: props.location,
+            tags: props.tags,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            servicePlanId: servicePlan.servicePlan.id,
+            storageContainerEndpoint: `${storageAccount.storageAccount.primaryBlobEndpoint}container1`,
+            storageAccessKey: storageAccount.storageAccount.primaryAccessKey,
+            runtimeName: props.functionAppFlexConsumption.runtimeName,
+            runtimeVersion: props.functionAppFlexConsumption.runtimeVersion,
+          },
+        );
+
+        if (props.functionAppFunctionFlexConsumption) {
+          new FunctionAppFunction(this, `FunctionAppFunctionFlexConsumption`, {
+            name: `fc-py-${props.name}`,
+            functionAppId:
+              functionAppFlexConsumption.functionAppFlexConsumption.id,
+            language: props.functionAppFunctionFlexConsumption.language,
+            file: props.functionAppFunctionFlexConsumption.file,
+            testData: props.functionAppFunctionFlexConsumption.testData,
+            configJson: props.functionAppFunctionFlexConsumption.configJson,
           });
         }
       }
