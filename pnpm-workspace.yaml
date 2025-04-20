@@ -1,0 +1,2 @@
+onlyBuiltDependencies:
+  - '@cdktf/node-pty-prebuilt-multiarch'
