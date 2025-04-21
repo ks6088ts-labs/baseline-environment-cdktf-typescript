@@ -16,15 +16,19 @@ export class LogAnalyticsWorkspace extends Construct {
 
     // Resources
     this.logAnalyticsWorkspace =
-      new logAnalyticsWorkspace.LogAnalyticsWorkspace(this, 'ai_foundry', {
-        name: props.name,
-        location: props.location,
-        tags: props.tags,
-        resourceGroupName: props.resourceGroupName,
-        sku: props.sku,
-        identity: {
-          type: 'SystemAssigned',
+      new logAnalyticsWorkspace.LogAnalyticsWorkspace(
+        this,
+        'log_analytics_workspace',
+        {
+          name: props.name,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: props.resourceGroupName,
+          sku: props.sku,
+          identity: {
+            type: 'SystemAssigned',
+          },
         },
-      });
+      );
   }
 }
