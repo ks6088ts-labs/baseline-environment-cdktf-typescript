@@ -355,6 +355,17 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
           },
         },
         {
+          name: 'o3',
+          model: {
+            name: 'o3',
+            version: '2025-04-16',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
           name: 'o3-mini',
           model: {
             name: 'o3-mini',
