@@ -25,6 +25,7 @@ import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
 import { VirtualNetwork } from '../construct/azurerm/virtual-network';
+import { Subnet } from '../construct/azurerm/subnet';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -127,6 +128,10 @@ export interface PlaygroundStackProps {
     configJson: string;
   };
   virtualNetwork?: {};
+  subnet?: {
+    name: string;
+    addressPrefixes: string[];
+  }[];
   monitorDiagnosticSetting?: {};
 }
 
@@ -610,7 +615,6 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   //   testData: testData,
   //   configJson: configJson,
   // },
-  // virtualNetwork: {},
   monitorDiagnosticSetting: {},
 };
 
@@ -622,6 +626,20 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
   },
   resourceGroup: {},
   virtualNetwork: {},
+  subnet: [
+    {
+      name: 'subnet0',
+      addressPrefixes: ['10.240.0.0/16'],
+    },
+    {
+      name: 'subnet1',
+      addressPrefixes: ['10.241.0.0/16'],
+    },
+    {
+      name: 'subnet2',
+      addressPrefixes: ['10.242.0.0/16'],
+    },
+  ],
 };
 
 export class PlaygroundStack extends TerraformStack {
@@ -858,13 +876,27 @@ export class PlaygroundStack extends TerraformStack {
       }
     }
 
+    let virtualNetwork: VirtualNetwork | undefined = undefined;
     if (props.virtualNetwork) {
-      new VirtualNetwork(this, `VirtualNetwork`, {
+      virtualNetwork = new VirtualNetwork(this, `VirtualNetwork`, {
         name: `vnet-${props.name}`,
         location: props.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
         addressSpace: ['10.0.0.0/8'],
+      });
+    }
+
+    if (props.subnet && virtualNetwork) {
+      new Subnet(this, `Subnet`, {
+        subnets: props.subnet.map((subnet) => {
+          return {
+            name: subnet.name,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            virtualNetworkName: virtualNetwork.virtualNetwork.name,
+            addressPrefixes: subnet.addressPrefixes,
+          };
+        }),
       });
     }
 

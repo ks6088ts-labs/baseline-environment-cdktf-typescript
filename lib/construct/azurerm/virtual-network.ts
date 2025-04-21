@@ -10,16 +10,21 @@ interface VirtualNetworkProps {
 }
 
 export class VirtualNetwork extends Construct {
+  public readonly virtualNetwork: virtualNetwork.VirtualNetwork;
   constructor(scope: Construct, id: string, props: VirtualNetworkProps) {
     super(scope, id);
 
     // Resources
-    new virtualNetwork.VirtualNetwork(this, 'virtual_network', {
-      name: props.name,
-      location: props.location,
-      resourceGroupName: props.resourceGroupName,
-      tags: props.tags,
-      addressSpace: props.addressSpace,
-    });
+    this.virtualNetwork = new virtualNetwork.VirtualNetwork(
+      this,
+      'virtual_network',
+      {
+        name: props.name,
+        location: props.location,
+        resourceGroupName: props.resourceGroupName,
+        tags: props.tags,
+        addressSpace: props.addressSpace,
+      },
+    );
   }
 }
