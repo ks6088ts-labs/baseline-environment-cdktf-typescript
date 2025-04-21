@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
+import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
 import {
   provider,
   linuxFunctionApp,
@@ -42,6 +43,10 @@ export interface PlaygroundStackProps {
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
+  logAnalyticsWorkspace?: {
+    location: string;
+    sku: string | undefined;
+  };
   aiServices?: {
     location: string;
     deployments?: AiServicesDeployment[];
@@ -175,6 +180,10 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   },
   resourceGroup: {},
   // ref. https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions
+  logAnalyticsWorkspace: {
+    location: 'japaneast',
+    sku: 'PerGB2018',
+  },
   aiServices: [
     {
       location: 'japaneast',
@@ -626,6 +635,16 @@ export class PlaygroundStack extends TerraformStack {
       location: props.location,
       tags: props.tags,
     });
+
+    if (props.logAnalyticsWorkspace) {
+      new LogAnalyticsWorkspace(this, `LogAnalyticsWorkspace`, {
+        name: `law-${props.name}`,
+        location: props.logAnalyticsWorkspace?.location || props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        sku: props.logAnalyticsWorkspace?.sku,
+      });
+    }
 
     const aiServicesArray = props.aiServices || [];
     for (let i = 0; i < aiServicesArray.length; i++) {
