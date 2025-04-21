@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
+import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
 import {
   provider,
   linuxFunctionApp,
@@ -23,6 +24,7 @@ import { ServicePlan } from '../construct/azurerm/service-plan';
 import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
+import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
 interface AiServicesDeployment {
@@ -42,6 +44,10 @@ export interface PlaygroundStackProps {
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
+  logAnalyticsWorkspace?: {
+    location: string;
+    sku: string | undefined;
+  };
   aiServices?: {
     location: string;
     deployments?: AiServicesDeployment[];
@@ -119,6 +125,7 @@ export interface PlaygroundStackProps {
     testData: string;
     configJson: string;
   };
+  monitorDiagnosticSetting?: {};
 }
 
 const pythonFunctionCode = `
@@ -175,6 +182,10 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   },
   resourceGroup: {},
   // ref. https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions
+  logAnalyticsWorkspace: {
+    location: 'japaneast',
+    sku: 'PerGB2018',
+  },
   aiServices: [
     {
       location: 'japaneast',
@@ -597,6 +608,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   //   testData: testData,
   //   configJson: configJson,
   // },
+  monitorDiagnosticSetting: {},
 };
 
 export const prodPlaygroundStackProps: PlaygroundStackProps = {
@@ -627,18 +639,34 @@ export class PlaygroundStack extends TerraformStack {
       tags: props.tags,
     });
 
-    const aiServicesArray = props.aiServices || [];
-    for (let i = 0; i < aiServicesArray.length; i++) {
-      const aiServices = aiServicesArray[i];
-      new AiServices(this, `AiServices-${aiServices.location}-${i}`, {
-        name: `ai-services-${props.name}-${aiServices.location}`,
-        location: aiServices.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        customSubdomainName: `ai-services-${props.name}-${i}`,
-        skuName: 'S0',
-        publicNetworkAccess: 'Enabled',
-        deployments: aiServices.deployments,
+    let logAnalyticsWorkspace: LogAnalyticsWorkspace | undefined = undefined;
+    if (props.logAnalyticsWorkspace) {
+      logAnalyticsWorkspace = new LogAnalyticsWorkspace(
+        this,
+        `LogAnalyticsWorkspace`,
+        {
+          name: `law-${props.name}`,
+          location: props.logAnalyticsWorkspace?.location || props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          sku: props.logAnalyticsWorkspace?.sku,
+        },
+      );
+    }
+
+    let aiServicesArray: AiServices[] = [];
+    if (props.aiServices) {
+      aiServicesArray = props.aiServices.map((aiService, i) => {
+        return new AiServices(this, `AiServices-${aiService.location}-${i}`, {
+          name: `ai-services-${props.name}-${i}`,
+          location: aiService.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          customSubdomainName: `ai-services-${props.name}-${i}`,
+          skuName: 'S0',
+          publicNetworkAccess: 'Enabled',
+          deployments: aiService.deployments,
+        });
       });
     }
 
@@ -823,6 +851,23 @@ export class PlaygroundStack extends TerraformStack {
             configJson: props.functionAppFunctionFlexConsumption.configJson,
           });
         }
+      }
+    }
+
+    if (props.monitorDiagnosticSetting && logAnalyticsWorkspace) {
+      for (const aiService of aiServicesArray) {
+        const name = `MonitorDiagnosticSetting-${aiService.aiServices.name}`;
+        new MonitorDiagnosticSetting(this, name, {
+          name: name,
+          targetResourceId: aiService.aiServices.id,
+          logAnalyticsWorkspaceId:
+            logAnalyticsWorkspace.logAnalyticsWorkspace.id,
+          enabledLog: [
+            {
+              categoryGroup: 'Audit',
+            },
+          ],
+        });
       }
     }
   }
