@@ -99,4 +99,4 @@ destroy: ## destroy the given stacks
 
 .PHONY: update
 update: ## update dependencies
-	pnpm update
+	pnpm update --latest
