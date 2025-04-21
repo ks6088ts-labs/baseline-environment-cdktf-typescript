@@ -24,6 +24,7 @@ import { ServicePlan } from '../construct/azurerm/service-plan';
 import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
+import { VirtualNetwork } from '../construct/azurerm/virtual-network';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -125,6 +126,7 @@ export interface PlaygroundStackProps {
     testData: string;
     configJson: string;
   };
+  virtualNetwork?: {};
   monitorDiagnosticSetting?: {};
 }
 
@@ -608,6 +610,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   //   testData: testData,
   //   configJson: configJson,
   // },
+  // virtualNetwork: {},
   monitorDiagnosticSetting: {},
 };
 
@@ -618,6 +621,7 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     owner: 'ks6088ts',
   },
   resourceGroup: {},
+  virtualNetwork: {},
 };
 
 export class PlaygroundStack extends TerraformStack {
@@ -852,6 +856,16 @@ export class PlaygroundStack extends TerraformStack {
           });
         }
       }
+    }
+
+    if (props.virtualNetwork) {
+      new VirtualNetwork(this, `VirtualNetwork`, {
+        name: `vnet-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        addressSpace: ['10.0.0.0/8'],
+      });
     }
 
     if (props.monitorDiagnosticSetting && logAnalyticsWorkspace) {
