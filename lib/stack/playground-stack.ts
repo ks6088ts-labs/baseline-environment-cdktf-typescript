@@ -1,6 +1,7 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
+import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
 import {
   provider,
@@ -52,6 +53,7 @@ export interface PlaygroundStackProps {
   tags?: { [key: string]: string };
   resourceGroup: {};
   userAssignedIdentity?: {};
+  roleAssignment?: {};
   logAnalyticsWorkspace?: {
     location: string;
     sku: string | undefined;
@@ -639,6 +641,7 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
   },
   resourceGroup: {},
   userAssignedIdentity: {},
+  roleAssignment: {},
   aiServices: [
     {
       location: 'francecentral',
@@ -992,6 +995,20 @@ export class PlaygroundStack extends TerraformStack {
             privateConnectionResourceId: aiService.aiServices.id,
             subresourceNames: ['account'],
             privateDnsZoneIds: [privateDnsZone.privateDnsZone.id],
+          },
+        );
+      }
+    }
+
+    if (props.roleAssignment && userAssignedIdentity) {
+      for (const aiService of aiServicesArray) {
+        new RoleAssignment(
+          this,
+          `RoleAssignment-${aiService.aiServices.name}`,
+          {
+            principalId: userAssignedIdentity.userAssignedIdentity.principalId,
+            roleDefinitionName: 'Cognitive Services OpenAI User',
+            scope: aiService.aiServices.id,
           },
         );
       }

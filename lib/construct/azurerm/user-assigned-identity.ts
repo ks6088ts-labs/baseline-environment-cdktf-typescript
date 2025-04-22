@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { userAssignedIdentity } from '@cdktf/provider-azurerm';
 
-export interface userAssignedIdentityProps {
+export interface UserAssignedIdentityProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -11,7 +11,7 @@ export interface userAssignedIdentityProps {
 export class UserAssignedIdentity extends Construct {
   public readonly userAssignedIdentity: userAssignedIdentity.UserAssignedIdentity;
 
-  constructor(scope: Construct, id: string, props: userAssignedIdentityProps) {
+  constructor(scope: Construct, id: string, props: UserAssignedIdentityProps) {
     super(scope, id);
 
     // Resources
