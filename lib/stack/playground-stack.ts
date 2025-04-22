@@ -958,6 +958,9 @@ export class PlaygroundStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         subnetId: subnet.subnets[0].id,
         vmSize: props.virtualMachine.vmSize,
+        identityIds: userAssignedIdentity
+          ? [userAssignedIdentity.userAssignedIdentity.id]
+          : undefined,
       });
     }
 
