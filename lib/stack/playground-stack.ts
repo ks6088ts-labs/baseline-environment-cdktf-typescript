@@ -1,5 +1,7 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
+import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
+import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
 import {
   provider,
@@ -50,6 +52,8 @@ export interface PlaygroundStackProps {
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
+  userAssignedIdentity?: {};
+  roleAssignment?: {};
   logAnalyticsWorkspace?: {
     location: string;
     sku: string | undefined;
@@ -636,6 +640,8 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     owner: 'ks6088ts',
   },
   resourceGroup: {},
+  userAssignedIdentity: {},
+  roleAssignment: {},
   aiServices: [
     {
       location: 'francecentral',
@@ -689,6 +695,20 @@ export class PlaygroundStack extends TerraformStack {
       location: props.location,
       tags: props.tags,
     });
+
+    let userAssignedIdentity: UserAssignedIdentity | undefined = undefined;
+    if (props.userAssignedIdentity) {
+      userAssignedIdentity = new UserAssignedIdentity(
+        this,
+        `UserAssignedIdentity`,
+        {
+          name: `uai-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+        },
+      );
+    }
 
     let logAnalyticsWorkspace: LogAnalyticsWorkspace | undefined = undefined;
     if (props.logAnalyticsWorkspace) {
@@ -938,6 +958,9 @@ export class PlaygroundStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         subnetId: subnet.subnets[0].id,
         vmSize: props.virtualMachine.vmSize,
+        identityIds: userAssignedIdentity
+          ? [userAssignedIdentity.userAssignedIdentity.id]
+          : undefined,
       });
     }
 
@@ -975,6 +998,20 @@ export class PlaygroundStack extends TerraformStack {
             privateConnectionResourceId: aiService.aiServices.id,
             subresourceNames: ['account'],
             privateDnsZoneIds: [privateDnsZone.privateDnsZone.id],
+          },
+        );
+      }
+    }
+
+    if (props.roleAssignment && userAssignedIdentity) {
+      for (const aiService of aiServicesArray) {
+        new RoleAssignment(
+          this,
+          `RoleAssignment-${aiService.aiServices.name}`,
+          {
+            principalId: userAssignedIdentity.userAssignedIdentity.principalId,
+            roleDefinitionName: 'Cognitive Services OpenAI User',
+            scope: aiService.aiServices.id,
           },
         );
       }

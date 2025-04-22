@@ -8,6 +8,7 @@ interface VirtualMachineProps {
   resourceGroupName: string;
   subnetId: string;
   vmSize: string;
+  identityIds?: string[];
 }
 
 export class VirtualMachine extends Construct {
@@ -61,7 +62,8 @@ export class VirtualMachine extends Construct {
         disablePasswordAuthentication: false,
       },
       identity: {
-        type: 'SystemAssigned',
+        type: 'SystemAssigned, UserAssigned',
+        identityIds: props.identityIds,
       },
     });
   }
