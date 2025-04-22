@@ -24,6 +24,10 @@ import { ServicePlan } from '../construct/azurerm/service-plan';
 import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
+import { VirtualNetwork } from '../construct/azurerm/virtual-network';
+import { Subnet } from '../construct/azurerm/subnet';
+import { VirtualMachine } from '../construct/azurerm/virtual-machine';
+import { BastionHost } from '../construct/azurerm/bastion';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -125,6 +129,15 @@ export interface PlaygroundStackProps {
     testData: string;
     configJson: string;
   };
+  virtualNetwork?: {};
+  subnet?: {
+    name: string;
+    addressPrefixes: string[];
+  }[];
+  virtualMachine?: {
+    vmSize: string;
+  };
+  bastionHost?: {};
   monitorDiagnosticSetting?: {};
 }
 
@@ -618,6 +631,21 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     owner: 'ks6088ts',
   },
   resourceGroup: {},
+  virtualNetwork: {},
+  subnet: [
+    {
+      name: 'VmSubnet',
+      addressPrefixes: ['10.240.0.0/16'],
+    },
+    {
+      name: 'AzureBastionSubnet',
+      addressPrefixes: ['10.241.0.0/16'],
+    },
+  ],
+  virtualMachine: {
+    vmSize: 'Standard_DS2_v2',
+  },
+  bastionHost: {},
 };
 
 export class PlaygroundStack extends TerraformStack {
@@ -852,6 +880,52 @@ export class PlaygroundStack extends TerraformStack {
           });
         }
       }
+    }
+
+    let virtualNetwork: VirtualNetwork | undefined = undefined;
+    if (props.virtualNetwork) {
+      virtualNetwork = new VirtualNetwork(this, `VirtualNetwork`, {
+        name: `vnet-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        addressSpace: ['10.0.0.0/8'],
+      });
+    }
+
+    let subnet: Subnet | undefined = undefined;
+    if (props.subnet && virtualNetwork) {
+      subnet = new Subnet(this, `Subnet`, {
+        subnets: props.subnet.map((subnet) => {
+          return {
+            name: subnet.name,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            virtualNetworkName: virtualNetwork.virtualNetwork.name,
+            addressPrefixes: subnet.addressPrefixes,
+          };
+        }),
+      });
+    }
+
+    if (props.virtualMachine && subnet) {
+      new VirtualMachine(this, `VirtualMachine`, {
+        name: `vm-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        subnetId: subnet.subnets[0].id,
+        vmSize: props.virtualMachine.vmSize,
+      });
+    }
+
+    if (props.bastionHost && subnet) {
+      new BastionHost(this, `BastionHost`, {
+        name: `bastion-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        subnetId: subnet.subnets[1].id,
+      });
     }
 
     if (props.monitorDiagnosticSetting && logAnalyticsWorkspace) {
