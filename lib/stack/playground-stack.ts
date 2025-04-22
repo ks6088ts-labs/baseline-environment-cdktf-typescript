@@ -27,6 +27,7 @@ import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-fl
 import { VirtualNetwork } from '../construct/azurerm/virtual-network';
 import { Subnet } from '../construct/azurerm/subnet';
 import { VirtualMachine } from '../construct/azurerm/virtual-machine';
+import { BastionHost } from '../construct/azurerm/bastion';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -136,6 +137,7 @@ export interface PlaygroundStackProps {
   virtualMachine?: {
     vmSize: string;
   };
+  bastionHost?: {};
   monitorDiagnosticSetting?: {};
 }
 
@@ -632,21 +634,18 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
   virtualNetwork: {},
   subnet: [
     {
-      name: 'subnet0',
+      name: 'VmSubnet',
       addressPrefixes: ['10.240.0.0/16'],
     },
     {
-      name: 'subnet1',
+      name: 'AzureBastionSubnet',
       addressPrefixes: ['10.241.0.0/16'],
-    },
-    {
-      name: 'subnet2',
-      addressPrefixes: ['10.242.0.0/16'],
     },
   ],
   virtualMachine: {
     vmSize: 'Standard_DS2_v2',
   },
+  bastionHost: {},
 };
 
 export class PlaygroundStack extends TerraformStack {
@@ -916,6 +915,16 @@ export class PlaygroundStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         subnetId: subnet.subnets[0].id,
         vmSize: props.virtualMachine.vmSize,
+      });
+    }
+
+    if (props.bastionHost && subnet) {
+      new BastionHost(this, `BastionHost`, {
+        name: `bastion-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        subnetId: subnet.subnets[1].id,
       });
     }
 
