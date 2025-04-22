@@ -29,6 +29,7 @@ import { Subnet } from '../construct/azurerm/subnet';
 import { VirtualMachine } from '../construct/azurerm/virtual-machine';
 import { BastionHost } from '../construct/azurerm/bastion';
 import { PrivateDnsZone } from '../construct/azurerm/private-dns-zone';
+import { PrivateEndpoint } from '../construct/azurerm/private-endpoint';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -55,6 +56,7 @@ export interface PlaygroundStackProps {
   };
   aiServices?: {
     location: string;
+    publicNetworkAccess?: string;
     deployments?: AiServicesDeployment[];
   }[];
   containerAppEnvironment?: {};
@@ -140,6 +142,7 @@ export interface PlaygroundStackProps {
   };
   bastionHost?: {};
   privateDnsZone?: {};
+  privateEndpoint?: {};
   monitorDiagnosticSetting?: {};
 }
 
@@ -633,6 +636,18 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     owner: 'ks6088ts',
   },
   resourceGroup: {},
+  aiServices: [
+    {
+      location: 'francecentral',
+      publicNetworkAccess: 'Disabled',
+      deployments: [],
+    },
+    {
+      location: 'westeurope',
+      publicNetworkAccess: 'Disabled',
+      deployments: [],
+    },
+  ],
   virtualNetwork: {},
   subnet: [
     {
@@ -643,12 +658,17 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
       name: 'AzureBastionSubnet',
       addressPrefixes: ['10.241.0.0/16'],
     },
+    {
+      name: 'PrivateEndpointSubnet',
+      addressPrefixes: ['10.242.0.0/16'],
+    },
   ],
   virtualMachine: {
     vmSize: 'Standard_DS2_v2',
   },
   bastionHost: {},
   privateDnsZone: {},
+  privateEndpoint: {},
 };
 
 export class PlaygroundStack extends TerraformStack {
@@ -695,7 +715,7 @@ export class PlaygroundStack extends TerraformStack {
           resourceGroupName: resourceGroup.resourceGroup.name,
           customSubdomainName: `ai-services-${props.name}-${i}`,
           skuName: 'S0',
-          publicNetworkAccess: 'Enabled',
+          publicNetworkAccess: aiService.publicNetworkAccess,
           deployments: aiService.deployments,
         });
       });
@@ -931,13 +951,33 @@ export class PlaygroundStack extends TerraformStack {
       });
     }
 
+    let privateDnsZone: PrivateDnsZone | undefined = undefined;
     if (props.privateDnsZone && virtualNetwork) {
-      new PrivateDnsZone(this, `PrivateDnsZone`, {
+      privateDnsZone = new PrivateDnsZone(this, `PrivateDnsZone`, {
         name: 'privatelink.openai.azure.com',
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
         virtualNetworkId: virtualNetwork.virtualNetwork.id,
       });
+    }
+
+    if (props.privateEndpoint && subnet && privateDnsZone) {
+      for (const aiService of aiServicesArray) {
+        new PrivateEndpoint(
+          this,
+          `PrivateEndpoint-${aiService.aiServices.name}`,
+          {
+            name: `pe-${aiService.aiServices.name}`,
+            location: props.location,
+            tags: props.tags,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            subnetId: subnet.subnets[2].id,
+            privateConnectionResourceId: aiService.aiServices.id,
+            subresourceNames: ['account'],
+            privateDnsZoneIds: [privateDnsZone.privateDnsZone.id],
+          },
+        );
+      }
     }
 
     if (props.monitorDiagnosticSetting && logAnalyticsWorkspace) {

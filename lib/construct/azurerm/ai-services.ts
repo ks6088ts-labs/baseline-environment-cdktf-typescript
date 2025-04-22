@@ -20,7 +20,7 @@ export interface AiServicesProps {
   resourceGroupName: string;
   customSubdomainName: string;
   skuName: string;
-  publicNetworkAccess: string;
+  publicNetworkAccess?: string;
   deployments?: AiServicesDeployment[];
 }
 
