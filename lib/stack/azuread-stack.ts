@@ -21,7 +21,7 @@ export class AzureadStack extends TerraformStack {
     super(scope, id);
 
     // Backend
-    createBackend(this, 'AzureadStack');
+    createBackend(this, id);
 
     // Providers
     new provider.AzureadProvider(this, 'azuread', {});
