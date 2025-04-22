@@ -682,7 +682,7 @@ export class PlaygroundStack extends TerraformStack {
     super(scope, id);
 
     // Backend
-    createBackend(this, 'PlaygroundStack');
+    createBackend(this, id);
 
     // Providers
     new provider.AzurermProvider(this, 'azurerm', {

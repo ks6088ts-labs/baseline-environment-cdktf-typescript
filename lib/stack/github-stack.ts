@@ -41,7 +41,7 @@ export class GithubStack extends TerraformStack {
     super(scope, id);
 
     // Backend
-    createBackend(this, 'GithubStack');
+    createBackend(this, id);
 
     // Providers
     new provider.GithubProvider(this, 'Github', {

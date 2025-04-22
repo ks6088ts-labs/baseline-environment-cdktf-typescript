@@ -64,7 +64,7 @@ export class ServicePrincipalStack extends TerraformStack {
     super(scope, id);
 
     // Backend
-    createBackend(this, 'ServicePrincipalStack');
+    createBackend(this, id);
 
     // Providers
     new azurermProvider.AzurermProvider(this, 'azurerm', {

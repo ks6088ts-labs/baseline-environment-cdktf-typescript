@@ -56,7 +56,7 @@ export class BackendStack extends TerraformStack {
     super(scope, id);
 
     // Backend
-    createBackend(this, 'BackendStack');
+    createBackend(this, id);
 
     // Providers
     new provider.AzurermProvider(this, 'azurerm', {
