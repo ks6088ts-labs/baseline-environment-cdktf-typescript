@@ -6,12 +6,16 @@ interface SubnetProps {
 }
 
 export class Subnet extends Construct {
+  public readonly subnets: subnet.Subnet[];
   constructor(scope: Construct, id: string, props: SubnetProps) {
     super(scope, id);
 
     // Resources
+    this.subnets = [];
     for (const subnetConfig of props.subnets) {
-      new subnet.Subnet(this, `subnet-${subnetConfig.name}`, subnetConfig);
+      this.subnets.push(
+        new subnet.Subnet(this, `subnet-${subnetConfig.name}`, subnetConfig),
+      );
     }
   }
 }

@@ -26,6 +26,7 @@ import { FunctionAppFunction } from '../construct/azurerm/function-app-function'
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
 import { VirtualNetwork } from '../construct/azurerm/virtual-network';
 import { Subnet } from '../construct/azurerm/subnet';
+import { VirtualMachine } from '../construct/azurerm/virtual-machine';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -132,6 +133,9 @@ export interface PlaygroundStackProps {
     name: string;
     addressPrefixes: string[];
   }[];
+  virtualMachine?: {
+    vmSize: string;
+  };
   monitorDiagnosticSetting?: {};
 }
 
@@ -640,6 +644,9 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
       addressPrefixes: ['10.242.0.0/16'],
     },
   ],
+  virtualMachine: {
+    vmSize: 'Standard_DS2_v2',
+  },
 };
 
 export class PlaygroundStack extends TerraformStack {
@@ -887,8 +894,9 @@ export class PlaygroundStack extends TerraformStack {
       });
     }
 
+    let subnet: Subnet | undefined = undefined;
     if (props.subnet && virtualNetwork) {
-      new Subnet(this, `Subnet`, {
+      subnet = new Subnet(this, `Subnet`, {
         subnets: props.subnet.map((subnet) => {
           return {
             name: subnet.name,
@@ -897,6 +905,17 @@ export class PlaygroundStack extends TerraformStack {
             addressPrefixes: subnet.addressPrefixes,
           };
         }),
+      });
+    }
+
+    if (props.virtualMachine && subnet) {
+      new VirtualMachine(this, `VirtualMachine`, {
+        name: `vm-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        subnetId: subnet.subnets[0].id,
+        vmSize: props.virtualMachine.vmSize,
       });
     }
 
