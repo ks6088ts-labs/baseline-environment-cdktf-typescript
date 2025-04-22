@@ -28,6 +28,7 @@ import { VirtualNetwork } from '../construct/azurerm/virtual-network';
 import { Subnet } from '../construct/azurerm/subnet';
 import { VirtualMachine } from '../construct/azurerm/virtual-machine';
 import { BastionHost } from '../construct/azurerm/bastion';
+import { PrivateDnsZone } from '../construct/azurerm/private-dns-zone';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -138,6 +139,7 @@ export interface PlaygroundStackProps {
     vmSize: string;
   };
   bastionHost?: {};
+  privateDnsZone?: {};
   monitorDiagnosticSetting?: {};
 }
 
@@ -646,6 +648,7 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     vmSize: 'Standard_DS2_v2',
   },
   bastionHost: {},
+  privateDnsZone: {},
 };
 
 export class PlaygroundStack extends TerraformStack {
@@ -925,6 +928,15 @@ export class PlaygroundStack extends TerraformStack {
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
         subnetId: subnet.subnets[1].id,
+      });
+    }
+
+    if (props.privateDnsZone && virtualNetwork) {
+      new PrivateDnsZone(this, `PrivateDnsZone`, {
+        name: 'privatelink.openai.azure.com',
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        virtualNetworkId: virtualNetwork.virtualNetwork.id,
       });
     }
 
