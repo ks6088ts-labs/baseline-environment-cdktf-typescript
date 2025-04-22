@@ -646,12 +646,36 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
     {
       location: 'francecentral',
       publicNetworkAccess: 'Disabled',
-      deployments: [],
+      deployments: [
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+      ],
     },
     {
       location: 'westeurope',
       publicNetworkAccess: 'Disabled',
-      deployments: [],
+      deployments: [
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+      ],
     },
   ],
   virtualNetwork: {},
