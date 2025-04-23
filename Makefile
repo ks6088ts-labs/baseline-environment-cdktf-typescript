@@ -15,7 +15,8 @@ STACKS ?= \
 	Dev-BackendStack \
 	Dev-GithubStack \
 	Dev-PlaygroundStack \
-	Dev-ServicePrincipalStack
+	Dev-ServicePrincipalStack \
+	Dev-AwsPlaygroundStack \
 
 .PHONY: help
 help:

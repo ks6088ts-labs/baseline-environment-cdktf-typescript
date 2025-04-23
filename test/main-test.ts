@@ -10,6 +10,10 @@ import {
   ServicePrincipalStack,
   devServicePrincipalStackProps,
 } from '../lib/stack/service-principal-stack';
+import {
+  AwsPlaygroundStack,
+  devAwsPlaygroundStackProps,
+} from '../lib/stack/aws-playground-stack';
 
 describe('Unit testing using assertions', () => {
   it('Test PlaygroundStack', () => {
@@ -67,6 +71,20 @@ describe('Unit testing using assertions', () => {
 
     // FIXME: TORIAEZU
     expect(synthesized).toMatch(/"subscription"/);
+    console.log(synthesized);
+  });
+
+  it('Test AwsPlaygroundStack', () => {
+    const app = Testing.app();
+    const stack = new AwsPlaygroundStack(
+      app,
+      'awsPlaygroundStack',
+      devAwsPlaygroundStackProps,
+    );
+    const synthesized = Testing.synth(stack);
+
+    // FIXME: TORIAEZU
+    expect(synthesized).toMatch(/"aws"/);
     console.log(synthesized);
   });
 });
