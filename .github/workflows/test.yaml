@@ -12,6 +12,13 @@ on:
     - cron: '00 00 * * 3'
   workflow_dispatch:
     inputs:
+      awsRegion:
+        type: choice
+        description: Specify the AWS region to use
+        default: 'ap-northeast-1'
+        options:
+          - ap-northeast-1
+          - ap-northeast-3
       tfBackend:
         type: choice
         description: Specify the backend to use
@@ -37,12 +44,25 @@ jobs:
     runs-on: ${{ matrix.platform }}
     environment: dev
     env:
+      # Azure
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_USE_OIDC: ${{secrets.ARM_USE_OIDC}}
+      # AWS
+      AWS_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
+      AWS_SESSION_NAME: gh-oidc-${{ github.run_id }}-${{ github.run_attempt }}
+      # Input
+      AWS_REGION: ${{ github.event.inputs.awsRegion || 'ap-northeast-1' }}
       TF_BACKEND: ${{ github.event.inputs.tfBackend || 'local' }}
     steps:
+      - name: Run CI tests with AWS region=${{ github.event.inputs.awsRegion || 'ap-northeast-1' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          role-session-name: ${{ env.AWS_SESSION_NAME }}
+          aws-region: ${{ env.AWS_REGION }}
+      - run: aws iam list-users
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # to retrieve git tags
