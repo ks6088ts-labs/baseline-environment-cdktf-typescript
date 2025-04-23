@@ -86,6 +86,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+      - name: Run CI tests with AWS region=${{ github.event.inputs.awsRegion || 'ap-northeast-1' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          role-session-name: ${{ env.AWS_SESSION_NAME }}
+          aws-region: ${{ env.AWS_REGION }}
       - name: Run CI tests with backend=${{ github.event.inputs.tfBackend || 'local' }}
         shell: bash
         run: |
