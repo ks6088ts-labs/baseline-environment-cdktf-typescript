@@ -25,6 +25,11 @@ import {
   devServicePrincipalStackProps,
   prodServicePrincipalStackProps,
 } from '../lib/stack/service-principal-stack';
+import {
+  AwsPlaygroundStack,
+  devAwsPlaygroundStackProps,
+  prodAwsPlaygroundStackProps,
+} from '../lib/stack/aws-playground-stack';
 
 const app = new App();
 
@@ -38,6 +43,11 @@ new ServicePrincipalStack(
   `Dev-ServicePrincipalStack`,
   devServicePrincipalStackProps,
 );
+new AwsPlaygroundStack(
+  app,
+  `Dev-AwsPlaygroundStack`,
+  devAwsPlaygroundStackProps,
+);
 
 // Production Environment
 new PlaygroundStack(app, `Prod-PlaygroundStack`, prodPlaygroundStackProps);
@@ -48,6 +58,11 @@ new ServicePrincipalStack(
   app,
   `Prod-ServicePrincipalStack`,
   prodServicePrincipalStackProps,
+);
+new AwsPlaygroundStack(
+  app,
+  `Prod-AwsPlaygroundStack`,
+  prodAwsPlaygroundStackProps,
 );
 
 app.synth();
