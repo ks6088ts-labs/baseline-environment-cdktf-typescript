@@ -14,6 +14,7 @@ import { AiServices } from '../construct/azurerm/ai-services';
 import { ContainerAppEnvironment } from '../construct/azurerm/container-app-environment';
 import { ContainerApp } from '../construct/azurerm/container-app';
 import { ContainerRegistry } from '../construct/azurerm/container-registry';
+import { Cosmosdb } from '../construct/azurerm/cosmosdb';
 import { ApiManagement } from '../construct/azurerm/api-management';
 import { KeyVault } from '../construct/azurerm/key-vault';
 import { KubernetesCluster } from '../construct/azurerm/kubernetes-cluster';
@@ -105,6 +106,9 @@ export interface PlaygroundStackProps {
     location: string;
     sku: string;
     adminEnabled: boolean;
+  };
+  cosmosdb?: {
+    location: string;
   };
   servicePlan?: {
     location: string;
@@ -606,6 +610,9 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     sku: 'Basic',
     adminEnabled: true,
   },
+  cosmosdb: {
+    location: 'japaneast',
+  },
   servicePlan: {
     location: 'japaneast',
     osType: 'Linux',
@@ -847,6 +854,15 @@ export class PlaygroundStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         sku: props.containerRegistry.sku,
         adminEnabled: props.containerRegistry.adminEnabled,
+      });
+    }
+
+    if (props.cosmosdb) {
+      new Cosmosdb(this, `Cosmosdb`, {
+        name: convertName(`cosmosdb-${props.name}`, 50),
+        location: props.cosmosdb.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
       });
     }
 
