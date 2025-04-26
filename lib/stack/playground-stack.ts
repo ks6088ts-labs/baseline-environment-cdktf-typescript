@@ -1,5 +1,9 @@
 import { Construct } from 'constructs';
-import { TerraformStack, TerraformOutput } from 'cdktf';
+import {
+  TerraformStack,
+  TerraformOutput,
+  TerraformResourceLifecycle,
+} from 'cdktf';
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
@@ -14,6 +18,7 @@ import { AiServices } from '../construct/azurerm/ai-services';
 import { ContainerAppEnvironment } from '../construct/azurerm/container-app-environment';
 import { ContainerApp } from '../construct/azurerm/container-app';
 import { ContainerRegistry } from '../construct/azurerm/container-registry';
+import { Cosmosdb } from '../construct/azurerm/cosmosdb';
 import { ApiManagement } from '../construct/azurerm/api-management';
 import { KeyVault } from '../construct/azurerm/key-vault';
 import { KubernetesCluster } from '../construct/azurerm/kubernetes-cluster';
@@ -100,11 +105,16 @@ export interface PlaygroundStackProps {
   kubernetesCluster?: {
     nodeCount: number;
     vmSize: string;
+    lifecycle?: TerraformResourceLifecycle;
   };
   containerRegistry?: {
     location: string;
     sku: string;
     adminEnabled: boolean;
+  };
+  cosmosdb?: {
+    location: string;
+    partitionKeyPaths: string[];
   };
   servicePlan?: {
     location: string;
@@ -600,11 +610,18 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   kubernetesCluster: {
     nodeCount: 1,
     vmSize: 'Standard_DS2_v2',
+    lifecycle: {
+      ignoreChanges: ['default_node_pool'],
+    },
   },
   containerRegistry: {
     location: 'japaneast',
     sku: 'Basic',
     adminEnabled: true,
+  },
+  cosmosdb: {
+    location: 'japaneast',
+    partitionKeyPaths: ['/partitionKey'],
   },
   servicePlan: {
     location: 'japaneast',
@@ -831,6 +848,7 @@ export class PlaygroundStack extends TerraformStack {
           resourceGroupName: resourceGroup.resourceGroup.name,
           nodeCount: props.kubernetesCluster.nodeCount,
           vmSize: props.kubernetesCluster.vmSize,
+          lifecycle: props.kubernetesCluster.lifecycle,
         },
       );
 
@@ -847,6 +865,16 @@ export class PlaygroundStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         sku: props.containerRegistry.sku,
         adminEnabled: props.containerRegistry.adminEnabled,
+      });
+    }
+
+    if (props.cosmosdb) {
+      new Cosmosdb(this, `Cosmosdb`, {
+        name: convertName(`cosmosdb-${props.name}`, 50),
+        location: props.cosmosdb.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        partitionKeyPaths: props.cosmosdb.partitionKeyPaths,
       });
     }
 

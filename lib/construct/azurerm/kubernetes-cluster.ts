@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
 import { kubernetesCluster } from '@cdktf/provider-azurerm';
+import { TerraformResourceLifecycle } from 'cdktf';
 
 export interface KubernetesClusterProps {
   name: string;
@@ -8,6 +9,7 @@ export interface KubernetesClusterProps {
   resourceGroupName: string;
   nodeCount: number;
   vmSize: string;
+  lifecycle?: TerraformResourceLifecycle;
 }
 
 export class KubernetesCluster extends Construct {
@@ -36,6 +38,7 @@ export class KubernetesCluster extends Construct {
         networkProfile: {
           networkPlugin: 'azure',
         },
+        lifecycle: props.lifecycle,
       },
     );
   }
