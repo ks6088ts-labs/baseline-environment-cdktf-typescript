@@ -1,5 +1,9 @@
 import { Construct } from 'constructs';
-import { TerraformStack, TerraformOutput } from 'cdktf';
+import {
+  TerraformStack,
+  TerraformOutput,
+  TerraformResourceLifecycle,
+} from 'cdktf';
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
@@ -101,6 +105,7 @@ export interface PlaygroundStackProps {
   kubernetesCluster?: {
     nodeCount: number;
     vmSize: string;
+    lifecycle?: TerraformResourceLifecycle;
   };
   containerRegistry?: {
     location: string;
@@ -605,6 +610,9 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   kubernetesCluster: {
     nodeCount: 1,
     vmSize: 'Standard_DS2_v2',
+    lifecycle: {
+      ignoreChanges: ['default_node_pool'],
+    },
   },
   containerRegistry: {
     location: 'japaneast',
@@ -840,6 +848,7 @@ export class PlaygroundStack extends TerraformStack {
           resourceGroupName: resourceGroup.resourceGroup.name,
           nodeCount: props.kubernetesCluster.nodeCount,
           vmSize: props.kubernetesCluster.vmSize,
+          lifecycle: props.kubernetesCluster.lifecycle,
         },
       );
 

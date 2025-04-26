@@ -6,6 +6,7 @@ export interface monitorDiagnosticSettingProps {
   targetResourceId: string;
   logAnalyticsWorkspaceId: string;
   enabledLog: monitorDiagnosticSetting.MonitorDiagnosticSettingEnabledLog[];
+  metric?: monitorDiagnosticSetting.MonitorDiagnosticSettingMetric[];
 }
 
 export class MonitorDiagnosticSetting extends Construct {
@@ -27,6 +28,16 @@ export class MonitorDiagnosticSetting extends Construct {
           targetResourceId: props.targetResourceId,
           logAnalyticsWorkspaceId: props.logAnalyticsWorkspaceId,
           enabledLog: props.enabledLog,
+          metric: props.metric || [
+            {
+              category: 'AllMetrics',
+              enabled: false,
+              retentionPolicy: {
+                days: 0,
+                enabled: false,
+              },
+            },
+          ],
         },
       );
   }
