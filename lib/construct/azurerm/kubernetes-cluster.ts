@@ -11,27 +11,32 @@ export interface KubernetesClusterProps {
 }
 
 export class KubernetesCluster extends Construct {
+  readonly kubernetesCluster: kubernetesCluster.KubernetesCluster;
   constructor(scope: Construct, id: string, props: KubernetesClusterProps) {
     super(scope, id);
 
     // Resources
-    new kubernetesCluster.KubernetesCluster(this, 'kubernetes_cluster', {
-      name: props.name,
-      location: props.location,
-      tags: props.tags,
-      resourceGroupName: props.resourceGroupName,
-      dnsPrefix: props.name,
-      defaultNodePool: {
-        name: 'default',
-        nodeCount: props.nodeCount,
-        vmSize: props.vmSize,
+    this.kubernetesCluster = new kubernetesCluster.KubernetesCluster(
+      this,
+      'kubernetes_cluster',
+      {
+        name: props.name,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: props.resourceGroupName,
+        dnsPrefix: props.name,
+        defaultNodePool: {
+          name: 'default',
+          nodeCount: props.nodeCount,
+          vmSize: props.vmSize,
+        },
+        identity: {
+          type: 'SystemAssigned',
+        },
+        networkProfile: {
+          networkPlugin: 'azure',
+        },
       },
-      identity: {
-        type: 'SystemAssigned',
-      },
-      networkProfile: {
-        networkPlugin: 'azure',
-      },
-    });
+    );
   }
 }

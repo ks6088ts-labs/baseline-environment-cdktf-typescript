@@ -98,6 +98,13 @@ destroy: ## destroy the given stacks
 		--auto-approve \
 		$(STACKS)
 
+.PHONY: output
+output: ## show the output of the given stacks
+	@for stack in $(STACKS); do \
+		echo "Retrieving output: $$stack"; \
+		TF_BACKEND=$(TF_BACKEND) cdktf output $$stack --output $(OUTPUT_DIR)/json; \
+	done
+
 .PHONY: update
 update: ## update dependencies
 	pnpm update --latest

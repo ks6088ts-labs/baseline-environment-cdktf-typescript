@@ -1,4 +1,4 @@
-# User assgined managed identity
+# User assigned managed identity
 
 ## Connect to VM with Bastion
 

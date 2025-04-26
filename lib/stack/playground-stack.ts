@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { TerraformStack } from 'cdktf';
+import { TerraformStack, TerraformOutput } from 'cdktf';
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
@@ -746,6 +746,9 @@ export class PlaygroundStack extends TerraformStack {
       location: props.location,
       tags: props.tags,
     });
+    new TerraformOutput(this, 'resource_group_name', {
+      value: resourceGroup.resourceGroup.name,
+    });
 
     let userAssignedIdentity: UserAssignedIdentity | undefined = undefined;
     if (props.userAssignedIdentity) {
@@ -818,13 +821,21 @@ export class PlaygroundStack extends TerraformStack {
     }
 
     if (props.kubernetesCluster) {
-      new KubernetesCluster(this, `KubernetesCluster`, {
-        name: `k8s-${props.name}`,
-        location: props.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        nodeCount: props.kubernetesCluster.nodeCount,
-        vmSize: props.kubernetesCluster.vmSize,
+      const kubernetesCluster = new KubernetesCluster(
+        this,
+        `KubernetesCluster`,
+        {
+          name: `k8s-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          nodeCount: props.kubernetesCluster.nodeCount,
+          vmSize: props.kubernetesCluster.vmSize,
+        },
+      );
+
+      new TerraformOutput(this, 'aks_cluster_name', {
+        value: kubernetesCluster.kubernetesCluster.name,
       });
     }
 
