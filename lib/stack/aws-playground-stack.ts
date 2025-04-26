@@ -2,6 +2,7 @@ import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
 import { provider } from '@cdktf/provider-aws';
 import { IamGroup } from '../construct/aws/iam-group';
+import { IamOpenidConnectProvider } from '../construct/aws/iam-openid-connect-provider';
 import { getRandomIdentifier, createBackend } from '../utils';
 
 export interface AwsPlaygroundStackProps {
@@ -10,6 +11,10 @@ export interface AwsPlaygroundStackProps {
   iamGroup?: {
     groupName: string;
   };
+  iamOpenidConnectProvider?: {
+    url: string;
+    clientIdList: string[];
+  };
 }
 
 export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
@@ -17,6 +22,10 @@ export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
   region: 'ap-northeast-1',
   iamGroup: {
     groupName: `Dev-AwsPlaygroundGroup-${getRandomIdentifier('Dev-AwsPlaygroundGroup')}`,
+  },
+  iamOpenidConnectProvider: {
+    url: 'https://token.actions.githubusercontent.com',
+    clientIdList: ['sts.amazonaws.com'],
   },
 };
 
@@ -41,6 +50,13 @@ export class AwsPlaygroundStack extends TerraformStack {
     if (props.iamGroup) {
       new IamGroup(this, 'Group', {
         name: props.iamGroup.groupName,
+      });
+    }
+
+    if (props.iamOpenidConnectProvider) {
+      new IamOpenidConnectProvider(this, 'IamOpenidConnectProvider', {
+        url: props.iamOpenidConnectProvider.url,
+        clientIdList: props.iamOpenidConnectProvider.clientIdList,
       });
     }
   }
