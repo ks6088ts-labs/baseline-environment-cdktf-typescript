@@ -10,11 +10,13 @@ export interface iamRoleProps {
 }
 
 export class IamRole extends Construct {
+  public readonly iamRole: iamRole.IamRole;
+
   constructor(scope: Construct, id: string, props: iamRoleProps) {
     super(scope, id);
 
     // Resources
-    new iamRole.IamRole(this, 'iam_role', {
+    this.iamRole = new iamRole.IamRole(this, 'iam_role', {
       name: props.name,
       assumeRolePolicy: JSON.stringify({
         Version: '2012-10-17',
