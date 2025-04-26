@@ -109,6 +109,7 @@ export interface PlaygroundStackProps {
   };
   cosmosdb?: {
     location: string;
+    partitionKeyPaths: string[];
   };
   servicePlan?: {
     location: string;
@@ -612,6 +613,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   },
   cosmosdb: {
     location: 'japaneast',
+    partitionKeyPaths: ['/partitionKey'],
   },
   servicePlan: {
     location: 'japaneast',
@@ -863,6 +865,7 @@ export class PlaygroundStack extends TerraformStack {
         location: props.cosmosdb.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
+        partitionKeyPaths: props.cosmosdb.partitionKeyPaths,
       });
     }
 

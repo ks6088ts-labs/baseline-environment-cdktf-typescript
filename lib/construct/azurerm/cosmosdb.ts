@@ -1,11 +1,16 @@
 import { Construct } from 'constructs';
-import { cosmosdbAccount } from '@cdktf/provider-azurerm';
+import {
+  cosmosdbAccount,
+  cosmosdbSqlDatabase,
+  cosmosdbSqlContainer,
+} from '@cdktf/provider-azurerm';
 
 export interface CosmosdbProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
   resourceGroupName: string;
+  partitionKeyPaths: string[];
 }
 
 export class Cosmosdb extends Construct {
@@ -42,6 +47,25 @@ export class Cosmosdb extends Construct {
             name: 'EnableServerless',
           },
         ],
+      },
+    );
+
+    const cosmosdbSqlDatabaseResource =
+      new cosmosdbSqlDatabase.CosmosdbSqlDatabase(this, 'cosmosdbSqlDatabase', {
+        name: `${props.name}sqldb`,
+        resourceGroupName: props.resourceGroupName,
+        accountName: this.cosmosdbAccount.name,
+      });
+
+    new cosmosdbSqlContainer.CosmosdbSqlContainer(
+      this,
+      'cosmosdbSqlContainer',
+      {
+        name: `${props.name}sqlcontainer`,
+        resourceGroupName: props.resourceGroupName,
+        accountName: this.cosmosdbAccount.name,
+        databaseName: cosmosdbSqlDatabaseResource.name,
+        partitionKeyPaths: props.partitionKeyPaths,
       },
     );
   }
