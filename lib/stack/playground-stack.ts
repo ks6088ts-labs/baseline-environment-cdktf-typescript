@@ -26,6 +26,7 @@ import { ServicePlan } from '../construct/azurerm/service-plan';
 import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
+import { Iothub } from '../construct/azurerm/iothub';
 import { VirtualNetwork } from '../construct/azurerm/virtual-network';
 import { Subnet } from '../construct/azurerm/subnet';
 import { VirtualMachine } from '../construct/azurerm/virtual-machine';
@@ -135,6 +136,11 @@ export interface PlaygroundStackProps {
     file: functionAppFunction.FunctionAppFunctionFile[];
     testData: string;
     configJson: string;
+  };
+  iothub?: {
+    location: string;
+    skuName: string;
+    capacity: number;
   };
   virtualNetwork?: {};
   subnet?: {
@@ -556,7 +562,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
         name: 'nginx',
         image: 'nginx:latest',
         cpu: 0.5,
-        memory: '1.0Gi',
+        memory: '1Gi',
         env: [
           {
             name: 'ENV_VAR1',
@@ -646,6 +652,11 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   //   testData: testData,
   //   configJson: configJson,
   // },
+  iothub: {
+    location: 'japaneast',
+    skuName: 'S1',
+    capacity: 1,
+  },
   monitorDiagnosticSetting: {},
 };
 
@@ -773,7 +784,7 @@ export class PlaygroundStack extends TerraformStack {
           location: aiService.location,
           tags: props.tags,
           resourceGroupName: resourceGroup.resourceGroup.name,
-          customSubdomainName: `ai-services-${props.name}-${i}`,
+          customSubdomainName: `ai-services-${props.name}-${i}`.toLowerCase(),
           skuName: 'S0',
           publicNetworkAccess: aiService.publicNetworkAccess,
           deployments: aiService.deployments,
@@ -963,6 +974,17 @@ export class PlaygroundStack extends TerraformStack {
           });
         }
       }
+    }
+
+    if (props.iothub) {
+      new Iothub(this, `Iothub`, {
+        name: `iothub-${props.name}`,
+        location: props.iothub.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        skuName: props.iothub.skuName,
+        capacity: props.iothub.capacity,
+      });
     }
 
     let virtualNetwork: VirtualNetwork | undefined = undefined;
