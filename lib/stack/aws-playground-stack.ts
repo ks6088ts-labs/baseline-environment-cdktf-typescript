@@ -3,6 +3,7 @@ import { TerraformStack } from 'cdktf';
 import { provider } from '@cdktf/provider-aws';
 import { IamGroup } from '../construct/aws/iam-group';
 import { IamOpenidConnectProvider } from '../construct/aws/iam-openid-connect-provider';
+import { IamRole } from '../construct/aws/iam-role';
 import { getRandomIdentifier, createBackend } from '../utils';
 
 export interface AwsPlaygroundStackProps {
@@ -15,6 +16,13 @@ export interface AwsPlaygroundStackProps {
     url: string;
     clientIdList: string[];
   };
+  iamRole?: {
+    name: string;
+    providerUrl: string;
+    awsId: string;
+    githubOrganization: string;
+    githubRepository: string;
+  };
 }
 
 export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
@@ -26,6 +34,13 @@ export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
   iamOpenidConnectProvider: {
     url: 'https://token.actions.githubusercontent.com',
     clientIdList: ['sts.amazonaws.com'],
+  },
+  iamRole: {
+    name: `Dev-AwsPlaygroundRole-${getRandomIdentifier('Dev-AwsPlaygroundRole')}`,
+    providerUrl: 'token.actions.githubusercontent.com',
+    awsId: '222412934037',
+    githubOrganization: 'ks6088ts-labs',
+    githubRepository: 'baseline-environment-on-azure-cdktf-typescript',
   },
 };
 
@@ -57,6 +72,16 @@ export class AwsPlaygroundStack extends TerraformStack {
       new IamOpenidConnectProvider(this, 'IamOpenidConnectProvider', {
         url: props.iamOpenidConnectProvider.url,
         clientIdList: props.iamOpenidConnectProvider.clientIdList,
+      });
+    }
+
+    if (props.iamRole) {
+      new IamRole(this, 'IamRole', {
+        name: props.iamRole.name,
+        providerUrl: props.iamRole.providerUrl,
+        awsId: props.iamRole.awsId,
+        githubOrganization: props.iamRole.githubOrganization,
+        githubRepository: props.iamRole.githubRepository,
       });
     }
   }
