@@ -532,6 +532,22 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
         },
       ],
     },
+    {
+      location: 'westus3',
+      deployments: [
+        {
+          name: 'gpt-image-1',
+          model: {
+            name: 'gpt-image-1',
+            version: '2025-04-15',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2,
+          },
+        },
+      ],
+    },
   ],
   containerAppEnvironment: {},
   containerApp: {
