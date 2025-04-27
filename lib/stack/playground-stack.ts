@@ -39,6 +39,8 @@ import { BastionHost } from '../construct/azurerm/bastion';
 import { PrivateDnsZone } from '../construct/azurerm/private-dns-zone';
 import { PrivateEndpoint } from '../construct/azurerm/private-endpoint';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
+import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
+import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
 interface AiServicesDeployment {
@@ -164,6 +166,8 @@ export interface PlaygroundStackProps {
   privateDnsZone?: {};
   privateEndpoint?: {};
   monitorDiagnosticSetting?: {};
+  monitorWorkspace?: {};
+  dashboardGrafana?: {};
 }
 
 const pythonFunctionCode = `
@@ -675,6 +679,8 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     capacity: 1,
   },
   monitorDiagnosticSetting: {},
+  monitorWorkspace: {},
+  dashboardGrafana: {},
 };
 
 export const prodPlaygroundStackProps: PlaygroundStackProps = {
@@ -1129,6 +1135,29 @@ export class PlaygroundStack extends TerraformStack {
           enabledLog: [
             {
               categoryGroup: 'Audit',
+            },
+          ],
+        });
+      }
+    }
+
+    if (props.monitorWorkspace) {
+      const monitorWorkspace = new MonitorWorkspace(this, `MonitorWorkspace`, {
+        name: `monitor-workspace-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+      });
+
+      if (props.dashboardGrafana) {
+        new DashboardGrafana(this, `DashboardGrafana`, {
+          name: convertName(`grafana-${props.name}`, 23),
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          azureMonitorWorkspaceIntegrations: [
+            {
+              resourceId: monitorWorkspace.monitorWorkspace.id,
             },
           ],
         });
