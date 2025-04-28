@@ -48,13 +48,6 @@ export class AzureadStack extends TerraformStack {
       features: [{}],
     });
 
-    // Datasources
-    const subscription = new dataAzurermSubscription.DataAzurermSubscription(
-      this,
-      'subscription',
-      {},
-    );
-
     // Resources
     let user: User | undefined = undefined;
     if (props.user) {
@@ -69,6 +62,12 @@ export class AzureadStack extends TerraformStack {
         name: props.group.name,
         description: props.group.description,
       });
+
+      const subscription = new dataAzurermSubscription.DataAzurermSubscription(
+        this,
+        'subscription',
+        {},
+      );
 
       new roleAssignment.RoleAssignment(this, 'role_assignment', {
         scope: subscription.id,
