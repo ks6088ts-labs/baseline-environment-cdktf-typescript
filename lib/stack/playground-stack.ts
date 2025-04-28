@@ -754,7 +754,7 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
   },
   containerRegistry: {
     location: 'japaneast',
-    sku: 'Standard',
+    sku: 'Premium', // to use Private Endpoint, Premium is required
     adminEnabled: true,
   },
   virtualNetwork: {},
