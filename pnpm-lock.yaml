@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@cdktf/provider-aws':
-        specifier: ^19.61.0
-        version: 19.61.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^19.62.0
+        version: 19.62.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azuread':
         specifier: 13.3.0
         version: 13.3.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
@@ -249,8 +249,8 @@ packages:
   '@cdktf/node-pty-prebuilt-multiarch@0.10.2':
     resolution: {integrity: sha512-Bpb0v9bzejJUAGmn8HfDFH6pYxFVHokiWV4mHvTao2XoYcEvETFVrniYIXlIg0e4yLlKB/U/z5WsC5PBsi3xEQ==}
 
-  '@cdktf/provider-aws@19.61.0':
-    resolution: {integrity: sha512-y07yLEWpPil2veOMivzAli51s4pqnt7j286814Bz3HCsxzIyq2u87HXxkBIAwqju6J3DWrOvHvV3THWKN4Eb5Q==}
+  '@cdktf/provider-aws@19.62.0':
+    resolution: {integrity: sha512-3kpIRj4/7d+Aj/KefKL++LeERT41CrJJd+jTJ76Y/uedkTrVwaPpk7f+V/kwh0zT+Hrmp6ycQN6UHLHI/CIytg==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
@@ -2459,8 +2459,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.9.0-dev.20250422:
-    resolution: {integrity: sha512-nhqzYEg74esioK1dt0zLZBEdpDv1VXZqX9qWe9qFi3pkYjXr2Rok3MTV0+CEDc7DIL6sKeJ5YBRuePpIsSmmfA==}
+  typescript@5.9.0-dev.20250428:
+    resolution: {integrity: sha512-/6K3WJlc0zjdAgLJMpU40jIxBIQ4fpAfE3o35EsPBTaqvDh9X6rY+c0NBYpYb/3UG0a2wgSr0yD0sS1l6Km7Fw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2958,7 +2958,7 @@ snapshots:
       nan: 2.22.2
       prebuild-install: 7.1.3
 
-  '@cdktf/provider-aws@19.61.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-aws@19.62.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
@@ -3978,7 +3978,7 @@ snapshots:
     dependencies:
       semver: 7.7.1
       shelljs: 0.8.5
-      typescript: 5.9.0-dev.20250422
+      typescript: 5.9.0-dev.20250428
 
   dunder-proto@1.0.1:
     dependencies:
@@ -5651,7 +5651,7 @@ snapshots:
 
   typescript@5.8.3: {}
 
-  typescript@5.9.0-dev.20250422: {}
+  typescript@5.9.0-dev.20250428: {}
 
   undici-types@5.26.5: {}
 
