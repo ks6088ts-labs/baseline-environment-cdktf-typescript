@@ -1,0 +1,55 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        platform:
+          - 'ubuntu-latest'
+        node-version:
+          - '22.12.0'
+        terraform-version:
+          - '1.11.3'
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # to retrieve git tags
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ matrix.terraform-version }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.9.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Synthesize Terraform
+        shell: bash
+        run: |
+          make install-deps-dev && make synth
+      - name: Set Versions
+        uses: actions/github-script@v7
+        id: set_version
+        with:
+          script: |
+            const tag = context.ref.substring(10)
+            const no_v = tag.replace('v', '')
+            const dash_index = no_v.lastIndexOf('-')
+            const no_dash = (dash_index > -1) ?  no_v.substring(0, dash_index) : no_v
+            core.setOutput('tag', tag)
+            core.setOutput('no-v', no_v)
+            core.setOutput('no-dash', no_dash)
+      - uses: actions/download-artifact@v4
+        with:
+          name: v${{steps.set_version.outputs.no-dash}}
+          path: cdktf.out/tf
