@@ -2,19 +2,23 @@ import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
 import { provider } from '@cdktf/provider-azuread';
 import { Group } from '../construct/azuread/group';
-import { getRandomIdentifier, createBackend } from '../utils';
+import { createBackend } from '../utils';
 
 export interface AzureadStackProps {
-  groupName: string;
+  group?: {
+    name: string;
+    description?: string;
+  };
 }
 
 export const devAzureadStackProps: AzureadStackProps = {
-  groupName: `Dev-AzureadStack-${getRandomIdentifier('Dev-AzureadStack')}`,
+  group: {
+    name: 'dev-developers',
+    description: 'Developers group for dev environment',
+  },
 };
 
-export const prodAzureadStackProps: AzureadStackProps = {
-  groupName: `Prod-AzureadStack-${getRandomIdentifier('Prod-AzureadStack')}`,
-};
+export const prodAzureadStackProps: AzureadStackProps = {};
 
 export class AzureadStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: AzureadStackProps) {
@@ -27,8 +31,11 @@ export class AzureadStack extends TerraformStack {
     new provider.AzureadProvider(this, 'azuread', {});
 
     // Resources
-    new Group(this, 'Group', {
-      name: props.groupName,
-    });
+    if (props.group) {
+      new Group(this, 'Group', {
+        name: props.group.name,
+        description: props.group.description,
+      });
+    }
   }
 }
