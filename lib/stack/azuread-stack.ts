@@ -8,6 +8,7 @@ import {
 } from '@cdktf/provider-azurerm';
 import { User } from '../construct/azuread/user';
 import { Group } from '../construct/azuread/group';
+import { GroupMember } from '../construct/azuread/group-member';
 import { createBackend } from '../utils';
 
 export interface AzureadStackProps {
@@ -18,6 +19,7 @@ export interface AzureadStackProps {
     name: string;
     description?: string;
   };
+  groupMember?: {};
 }
 
 export const devAzureadStackProps: AzureadStackProps = {
@@ -28,6 +30,7 @@ export const devAzureadStackProps: AzureadStackProps = {
     name: 'dev-developers',
     description: 'Developers group for dev environment',
   },
+  groupMember: {},
 };
 
 export const prodAzureadStackProps: AzureadStackProps = {};
@@ -53,14 +56,16 @@ export class AzureadStack extends TerraformStack {
     );
 
     // Resources
+    let user: User | undefined = undefined;
     if (props.user) {
-      new User(this, 'User', {
+      user = new User(this, 'User', {
         name: props.user.name,
       });
     }
 
+    let group: Group | undefined = undefined;
     if (props.group) {
-      const group = new Group(this, 'Group', {
+      group = new Group(this, 'Group', {
         name: props.group.name,
         description: props.group.description,
       });
@@ -69,6 +74,13 @@ export class AzureadStack extends TerraformStack {
         scope: subscription.id,
         roleDefinitionName: 'Contributor',
         principalId: group.group.objectId,
+      });
+    }
+
+    if (props.groupMember && user && group) {
+      new GroupMember(this, 'GroupMember', {
+        groupObjectId: group.group.objectId,
+        memberObjectId: user.user.objectId,
       });
     }
   }
