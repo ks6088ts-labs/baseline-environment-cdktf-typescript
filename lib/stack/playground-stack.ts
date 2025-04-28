@@ -789,7 +789,15 @@ export class PlaygroundStack extends TerraformStack {
 
     // Providers
     new provider.AzurermProvider(this, 'azurerm', {
-      features: [{}],
+      features: [
+        {
+          resourceGroup: [
+            {
+              preventDeletionIfContainsResources: false,
+            },
+          ],
+        },
+      ],
     });
 
     // Resources
@@ -1120,58 +1128,35 @@ export class PlaygroundStack extends TerraformStack {
       });
     }
 
-    let privateDnsZoneOpenAi: PrivateDnsZone | undefined = undefined;
-    let privateDnsZoneStorageAccount: PrivateDnsZone | undefined = undefined;
-    let privateDnsZoneKeyVault: PrivateDnsZone | undefined = undefined;
-    let privateDnsZoneContainerRegistry: PrivateDnsZone | undefined = undefined;
+    // Create Private DNS Zones for different services
+    const privateDnsZones: { [key: string]: PrivateDnsZone } = {};
     if (props.privateDnsZone && virtualNetwork) {
-      privateDnsZoneOpenAi = new PrivateDnsZone(this, `PrivateDnsZoneOpenAi`, {
-        name: 'privatelink.openai.azure.com',
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        virtualNetworkId: virtualNetwork.virtualNetwork.id,
+      const dnsZoneConfigs = [
+        { id: 'OpenAi', name: 'privatelink.openai.azure.com' },
+        { id: 'StorageAccount', name: 'privatelink.blob.core.windows.net' },
+        { id: 'KeyVault', name: 'privatelink.vaultcore.azure.net' },
+        { id: 'ContainerRegistry', name: 'privatelink.azurecr.io' },
+      ];
+
+      dnsZoneConfigs.forEach((config) => {
+        privateDnsZones[config.id] = new PrivateDnsZone(
+          this,
+          `PrivateDnsZone${config.id}`,
+          {
+            name: config.name,
+            tags: props.tags,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            virtualNetworkId: virtualNetwork.virtualNetwork.id,
+          },
+        );
       });
     }
-    if (props.privateDnsZone && virtualNetwork) {
-      privateDnsZoneStorageAccount = new PrivateDnsZone(
-        this,
-        `PrivateDnsZoneStorageAccount`,
-        {
-          name: 'privatelink.blob.core.windows.net',
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          virtualNetworkId: virtualNetwork.virtualNetwork.id,
-        },
-      );
-    }
-    if (props.privateDnsZone && virtualNetwork) {
-      privateDnsZoneKeyVault = new PrivateDnsZone(
-        this,
-        `PrivateDnsZoneKeyVault`,
-        {
-          name: 'privatelink.vaultcore.azure.net',
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          virtualNetworkId: virtualNetwork.virtualNetwork.id,
-        },
-      );
-    }
-    if (props.privateDnsZone && virtualNetwork) {
-      privateDnsZoneContainerRegistry = new PrivateDnsZone(
-        this,
-        `PrivateDnsZoneContainerRegistry`,
-        {
-          name: 'privatelink.azurecr.io',
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          virtualNetworkId: virtualNetwork.virtualNetwork.id,
-        },
-      );
-    }
 
+    // Create Private Endpoints
     if (props.privateEndpoint && subnet) {
-      if (privateDnsZoneOpenAi) {
-        for (const aiService of aiServicesArray) {
+      // Create Private Endpoints for AI Services
+      if (privateDnsZones['OpenAi']) {
+        aiServicesArray.forEach((aiService) => {
           new PrivateEndpoint(
             this,
             `PrivateEndpoint-${aiService.aiServices.name}`,
@@ -1183,49 +1168,52 @@ export class PlaygroundStack extends TerraformStack {
               subnetId: subnet.subnets[2].id,
               privateConnectionResourceId: aiService.aiServices.id,
               subresourceNames: ['account'],
-              privateDnsZoneIds: [privateDnsZoneOpenAi.privateDnsZone.id],
+              privateDnsZoneIds: [privateDnsZones['OpenAi'].privateDnsZone.id],
             },
           );
+        });
+      }
+
+      // Create Private Endpoints for other services
+      const endpointConfigs = [
+        {
+          id: 'StorageAccount',
+          condition: !!storageAccount,
+          resourceId: storageAccount?.storageAccount.id,
+          subresource: 'blob',
+        },
+        {
+          id: 'KeyVault',
+          condition: !!keyVault,
+          resourceId: keyVault?.keyVault.id,
+          subresource: 'vault',
+        },
+        {
+          id: 'ContainerRegistry',
+          condition: !!containerRegistry,
+          resourceId: containerRegistry?.containerRegistry.id,
+          subresource: 'registry',
+        },
+      ];
+
+      endpointConfigs.forEach((config) => {
+        if (
+          config.condition &&
+          privateDnsZones[config.id] &&
+          config.resourceId
+        ) {
+          new PrivateEndpoint(this, `PrivateEndpoint${config.id}`, {
+            name: `pe-${config.id.toLowerCase()}-${props.name}`,
+            location: props.location,
+            tags: props.tags,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            subnetId: subnet.subnets[2].id,
+            privateConnectionResourceId: config.resourceId,
+            subresourceNames: [config.subresource],
+            privateDnsZoneIds: [privateDnsZones[config.id].privateDnsZone.id],
+          });
         }
-      }
-      if (privateDnsZoneStorageAccount && storageAccount) {
-        new PrivateEndpoint(this, `PrivateEndpointStorageAccount`, {
-          name: `pe-storage-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          subnetId: subnet.subnets[2].id,
-          privateConnectionResourceId: storageAccount.storageAccount.id,
-          subresourceNames: ['blob'],
-          privateDnsZoneIds: [privateDnsZoneStorageAccount.privateDnsZone.id],
-        });
-      }
-      if (privateDnsZoneKeyVault && keyVault) {
-        new PrivateEndpoint(this, `PrivateEndpointKeyVault`, {
-          name: `pe-kv-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          subnetId: subnet.subnets[2].id,
-          privateConnectionResourceId: keyVault.keyVault.id,
-          subresourceNames: ['vault'],
-          privateDnsZoneIds: [privateDnsZoneKeyVault.privateDnsZone.id],
-        });
-      }
-      if (privateDnsZoneContainerRegistry && containerRegistry) {
-        new PrivateEndpoint(this, `PrivateEndpointContainerRegistry`, {
-          name: `pe-acr-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          subnetId: subnet.subnets[2].id,
-          privateConnectionResourceId: containerRegistry.containerRegistry.id,
-          subresourceNames: ['registry'],
-          privateDnsZoneIds: [
-            privateDnsZoneContainerRegistry.privateDnsZone.id,
-          ],
-        });
-      }
+      });
     }
 
     if (props.roleAssignment && userAssignedIdentity) {
