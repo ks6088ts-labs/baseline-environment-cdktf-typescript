@@ -5,7 +5,10 @@ import { IamGroup } from '../construct/aws/iam-group';
 import { IamOpenidConnectProvider } from '../construct/aws/iam-openid-connect-provider';
 import { IamRole } from '../construct/aws/iam-role';
 import { IamRolePolicyAttachment } from '../construct/aws/iam-role-policy-attachment';
+import { LambdaFunction } from '../construct/aws/lambda-function';
 import { getRandomIdentifier, createBackend } from '../utils';
+import { createHash } from 'crypto';
+import { readFileSync } from 'fs';
 
 export interface AwsPlaygroundStackProps {
   name: string;
@@ -25,6 +28,12 @@ export interface AwsPlaygroundStackProps {
     githubRepository: string;
   };
   iamRolePolicyAttachment?: {};
+  lambdaFunction?: {
+    name: string;
+    handler: string;
+    runtime: string;
+    fileName: string;
+  };
 }
 
 export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
@@ -45,6 +54,12 @@ export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
     githubRepository: 'baseline-environment-on-azure-cdktf-typescript',
   },
   iamRolePolicyAttachment: {},
+  lambdaFunction: {
+    name: `Dev-AwsPlaygroundFunction-${getRandomIdentifier('Dev-AwsPlaygroundFunction')}`,
+    handler: 'main.handler',
+    runtime: 'python3.10',
+    fileName: 'lambda.zip',
+  },
 };
 
 export const prodAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
@@ -79,12 +94,25 @@ export class AwsPlaygroundStack extends TerraformStack {
     }
 
     if (props.iamRole) {
-      const iamRole = new IamRole(this, 'IamRole', {
+      const iamRole = new IamRole(this, `IamRole-${props.iamRole.name}`, {
         name: props.iamRole.name,
-        providerUrl: props.iamRole.providerUrl,
-        awsId: props.iamRole.awsId,
-        githubOrganization: props.iamRole.githubOrganization,
-        githubRepository: props.iamRole.githubRepository,
+        assumeRolePolicy: JSON.stringify({
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Action: 'sts:AssumeRoleWithWebIdentity',
+              Principal: {
+                Federated: `arn:aws:iam::${props.iamRole.awsId}:oidc-provider/${props.iamRole.providerUrl}`,
+              },
+              Condition: {
+                StringLike: {
+                  [`${props.iamRole.providerUrl}:sub`]: `repo:${props.iamRole.githubOrganization}/${props.iamRole.githubRepository}:*`,
+                },
+              },
+            },
+          ],
+        }),
       });
 
       if (props.iamRolePolicyAttachment) {
@@ -93,6 +121,40 @@ export class AwsPlaygroundStack extends TerraformStack {
           policyArn: 'arn:aws:iam::aws:policy/IAMReadOnlyAccess',
         });
       }
+    }
+
+    if (props.lambdaFunction) {
+      const iamRole = new IamRole(
+        this,
+        `IamRole-${props.lambdaFunction.name}`,
+        {
+          name: `LambdaFunctionRole-${getRandomIdentifier('LambdaFunctionRole')}`,
+          assumeRolePolicy: JSON.stringify({
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Effect: 'Allow',
+                Action: 'sts:AssumeRole',
+                Principal: {
+                  Service: 'lambda.amazonaws.com',
+                },
+                Sid: '',
+              },
+            ],
+          }),
+        },
+      );
+
+      new LambdaFunction(this, 'LambdaFunction', {
+        name: props.lambdaFunction.name,
+        handler: props.lambdaFunction.handler,
+        runtime: props.lambdaFunction.runtime,
+        fileName: props.lambdaFunction.fileName,
+        sourceCodeHash: createHash('sha256')
+          .update(readFileSync(props.lambdaFunction.fileName))
+          .digest('hex'),
+        role: iamRole.iamRole.arn,
+      });
     }
   }
 }
