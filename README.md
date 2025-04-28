@@ -1,4 +1,5 @@
 [![test](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/test.yaml?query=branch%3Amain)
+[![release](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/release.yaml/badge.svg?branch=main)](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/release.yaml?query=branch%3Amain)
 
 # baseline-environment-on-azure-cdktf-typescript
 
