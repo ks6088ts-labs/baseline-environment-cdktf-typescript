@@ -7,6 +7,7 @@ import {
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
+import { AppConfiguration } from '../construct/azurerm/app-configuration';
 import {
   provider,
   linuxFunctionApp,
@@ -67,6 +68,7 @@ export interface PlaygroundStackProps {
     location: string;
     sku: string | undefined;
   };
+  appConfiguration?: {};
   aiServices?: {
     location: string;
     publicNetworkAccess?: string;
@@ -230,6 +232,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     location: 'japaneast',
     sku: 'PerGB2018',
   },
+  appConfiguration: {},
   aiServices: [
     {
       location: 'japaneast',
@@ -803,6 +806,15 @@ export class PlaygroundStack extends TerraformStack {
           sku: props.logAnalyticsWorkspace?.sku,
         },
       );
+    }
+
+    if (props.appConfiguration) {
+      new AppConfiguration(this, `AppConfiguration`, {
+        name: `app-configuration-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+      });
     }
 
     let aiServicesArray: AiServices[] = [];
