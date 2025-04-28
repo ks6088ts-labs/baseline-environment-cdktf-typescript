@@ -6,10 +6,14 @@ import {
   dataAzurermSubscription,
   roleAssignment,
 } from '@cdktf/provider-azurerm';
+import { User } from '../construct/azuread/user';
 import { Group } from '../construct/azuread/group';
 import { createBackend } from '../utils';
 
 export interface AzureadStackProps {
+  user?: {
+    name: string;
+  };
   group?: {
     name: string;
     description?: string;
@@ -17,6 +21,9 @@ export interface AzureadStackProps {
 }
 
 export const devAzureadStackProps: AzureadStackProps = {
+  user: {
+    name: 'ks6088ts',
+  },
   group: {
     name: 'dev-developers',
     description: 'Developers group for dev environment',
@@ -46,6 +53,12 @@ export class AzureadStack extends TerraformStack {
     );
 
     // Resources
+    if (props.user) {
+      new User(this, 'User', {
+        name: props.user.name,
+      });
+    }
+
     if (props.group) {
       const group = new Group(this, 'Group', {
         name: props.group.name,
