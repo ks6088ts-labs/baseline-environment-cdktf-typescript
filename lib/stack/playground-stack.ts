@@ -7,6 +7,7 @@ import {
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
+import { AppConfiguration } from '../construct/azurerm/app-configuration';
 import {
   provider,
   linuxFunctionApp,
@@ -40,6 +41,7 @@ import { PrivateDnsZone } from '../construct/azurerm/private-dns-zone';
 import { PrivateEndpoint } from '../construct/azurerm/private-endpoint';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
+import { ApplicationInsights } from '../construct/azurerm/application-insights';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -66,6 +68,7 @@ export interface PlaygroundStackProps {
     location: string;
     sku: string | undefined;
   };
+  appConfiguration?: {};
   aiServices?: {
     location: string;
     publicNetworkAccess?: string;
@@ -167,6 +170,7 @@ export interface PlaygroundStackProps {
   privateEndpoint?: {};
   monitorDiagnosticSetting?: {};
   monitorWorkspace?: {};
+  applicationInsights?: {};
   dashboardGrafana?: {};
 }
 
@@ -228,6 +232,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
     location: 'japaneast',
     sku: 'PerGB2018',
   },
+  appConfiguration: {},
   aiServices: [
     {
       location: 'japaneast',
@@ -680,6 +685,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   },
   monitorDiagnosticSetting: {},
   monitorWorkspace: {},
+  applicationInsights: {},
   dashboardGrafana: {},
 };
 
@@ -800,6 +806,15 @@ export class PlaygroundStack extends TerraformStack {
           sku: props.logAnalyticsWorkspace?.sku,
         },
       );
+    }
+
+    if (props.appConfiguration) {
+      new AppConfiguration(this, `AppConfiguration`, {
+        name: `app-configuration-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+      });
     }
 
     let aiServicesArray: AiServices[] = [];
@@ -1148,6 +1163,16 @@ export class PlaygroundStack extends TerraformStack {
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
       });
+
+      if (props.applicationInsights && logAnalyticsWorkspace) {
+        new ApplicationInsights(this, `ApplicationInsights`, {
+          name: `app-insights-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          workspaceId: logAnalyticsWorkspace.logAnalyticsWorkspace.id,
+        });
+      }
 
       if (props.dashboardGrafana) {
         new DashboardGrafana(this, `DashboardGrafana`, {
