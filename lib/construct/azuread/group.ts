@@ -3,6 +3,7 @@ import { group } from '@cdktf/provider-azuread';
 
 export interface GroupProps {
   name: string;
+  description?: string;
 }
 
 export class Group extends Construct {
@@ -13,6 +14,7 @@ export class Group extends Construct {
     // Resources
     this.group = new group.Group(this, 'group', {
       displayName: props.name,
+      description: props.description,
       securityEnabled: true,
     });
   }
