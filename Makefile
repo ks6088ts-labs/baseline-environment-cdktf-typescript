@@ -74,7 +74,7 @@ synth: ## synthesize the given stacks
 		--output $(OUTPUT_DIR)/tf
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint build test synth lint-hcl diff ## run CI test
+ci-test: install-deps-dev lint build assets test synth lint-hcl diff ## run CI test
 
 .PHONY: diff
 diff: synth ## perform a diff (terraform plan) for the given stack
@@ -85,7 +85,6 @@ diff: synth ## perform a diff (terraform plan) for the given stack
 
 .PHONY: deploy
 deploy: ## create or update the given stacks
-	mkdir -p $(OUTPUT_DIR)/json
 	TF_BACKEND=$(TF_BACKEND) cdktf deploy \
 		--output $(OUTPUT_DIR)/json \
 		--auto-approve \
@@ -108,3 +107,9 @@ output: ## show the output of the given stacks
 .PHONY: update
 update: ## update dependencies
 	pnpm update --latest
+
+.PHONY: assets
+assets: ## update assets
+	cd assets/aws_lambda_function \
+		&& zip -r ../../lambda.zip . \
+		&& mkdir -p $(OUTPUT_DIR)/json/stacks/Dev-AwsPlaygroundStack && cp ../../lambda.zip $(OUTPUT_DIR)/json/stacks/Dev-AwsPlaygroundStack/
