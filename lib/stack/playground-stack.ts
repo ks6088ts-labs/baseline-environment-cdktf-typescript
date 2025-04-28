@@ -40,6 +40,7 @@ import { PrivateDnsZone } from '../construct/azurerm/private-dns-zone';
 import { PrivateEndpoint } from '../construct/azurerm/private-endpoint';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
+import { ApplicationInsights } from '../construct/azurerm/application-insights';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -167,6 +168,7 @@ export interface PlaygroundStackProps {
   privateEndpoint?: {};
   monitorDiagnosticSetting?: {};
   monitorWorkspace?: {};
+  applicationInsights?: {};
   dashboardGrafana?: {};
 }
 
@@ -680,6 +682,7 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   },
   monitorDiagnosticSetting: {},
   monitorWorkspace: {},
+  applicationInsights: {},
   dashboardGrafana: {},
 };
 
@@ -1148,6 +1151,16 @@ export class PlaygroundStack extends TerraformStack {
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
       });
+
+      if (props.applicationInsights && logAnalyticsWorkspace) {
+        new ApplicationInsights(this, `ApplicationInsights`, {
+          name: `app-insights-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          workspaceId: logAnalyticsWorkspace.logAnalyticsWorkspace.id,
+        });
+      }
 
       if (props.dashboardGrafana) {
         new DashboardGrafana(this, `DashboardGrafana`, {
