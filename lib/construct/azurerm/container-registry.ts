@@ -11,20 +11,25 @@ export interface ContainerRegistryProps {
 }
 
 export class ContainerRegistry extends Construct {
+  public readonly containerRegistry: containerRegistry.ContainerRegistry;
   constructor(scope: Construct, id: string, props: ContainerRegistryProps) {
     super(scope, id);
 
     // Resources
-    new containerRegistry.ContainerRegistry(this, 'container_registry', {
-      name: props.name,
-      location: props.location,
-      tags: props.tags,
-      resourceGroupName: props.resourceGroupName,
-      sku: props.sku,
-      adminEnabled: props.adminEnabled,
-      identity: {
-        type: 'SystemAssigned',
+    this.containerRegistry = new containerRegistry.ContainerRegistry(
+      this,
+      'container_registry',
+      {
+        name: props.name,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: props.resourceGroupName,
+        sku: props.sku,
+        adminEnabled: props.adminEnabled,
+        identity: {
+          type: 'SystemAssigned',
+        },
       },
-    });
+    );
   }
 }
