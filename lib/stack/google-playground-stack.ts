@@ -39,7 +39,7 @@ export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
   iamWorkloadIdentityPoolProvider: {
     name: 'github',
     attributeCondition:
-      'attribute.repository == "ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript"',
+      'attribute.repository == "ks6088ts-labs/baseline-environment-cdktf-typescript"',
     attributeMapping: {
       'google.subject': 'assertion.sub',
       'attribute.actor': 'assertion.actor',
@@ -56,7 +56,7 @@ export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
   serviceAccountIamMember: {
     role: 'roles/iam.workloadIdentityUser',
     github_full_repo_name:
-      'ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript',
+      'ks6088ts-labs/baseline-environment-cdktf-typescript',
   },
   projectIamMember: {
     role: 'roles/owner',

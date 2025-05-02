@@ -10,7 +10,7 @@ aws iam create-open-id-connect-provider \
     --thumbprint-list 1234567890123456789012345678901234567890
 
 # set environment variables
-export GITHUB_REPOSITORY="ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript"
+export GITHUB_REPOSITORY="ks6088ts-labs/baseline-environment-cdktf-typescript"
 export PROVIDER_URL=token.actions.githubusercontent.com
 export AWS_ID=$(aws sts get-caller-identity --query Account --output text)
 export AWS_ROLE_NAME=github-actions

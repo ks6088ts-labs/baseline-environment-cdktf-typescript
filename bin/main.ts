@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { App } from 'cdktf';
 import {
-  PlaygroundStack,
-  devPlaygroundStackProps,
-  prodPlaygroundStackProps,
-} from '../lib/stack/playground-stack';
+  AzurermPlaygroundStack,
+  devAzurermPlaygroundStackProps,
+  prodAzurermPlaygroundStackProps,
+} from '../lib/stack/azurerm-playground-stack';
 import {
   BackendStack,
   devBackendStackProps,
@@ -39,7 +39,11 @@ import {
 const app = new App();
 
 // Development Environment
-new PlaygroundStack(app, `Dev-PlaygroundStack`, devPlaygroundStackProps);
+new AzurermPlaygroundStack(
+  app,
+  `Dev-AzurermPlaygroundStack`,
+  devAzurermPlaygroundStackProps,
+);
 new BackendStack(app, `Dev-BackendStack`, devBackendStackProps);
 new AzureadStack(app, `Dev-AzureadStack`, devAzureadStackProps);
 new GithubStack(app, `Dev-GithubStack`, devGithubStackProps);
@@ -60,7 +64,11 @@ new GooglePlaygroundStack(
 );
 
 // Production Environment
-new PlaygroundStack(app, `Prod-PlaygroundStack`, prodPlaygroundStackProps);
+new AzurermPlaygroundStack(
+  app,
+  `Prod-AzurermPlaygroundStack`,
+  prodAzurermPlaygroundStackProps,
+);
 new BackendStack(app, `Prod-BackendStack`, prodBackendStackProps);
 new AzureadStack(app, `Prod-AzureadStack`, prodAzureadStackProps);
 new GithubStack(app, `Prod-GithubStack`, prodGithubStackProps);

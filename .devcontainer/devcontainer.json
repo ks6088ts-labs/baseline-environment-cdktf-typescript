@@ -1,21 +1,16 @@
 {
-    "name": "ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
-    "features": {},
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "ms-azuretools.azure-dev",
-                "esbenp.prettier-vscode"
-            ]
-        }
-    },
-    "forwardPorts": [
-        50505
-    ],
-    "postCreateCommand": "bash ./scripts/install-deps-dev.sh",
-    "remoteUser": "vscode",
-    "hostRequirements": {
-        "memory": "8gb"
+  "name": "ks6088ts-labs/baseline-environment-cdktf-typescript",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-azuretools.azure-dev", "esbenp.prettier-vscode"]
     }
+  },
+  "forwardPorts": [50505],
+  "postCreateCommand": "bash ./scripts/install-deps-dev.sh",
+  "remoteUser": "vscode",
+  "hostRequirements": {
+    "memory": "8gb"
+  }
 }

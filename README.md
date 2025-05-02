@@ -1,7 +1,7 @@
-[![test](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/test.yaml?query=branch%3Amain)
-[![release](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/release.yaml/badge.svg)](https://github.com/ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript/actions/workflows/release.yaml)
+[![test](https://github.com/ks6088ts-labs/baseline-environment-cdktf-typescript/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/ks6088ts-labs/baseline-environment-cdktf-typescript/actions/workflows/test.yaml?query=branch%3Amain)
+[![release](https://github.com/ks6088ts-labs/baseline-environment-cdktf-typescript/actions/workflows/release.yaml/badge.svg)](https://github.com/ks6088ts-labs/baseline-environment-cdktf-typescript/actions/workflows/release.yaml)
 
-# baseline-environment-on-azure-cdktf-typescript
+# baseline-environment-cdktf-typescript
 
 Baseline Environment on Azure in CDK for Terraform using TypeScript
 
