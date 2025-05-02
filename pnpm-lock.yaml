@@ -20,6 +20,9 @@ importers:
       '@cdktf/provider-github':
         specifier: ^14.6.0
         version: 14.6.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+      '@cdktf/provider-google':
+        specifier: ^14.32.0
+        version: 14.32.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       cdktf:
         specifier: ^0.20.12
         version: 0.20.12(constructs@10.4.2)
@@ -275,6 +278,13 @@ packages:
 
   '@cdktf/provider-github@14.6.0':
     resolution: {integrity: sha512-V23aYM7b/sndHm7NcDzJhqUaBssAy6PzQT53PkwAqiA8DNbJFszIoKC2da8KUu8Ohdduwq93WsLP6umUJjkDvA==}
+    engines: {node: '>= 18.12.0'}
+    peerDependencies:
+      cdktf: ^0.20.0
+      constructs: ^10.3.0
+
+  '@cdktf/provider-google@14.32.0':
+    resolution: {integrity: sha512-mgH18XD8eJ9kDKzlIxOZSXeWfkI4H6SaijDZa1wmEQGj6ZgwsstH/6yF6jimsfIqjh1Y+sxVHnSjt0u8wwHAOQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
@@ -2459,8 +2469,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.9.0-dev.20250428:
-    resolution: {integrity: sha512-/6K3WJlc0zjdAgLJMpU40jIxBIQ4fpAfE3o35EsPBTaqvDh9X6rY+c0NBYpYb/3UG0a2wgSr0yD0sS1l6Km7Fw==}
+  typescript@5.9.0-dev.20250501:
+    resolution: {integrity: sha512-oVdMnDZTyAKb0Bv9Lx5Uiy2XrHWeN6nHwekRxElXs6OJpQK1oPTd2uaL7xVJUD5CiVTlQGQQeCXJQZFrXmrgQw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2987,6 +2997,11 @@ snapshots:
       - supports-color
 
   '@cdktf/provider-github@14.6.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
+    dependencies:
+      cdktf: 0.20.12(constructs@10.4.2)
+      constructs: 10.4.2
+
+  '@cdktf/provider-google@14.32.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
@@ -3978,7 +3993,7 @@ snapshots:
     dependencies:
       semver: 7.7.1
       shelljs: 0.8.5
-      typescript: 5.9.0-dev.20250428
+      typescript: 5.9.0-dev.20250501
 
   dunder-proto@1.0.1:
     dependencies:
@@ -5651,7 +5666,7 @@ snapshots:
 
   typescript@5.8.3: {}
 
-  typescript@5.9.0-dev.20250428: {}
+  typescript@5.9.0-dev.20250501: {}
 
   undici-types@5.26.5: {}
 
