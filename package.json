@@ -1,5 +1,5 @@
 {
-  "name": "baseline-environment-on-azure-cdktf-typescript",
+  "name": "baseline-environment-cdktf-typescript",
   "version": "1.0.0",
   "main": "main.js",
   "types": "main.ts",

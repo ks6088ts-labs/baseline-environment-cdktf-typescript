@@ -51,7 +51,7 @@ export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
     providerUrl: 'token.actions.githubusercontent.com',
     awsId: '222412934037',
     githubOrganization: 'ks6088ts-labs',
-    githubRepository: 'baseline-environment-on-azure-cdktf-typescript',
+    githubRepository: 'baseline-environment-cdktf-typescript',
   },
   iamRolePolicyAttachment: {},
   lambdaFunction: {

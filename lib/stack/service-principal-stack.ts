@@ -26,9 +26,9 @@ export interface ServicePrincipalStackProps {
 }
 
 export const devServicePrincipalStackProps: ServicePrincipalStackProps = {
-  name: 'baseline-environment-on-azure-cdktf-typescript_dev',
+  name: 'baseline-environment-cdktf-typescript_dev',
   githubOrganization: 'ks6088ts-labs',
-  githubRepository: 'baseline-environment-on-azure-cdktf-typescript',
+  githubRepository: 'baseline-environment-cdktf-typescript',
   githubEnvironment: 'dev',
   resourceAccess: [
     {
@@ -43,9 +43,9 @@ export const devServicePrincipalStackProps: ServicePrincipalStackProps = {
 };
 
 export const prodServicePrincipalStackProps: ServicePrincipalStackProps = {
-  name: 'baseline-environment-on-azure-cdktf-typescript_prod',
+  name: 'baseline-environment-cdktf-typescript_prod',
   githubOrganization: 'ks6088ts-labs',
-  githubRepository: 'baseline-environment-on-azure-cdktf-typescript',
+  githubRepository: 'baseline-environment-cdktf-typescript',
   githubEnvironment: 'prod',
   resourceAccess: [
     {

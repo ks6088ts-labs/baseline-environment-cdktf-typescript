@@ -17,7 +17,7 @@ export interface GithubStackProps {
 
 export const devGithubStackProps: GithubStackProps = {
   createRepository: false,
-  repositoryName: 'baseline-environment-on-azure-cdktf-typescript',
+  repositoryName: 'baseline-environment-cdktf-typescript',
   visibility: 'public',
   environment: 'dev',
   organization: 'ks6088ts-labs',
@@ -31,7 +31,7 @@ export const devGithubStackProps: GithubStackProps = {
 
 export const prodGithubStackProps: GithubStackProps = {
   createRepository: false,
-  repositoryName: 'baseline-environment-on-azure-cdktf-typescript',
+  repositoryName: 'baseline-environment-cdktf-typescript',
   environment: 'prod',
   organization: 'ks6088ts-labs',
 };
