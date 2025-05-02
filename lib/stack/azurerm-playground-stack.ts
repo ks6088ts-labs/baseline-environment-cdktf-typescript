@@ -778,7 +778,7 @@ export const prodAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     vmSize: 'Standard_DS2_v2',
   },
   bastionHost: {
-    sku: 'Developer',
+    sku: 'Basic',
   },
   privateDnsZone: {},
   privateEndpoint: {},
