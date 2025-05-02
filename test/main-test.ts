@@ -14,6 +14,10 @@ import {
   AwsPlaygroundStack,
   devAwsPlaygroundStackProps,
 } from '../lib/stack/aws-playground-stack';
+import {
+  GooglePlaygroundStack,
+  devGooglePlaygroundStackProps,
+} from '../lib/stack/google-playground-stack';
 
 describe('Unit testing using assertions', () => {
   it('Test PlaygroundStack', () => {
@@ -85,6 +89,20 @@ describe('Unit testing using assertions', () => {
 
     // FIXME: TORIAEZU
     expect(synthesized).toMatch(/"aws"/);
+    console.log(synthesized);
+  });
+
+  it('Test GooglePlaygroundStack', () => {
+    const app = Testing.app();
+    const stack = new GooglePlaygroundStack(
+      app,
+      'googlePlaygroundStack',
+      devGooglePlaygroundStackProps,
+    );
+    const synthesized = Testing.synth(stack);
+
+    // FIXME: TORIAEZU
+    expect(synthesized).toMatch(/"google"/);
     console.log(synthesized);
   });
 });

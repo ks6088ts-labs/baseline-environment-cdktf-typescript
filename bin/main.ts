@@ -30,6 +30,11 @@ import {
   devAwsPlaygroundStackProps,
   prodAwsPlaygroundStackProps,
 } from '../lib/stack/aws-playground-stack';
+import {
+  GooglePlaygroundStack,
+  devGooglePlaygroundStackProps,
+  prodGooglePlaygroundStackProps,
+} from '../lib/stack/google-playground-stack';
 
 const app = new App();
 
@@ -48,6 +53,11 @@ new AwsPlaygroundStack(
   `Dev-AwsPlaygroundStack`,
   devAwsPlaygroundStackProps,
 );
+new GooglePlaygroundStack(
+  app,
+  `Dev-GooglePlaygroundStack`,
+  devGooglePlaygroundStackProps,
+);
 
 // Production Environment
 new PlaygroundStack(app, `Prod-PlaygroundStack`, prodPlaygroundStackProps);
@@ -63,6 +73,11 @@ new AwsPlaygroundStack(
   app,
   `Prod-AwsPlaygroundStack`,
   prodAwsPlaygroundStackProps,
+);
+new GooglePlaygroundStack(
+  app,
+  `Prod-GooglePlaygroundStack`,
+  prodGooglePlaygroundStackProps,
 );
 
 app.synth();
