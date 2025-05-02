@@ -902,7 +902,7 @@ export class AzurermPlaygroundStack extends TerraformStack {
         this,
         `KubernetesCluster`,
         {
-          name: `k8s-${props.name}`,
+          name: convertName(`k8s-${props.name}`, 80),
           location: props.location,
           tags: props.tags,
           resourceGroupName: resourceGroup.resourceGroup.name,
