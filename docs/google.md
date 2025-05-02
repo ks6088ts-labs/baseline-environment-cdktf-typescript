@@ -11,7 +11,7 @@ gcloud auth application-default login
 
 # FIXME: Not sure if these are needed
 export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/application_default_credentials.json
-export GOOGLE_PROJECT=your-project-id
+export GOOGLE_PROJECT=$(cat ~/.config/gcloud/application_default_credentials.json | jq -r .quota_project_id)
 
 # Deploy the stack
 make deploy STACKS=Dev-GooglePlaygroundStack TF_BACKEND=azurerm

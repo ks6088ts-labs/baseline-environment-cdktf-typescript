@@ -5,6 +5,7 @@ import { iamWorkloadIdentityPoolProvider } from '@cdktf/provider-google';
 
 import { IamWorkloadIdentityPool } from '../construct/google/iam-workload-identity-pool';
 import { IamWorkloadIdentityPoolProvider } from '../construct/google/iam-workload-identity-pool-provider';
+import { ServiceAccount } from '../construct/google/service-account';
 import { getRandomIdentifier, createBackend, convertName } from '../utils';
 
 export interface GooglePlaygroundStackProps {
@@ -16,6 +17,7 @@ export interface GooglePlaygroundStackProps {
     attributeMapping: iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProviderConfig['attributeMapping'];
     oidc: iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProviderConfig['oidc'];
   };
+  serviceAccount?: {};
 }
 
 export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
@@ -36,6 +38,9 @@ export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
     oidc: {
       issuerUri: 'https://token.actions.githubusercontent.com',
     },
+  },
+  serviceAccount: {
+    name: getRandomIdentifier('Dev-GooglePlaygroundServiceAccount'),
   },
 };
 
@@ -80,6 +85,12 @@ export class GooglePlaygroundStack extends TerraformStack {
           },
         );
       }
+    }
+
+    if (props.serviceAccount) {
+      new ServiceAccount(this, 'ServiceAccount', {
+        name: convertName(props.name, 32),
+      });
     }
   }
 }
