@@ -3,7 +3,7 @@
 
 # baseline-environment-cdktf-typescript
 
-Baseline Environment on Azure in CDK for Terraform using TypeScript
+Baseline Environment in CDK for Terraform using TypeScript
 
 ## Prerequisites
 

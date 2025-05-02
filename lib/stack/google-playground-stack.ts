@@ -34,7 +34,7 @@ export interface GooglePlaygroundStackProps {
 export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
   name: `Dev-GooglePlaygroundStack-${getRandomIdentifier('Dev-GooglePlaygroundStack')}`,
   iamWorkloadIdentityPool: {
-    name: `Dev-GooglePlaygroundPool-${getRandomIdentifier('Dev-GooglePlaygroundPool')}`,
+    name: `wid${getRandomIdentifier('Dev-GooglePlaygroundStack')}`,
   },
   iamWorkloadIdentityPoolProvider: {
     name: 'github',
@@ -50,9 +50,7 @@ export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
       issuerUri: 'https://token.actions.githubusercontent.com',
     },
   },
-  serviceAccount: {
-    name: getRandomIdentifier('Dev-GooglePlaygroundServiceAccount'),
-  },
+  serviceAccount: {},
   serviceAccountIamMember: {
     role: 'roles/iam.workloadIdentityUser',
     github_full_repo_name:
@@ -85,7 +83,7 @@ export class GooglePlaygroundStack extends TerraformStack {
         this,
         'IamWorkloadIdentityPool',
         {
-          name: convertName(props.name, 32),
+          name: convertName(props.iamWorkloadIdentityPool.name, 32),
         },
       );
 

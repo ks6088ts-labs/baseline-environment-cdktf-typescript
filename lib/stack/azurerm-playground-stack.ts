@@ -977,7 +977,7 @@ export class AzurermPlaygroundStack extends TerraformStack {
 
     if (props.aiFoundry && storageAccount && keyVault) {
       const aiFoundry = new AiFoundry(this, `AiFoundry`, {
-        name: `af-${props.name}`,
+        name: convertName(`af-${props.name}`, 33),
         location: props.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
@@ -987,7 +987,7 @@ export class AzurermPlaygroundStack extends TerraformStack {
 
       if (props.aiFoundryProject) {
         new AiFoundryProject(this, `AiFoundryProject`, {
-          name: `afp-${props.name}`,
+          name: convertName(`afp-${props.name}`, 32),
           location: props.location,
           tags: props.tags,
           aiServicesHubId: aiFoundry.aiFoundry.id,
@@ -1258,7 +1258,7 @@ export class AzurermPlaygroundStack extends TerraformStack {
 
     if (props.monitorWorkspace) {
       const monitorWorkspace = new MonitorWorkspace(this, `MonitorWorkspace`, {
-        name: `monitor-workspace-${props.name}`,
+        name: convertName(`mw-${props.name}`, 44),
         location: props.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
