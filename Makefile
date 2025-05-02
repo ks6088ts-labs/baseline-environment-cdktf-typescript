@@ -33,7 +33,7 @@ info: ## show information
 	@echo "TENANT_ID: $(TENANT_ID)"
 
 .PHONY: install-deps-dev
-install-deps-dev: ## install dependencies for development
+install-deps-dev: assets ## install dependencies for development
 	@# https://pnpm.io/installation
 	@which pnpm || npm install -g pnpm
 	@# https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install
