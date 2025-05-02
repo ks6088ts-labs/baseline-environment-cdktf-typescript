@@ -2,7 +2,7 @@
 
 ## Connect to VM with Bastion
 
-From Azure Portal, go to VM on Prod-PlaygroundStack and connect via Bastion with user name `azureuser` and password `P@ssw0rd1234`. (see [virtual-machine.ts](../lib/construct/azurerm/virtual-machine.ts))
+From Azure Portal, go to VM on Prod-AzurermPlaygroundStack and connect via Bastion with user name `azureuser` and password `P@ssw0rd1234`. (see [virtual-machine.ts](../lib/construct/azurerm/virtual-machine.ts))
 
 ## Call Azure OpenAI API from virtual machine with user-assigned managed identity
 
@@ -19,7 +19,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 ifconfig
 
 # (Optional) Get the private IP address of the Azure OpenAI resource
-nslookup ai-services-prod-playgroundstack-pw9gp-0.openai.azure.com
+nslookup ai-services-prod-azurermplaygroundstack-pw9gp-0.openai.azure.com
 
 # Set up a Python virtual environment
 python3 -m venv .venv
@@ -39,7 +39,7 @@ For more information, see the following links:
 
 ```shell
 # Set the environment variable for the Azure OpenAI resource
-export AZURE_OPENAI_ENDPOINT="https://ai-services-prod-playgroundstack-pw9gp-0.openai.azure.com/"
+export AZURE_OPENAI_ENDPOINT="https://ai-services-prod-azurermplaygroundstack-pw9gp-0.openai.azure.com/"
 export AZURE_CLIENT_ID="40ef8b37-85e4-45ae-a1a7-54ee36fe30e4"
 
 # Start the Python interpreter

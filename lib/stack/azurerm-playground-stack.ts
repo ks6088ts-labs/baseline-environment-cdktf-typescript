@@ -58,7 +58,7 @@ interface AiServicesDeployment {
   };
 }
 
-export interface PlaygroundStackProps {
+export interface AzurermPlaygroundStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -223,8 +223,8 @@ const configJson = JSON.stringify({
   disabled: false,
 });
 
-export const devPlaygroundStackProps: PlaygroundStackProps = {
-  name: `Dev-PlaygroundStack-${getRandomIdentifier('Dev-PlaygroundStack')}`,
+export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
+  name: `Dev-AzurermPlaygroundStack-${getRandomIdentifier('Dev-AzurermPlaygroundStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -692,8 +692,8 @@ export const devPlaygroundStackProps: PlaygroundStackProps = {
   dashboardGrafana: {},
 };
 
-export const prodPlaygroundStackProps: PlaygroundStackProps = {
-  name: `Prod-PlaygroundStack-${getRandomIdentifier('Prod-PlaygroundStack')}`,
+export const prodAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
+  name: `Prod-AzurermPlaygroundStack-${getRandomIdentifier('Prod-AzurermPlaygroundStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -784,8 +784,12 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
   privateEndpoint: {},
 };
 
-export class PlaygroundStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: PlaygroundStackProps) {
+export class AzurermPlaygroundStack extends TerraformStack {
+  constructor(
+    scope: Construct,
+    id: string,
+    props: AzurermPlaygroundStackProps,
+  ) {
     super(scope, id);
 
     // Backend

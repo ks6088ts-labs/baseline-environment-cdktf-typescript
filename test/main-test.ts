@@ -1,8 +1,8 @@
 import { Testing } from 'cdktf';
 import {
-  PlaygroundStack,
-  devPlaygroundStackProps,
-} from '../lib/stack/playground-stack';
+  AzurermPlaygroundStack,
+  devAzurermPlaygroundStackProps,
+} from '../lib/stack/azurerm-playground-stack';
 import { BackendStack, devBackendStackProps } from '../lib/stack/backend-stack';
 import { AzureadStack, devAzureadStackProps } from '../lib/stack/azuread-stack';
 import { GithubStack, devGithubStackProps } from '../lib/stack/github-stack';
@@ -20,12 +20,12 @@ import {
 } from '../lib/stack/google-playground-stack';
 
 describe('Unit testing using assertions', () => {
-  it('Test PlaygroundStack', () => {
+  it('Test AzurermPlaygroundStack', () => {
     const app = Testing.app();
-    const stack = new PlaygroundStack(
+    const stack = new AzurermPlaygroundStack(
       app,
-      'playgroundStack',
-      devPlaygroundStackProps,
+      'azurermPlaygroundStack',
+      devAzurermPlaygroundStackProps,
     );
     const synthesized = Testing.synth(stack);
 

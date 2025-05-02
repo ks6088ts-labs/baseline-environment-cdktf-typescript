@@ -14,8 +14,8 @@ STACKS ?= \
 	Dev-AzureadStack \
 	Dev-BackendStack \
 	Dev-GithubStack \
-	Dev-PlaygroundStack \
 	Dev-ServicePrincipalStack \
+	Dev-AzurermPlaygroundStack \
 	Dev-AwsPlaygroundStack \
 	Dev-GooglePlaygroundStack \
 
