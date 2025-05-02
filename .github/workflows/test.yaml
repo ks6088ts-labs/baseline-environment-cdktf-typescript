@@ -87,5 +87,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: Run CI tests with backend=${{ github.event.inputs.tfBackend || 'local' }}
         shell: bash
+        # W/A: Increase memory limit for Node.js
+        env:
+          NODE_OPTIONS: '--max_old_space_size=8192'
         run: |
           make ci-test
