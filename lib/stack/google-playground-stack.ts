@@ -6,6 +6,7 @@ import { iamWorkloadIdentityPoolProvider } from '@cdktf/provider-google';
 import { IamWorkloadIdentityPool } from '../construct/google/iam-workload-identity-pool';
 import { IamWorkloadIdentityPoolProvider } from '../construct/google/iam-workload-identity-pool-provider';
 import { ServiceAccount } from '../construct/google/service-account';
+import { ProjectIamMember } from '../construct/google/project-iam-member';
 import { getRandomIdentifier, createBackend, convertName } from '../utils';
 
 export interface GooglePlaygroundStackProps {
@@ -18,6 +19,9 @@ export interface GooglePlaygroundStackProps {
     oidc: iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProviderConfig['oidc'];
   };
   serviceAccount?: {};
+  projectIamMember?: {
+    role: string;
+  };
 }
 
 export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
@@ -41,6 +45,9 @@ export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
   },
   serviceAccount: {
     name: getRandomIdentifier('Dev-GooglePlaygroundServiceAccount'),
+  },
+  projectIamMember: {
+    role: 'roles/owner',
   },
 };
 
@@ -88,9 +95,16 @@ export class GooglePlaygroundStack extends TerraformStack {
     }
 
     if (props.serviceAccount) {
-      new ServiceAccount(this, 'ServiceAccount', {
+      const serviceAccount = new ServiceAccount(this, 'ServiceAccount', {
         name: convertName(props.name, 32),
       });
+      if (props.projectIamMember) {
+        new ProjectIamMember(this, 'ProjectIamMember', {
+          role: props.projectIamMember.role,
+          project: serviceAccount.serviceAccount.project,
+          member: `serviceAccount:${serviceAccount.serviceAccount.email}`,
+        });
+      }
     }
   }
 }
