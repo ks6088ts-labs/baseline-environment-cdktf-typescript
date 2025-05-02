@@ -17,6 +17,7 @@ STACKS ?= \
 	Dev-PlaygroundStack \
 	Dev-ServicePrincipalStack \
 	Dev-AwsPlaygroundStack \
+	Dev-GooglePlaygroundStack \
 
 .PHONY: help
 help:
