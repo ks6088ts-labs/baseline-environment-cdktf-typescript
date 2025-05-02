@@ -166,7 +166,9 @@ export interface PlaygroundStackProps {
   virtualMachine?: {
     vmSize: string;
   };
-  bastionHost?: {};
+  bastionHost?: {
+    sku: string;
+  };
   privateDnsZone?: {};
   privateEndpoint?: {};
   monitorDiagnosticSetting?: {};
@@ -775,7 +777,9 @@ export const prodPlaygroundStackProps: PlaygroundStackProps = {
   virtualMachine: {
     vmSize: 'Standard_DS2_v2',
   },
-  bastionHost: {},
+  bastionHost: {
+    sku: 'Developer',
+  },
   privateDnsZone: {},
   privateEndpoint: {},
 };
@@ -1124,6 +1128,7 @@ export class PlaygroundStack extends TerraformStack {
         location: props.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
+        sku: props.bastionHost.sku,
         subnetId: subnet.subnets[1].id,
       });
     }

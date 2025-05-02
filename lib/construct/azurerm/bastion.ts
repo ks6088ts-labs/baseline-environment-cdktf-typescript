@@ -6,6 +6,7 @@ interface BastionHostProps {
   location: string;
   tags?: { [key: string]: string };
   resourceGroupName: string;
+  sku: string;
   subnetId: string;
 }
 
@@ -28,6 +29,7 @@ export class BastionHost extends Construct {
       location: props.location,
       tags: props.tags,
       resourceGroupName: props.resourceGroupName,
+      sku: props.sku,
       ipConfiguration: {
         name: `${props.name}-ip-config`,
         subnetId: props.subnetId,
