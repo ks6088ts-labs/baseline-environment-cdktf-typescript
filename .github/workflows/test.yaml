@@ -52,6 +52,9 @@ jobs:
       # AWS
       AWS_ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
       AWS_SESSION_NAME: gh-oidc-${{ github.run_id }}-${{ github.run_attempt }}
+      # Google
+      GOOGLE_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+      GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       # Input
       AWS_REGION: ${{ github.event.inputs.awsRegion || 'ap-northeast-1' }}
       TF_BACKEND: ${{ github.event.inputs.tfBackend || 'local' }}
@@ -79,12 +82,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      - name: Run CI tests with AWS region=${{ github.event.inputs.awsRegion || 'ap-northeast-1' }}
+      - name: Authenticate to AWS with region=${{ github.event.inputs.awsRegion || 'ap-northeast-1' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_ROLE_ARN }}
           role-session-name: ${{ env.AWS_SESSION_NAME }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: 'Authenticate to GCP'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       - name: Run CI tests with backend=${{ github.event.inputs.tfBackend || 'local' }}
         shell: bash
         # W/A: Increase memory limit for Node.js

@@ -5,16 +5,29 @@ import { iamWorkloadIdentityPoolProvider } from '@cdktf/provider-google';
 
 import { IamWorkloadIdentityPool } from '../construct/google/iam-workload-identity-pool';
 import { IamWorkloadIdentityPoolProvider } from '../construct/google/iam-workload-identity-pool-provider';
+import { ServiceAccount } from '../construct/google/service-account';
+import { ServiceAccountIamMember } from '../construct/google/service-account-iam-member';
+import { ProjectIamMember } from '../construct/google/project-iam-member';
 import { getRandomIdentifier, createBackend, convertName } from '../utils';
 
 export interface GooglePlaygroundStackProps {
   name: string;
-  iamWorkloadIdentityPool?: {};
+  iamWorkloadIdentityPool?: {
+    name: string;
+  };
   iamWorkloadIdentityPoolProvider?: {
     name: string;
     attributeCondition: iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProviderConfig['attributeCondition'];
     attributeMapping: iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProviderConfig['attributeMapping'];
     oidc: iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProviderConfig['oidc'];
+  };
+  serviceAccount?: {};
+  serviceAccountIamMember?: {
+    role: string;
+    github_full_repo_name: string;
+  };
+  projectIamMember?: {
+    role: string;
   };
 }
 
@@ -37,6 +50,17 @@ export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
       issuerUri: 'https://token.actions.githubusercontent.com',
     },
   },
+  serviceAccount: {
+    name: getRandomIdentifier('Dev-GooglePlaygroundServiceAccount'),
+  },
+  serviceAccountIamMember: {
+    role: 'roles/iam.workloadIdentityUser',
+    github_full_repo_name:
+      'ks6088ts-labs/baseline-environment-on-azure-cdktf-typescript',
+  },
+  projectIamMember: {
+    role: 'roles/owner',
+  },
 };
 
 export const prodGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
@@ -54,8 +78,10 @@ export class GooglePlaygroundStack extends TerraformStack {
     new provider.GoogleProvider(this, 'google', {});
 
     // Resources
+    let iamWorkloadIdentityPool: IamWorkloadIdentityPool | undefined =
+      undefined;
     if (props.iamWorkloadIdentityPool) {
-      const iamWorkloadIdentityPool = new IamWorkloadIdentityPool(
+      iamWorkloadIdentityPool = new IamWorkloadIdentityPool(
         this,
         'IamWorkloadIdentityPool',
         {
@@ -79,6 +105,28 @@ export class GooglePlaygroundStack extends TerraformStack {
             oidc: props.iamWorkloadIdentityPoolProvider.oidc,
           },
         );
+      }
+    }
+
+    if (props.serviceAccount) {
+      const serviceAccount = new ServiceAccount(this, 'ServiceAccount', {
+        name: convertName(props.name, 32),
+      });
+
+      if (props.serviceAccountIamMember && iamWorkloadIdentityPool) {
+        new ServiceAccountIamMember(this, 'ServiceAccountIamMember', {
+          serviceAccountId: serviceAccount.serviceAccount.id,
+          role: props.serviceAccountIamMember.role,
+          member: `principalSet://iam.googleapis.com/${iamWorkloadIdentityPool.iamWorkloadIdentityPool.name}/attribute.repository/${props.serviceAccountIamMember.github_full_repo_name}`,
+        });
+      }
+
+      if (props.projectIamMember) {
+        new ProjectIamMember(this, 'ProjectIamMember', {
+          role: props.projectIamMember.role,
+          project: serviceAccount.serviceAccount.project,
+          member: `serviceAccount:${serviceAccount.serviceAccount.email}`,
+        });
       }
     }
   }
