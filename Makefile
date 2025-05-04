@@ -7,6 +7,12 @@ SUBSCRIPTION_ID ?= $(shell az account show --query id --output tsv)
 SUBSCRIPTION_NAME ?= $(shell az account show --query name --output tsv)
 TENANT_ID ?= $(shell az account show --query tenantId --output tsv)
 
+# AWS CLI
+AWS_ID ?= $(shell aws sts get-caller-identity --query Account --output text)
+
+# Google CLI
+GOOGLE_PROJECT_ID ?= $(shell gcloud config get-value project)
+
 # Backend: azurerm, local
 OUTPUT_DIR ?= $(PWD)/cdktf.out
 TF_BACKEND ?= local
@@ -31,6 +37,8 @@ info: ## show information
 	@echo "SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)"
 	@echo "SUBSCRIPTION_NAME: $(SUBSCRIPTION_NAME)"
 	@echo "TENANT_ID: $(TENANT_ID)"
+	@echo "AWS_ID: $(AWS_ID)"
+	@echo "GOOGLE_PROJECT_ID: $(GOOGLE_PROJECT_ID)"
 
 .PHONY: install-deps-dev
 install-deps-dev: assets ## install dependencies for development

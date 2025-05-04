@@ -22,10 +22,19 @@ export const devGithubStackProps: GithubStackProps = {
   environment: 'dev',
   organization: 'ks6088ts-labs',
   secrets: {
+    // Azure
     ARM_CLIENT_ID: 'your-client-id',
     ARM_SUBSCRIPTION_ID: 'your-subscription-id',
     ARM_TENANT_ID: 'your-tenant-id',
     ARM_USE_OIDC: 'true',
+    // AWS
+    AWS_ID: 'your-aws-id',
+    AWS_ROLE_NAME: 'your-role-name',
+    // Google
+    GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
+      'projects/PROJECT_ID/locations/global/workloadIdentityPools/WORKLOAD_IDENTITY_POOL_ID/providers/PROVIDER_ID',
+    GOOGLE_SERVICE_ACCOUNT:
+      'SERVICE_ACCOUNT_NAME@PROJECT_ID.iam.gserviceaccount.com',
   },
 };
 
