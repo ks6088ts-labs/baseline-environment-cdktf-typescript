@@ -1,6 +1,9 @@
 import { Construct } from 'constructs';
 import { TerraformStack } from 'cdktf';
-import { provider as azureadProvider } from '@cdktf/provider-azuread';
+import {
+  provider as azureadProvider,
+  dataAzureadDomains,
+} from '@cdktf/provider-azuread';
 import {
   provider as azurermProvider,
   dataAzurermSubscription,
@@ -14,6 +17,7 @@ import { createBackend } from '../utils';
 export interface AzureadPlaygroundStackProps {
   user?: {
     name: string;
+    password: string;
   };
   group?: {
     name: string;
@@ -25,6 +29,7 @@ export interface AzureadPlaygroundStackProps {
 export const devAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {
   user: {
     name: 'ks6088ts',
+    password: 'P@ssw0rd!',
   },
   group: {
     name: 'dev-developers',
@@ -43,6 +48,11 @@ export class AzureadPlaygroundStack extends TerraformStack {
   ) {
     super(scope, id);
 
+    // Datasources
+    const domains = new dataAzureadDomains.DataAzureadDomains(this, 'domains', {
+      onlyInitial: true,
+    });
+
     // Backend
     createBackend(this, id);
 
@@ -57,6 +67,8 @@ export class AzureadPlaygroundStack extends TerraformStack {
     if (props.user) {
       user = new User(this, 'User', {
         name: props.user.name,
+        userPrincipalName: `${props.user.name}@${domains.domains.get(0).domainName}`,
+        password: props.user.password,
       });
     }
 
