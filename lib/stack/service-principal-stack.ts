@@ -59,6 +59,11 @@ export const prodServicePrincipalStackProps: ServicePrincipalStackProps = {
 };
 
 export class ServicePrincipalStack extends TerraformStack {
+  public readonly armClientId: string;
+  public readonly armSubscriptionId: string;
+  public readonly armTenantId: string;
+  public readonly armUseOidc: string;
+
   constructor(scope: Construct, id: string, props: ServicePrincipalStackProps) {
     super(scope, id);
 
@@ -144,5 +149,10 @@ export class ServicePrincipalStack extends TerraformStack {
         subject: `repo:${props.githubOrganization}/${props.githubRepository}:environment:${props.githubEnvironment}`,
       },
     );
+
+    this.armClientId = application.application.clientId;
+    this.armSubscriptionId = subscription.subscriptionId;
+    this.armTenantId = clientConfig.tenantId;
+    this.armUseOidc = 'true';
   }
 }

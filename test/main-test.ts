@@ -8,7 +8,7 @@ import {
   AzureadPlaygroundStack,
   devAzureadPlaygroundStackProps,
 } from '../lib/stack/azuread-playground-stack';
-import { GithubStack, devGithubStackProps } from '../lib/stack/github-stack';
+import { GithubStack, prodGithubStackProps } from '../lib/stack/github-stack';
 import {
   ServicePrincipalStack,
   devServicePrincipalStackProps,
@@ -63,7 +63,7 @@ describe('Unit testing using assertions', () => {
 
   it('Test GithubStack', () => {
     const app = Testing.app();
-    const stack = new GithubStack(app, 'githubStack', devGithubStackProps);
+    const stack = new GithubStack(app, 'githubStack', prodGithubStackProps);
     const synthesized = Testing.synth(stack);
 
     // FIXME: TORIAEZU

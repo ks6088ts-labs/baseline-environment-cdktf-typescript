@@ -66,7 +66,13 @@ export const prodGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
 };
 
 export class GooglePlaygroundStack extends TerraformStack {
+  public readonly googleWorkloadIdentityProvider: string;
+  public readonly googleServiceAccount: string;
+
   constructor(scope: Construct, id: string, props: GooglePlaygroundStackProps) {
+    let googleWorkloadIdentityProvider: string | undefined = undefined;
+    let googleServiceAccount: string | undefined = undefined;
+
     super(scope, id);
 
     // Backend
@@ -88,21 +94,24 @@ export class GooglePlaygroundStack extends TerraformStack {
       );
 
       if (props.iamWorkloadIdentityPoolProvider) {
-        new IamWorkloadIdentityPoolProvider(
-          this,
-          'IamWorkloadIdentityPoolProvider',
-          {
-            name: props.iamWorkloadIdentityPoolProvider.name,
-            workloadIdentityPoolId:
-              iamWorkloadIdentityPool.iamWorkloadIdentityPool
-                .workloadIdentityPoolId,
-            attributeCondition:
-              props.iamWorkloadIdentityPoolProvider.attributeCondition,
-            attributeMapping:
-              props.iamWorkloadIdentityPoolProvider.attributeMapping,
-            oidc: props.iamWorkloadIdentityPoolProvider.oidc,
-          },
-        );
+        const iamWorkloadIdentityPoolProvider =
+          new IamWorkloadIdentityPoolProvider(
+            this,
+            'IamWorkloadIdentityPoolProvider',
+            {
+              name: props.iamWorkloadIdentityPoolProvider.name,
+              workloadIdentityPoolId:
+                iamWorkloadIdentityPool.iamWorkloadIdentityPool
+                  .workloadIdentityPoolId,
+              attributeCondition:
+                props.iamWorkloadIdentityPoolProvider.attributeCondition,
+              attributeMapping:
+                props.iamWorkloadIdentityPoolProvider.attributeMapping,
+              oidc: props.iamWorkloadIdentityPoolProvider.oidc,
+            },
+          );
+        googleWorkloadIdentityProvider =
+          iamWorkloadIdentityPoolProvider.workloadIdentityPoolProvider.name;
       }
     }
 
@@ -110,6 +119,7 @@ export class GooglePlaygroundStack extends TerraformStack {
       const serviceAccount = new ServiceAccount(this, 'ServiceAccount', {
         name: convertName(props.name, 32),
       });
+      googleServiceAccount = serviceAccount.serviceAccount.email;
 
       if (props.serviceAccountIamMember && iamWorkloadIdentityPool) {
         new ServiceAccountIamMember(this, 'ServiceAccountIamMember', {
@@ -127,5 +137,12 @@ export class GooglePlaygroundStack extends TerraformStack {
         });
       }
     }
+
+    this.googleWorkloadIdentityProvider =
+      googleWorkloadIdentityProvider ||
+      `projects/PROJECT_ID/locations/global/workloadIdentityPools/WORKLOAD_IDENTITY_POOL_ID/providers/PROVIDER_ID`;
+    this.googleServiceAccount =
+      googleServiceAccount ||
+      'SERVICE_ACCOUNT_NAME@PROJECT_ID.iam.gserviceaccount.com';
   }
 }

@@ -68,6 +68,9 @@ export const prodAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
 };
 
 export class AwsPlaygroundStack extends TerraformStack {
+  public readonly awsId: string;
+  public readonly awsRoleName: string;
+
   constructor(scope: Construct, id: string, props: AwsPlaygroundStackProps) {
     super(scope, id);
 
@@ -156,5 +159,7 @@ export class AwsPlaygroundStack extends TerraformStack {
         role: iamRole.iamRole.arn,
       });
     }
+    this.awsId = props.iamRole?.awsId || '';
+    this.awsRoleName = props.iamRole?.name || '';
   }
 }
