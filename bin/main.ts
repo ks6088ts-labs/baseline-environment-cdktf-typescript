@@ -11,10 +11,10 @@ import {
   prodBackendStackProps,
 } from '../lib/stack/backend-stack';
 import {
-  AzureadStack,
-  devAzureadStackProps,
-  prodAzureadStackProps,
-} from '../lib/stack/azuread-stack';
+  AzureadPlaygroundStack,
+  devAzureadPlaygroundStackProps,
+  prodAzureadPlaygroundStackProps,
+} from '../lib/stack/azuread-playground-stack';
 import {
   GithubStack,
   devGithubStackProps,
@@ -45,7 +45,11 @@ new AzurermPlaygroundStack(
   devAzurermPlaygroundStackProps,
 );
 new BackendStack(app, `Dev-BackendStack`, devBackendStackProps);
-new AzureadStack(app, `Dev-AzureadStack`, devAzureadStackProps);
+new AzureadPlaygroundStack(
+  app,
+  `Dev-AzureadPlaygroundStack`,
+  devAzureadPlaygroundStackProps,
+);
 new GithubStack(app, `Dev-GithubStack`, devGithubStackProps);
 new ServicePrincipalStack(
   app,
@@ -70,7 +74,11 @@ new AzurermPlaygroundStack(
   prodAzurermPlaygroundStackProps,
 );
 new BackendStack(app, `Prod-BackendStack`, prodBackendStackProps);
-new AzureadStack(app, `Prod-AzureadStack`, prodAzureadStackProps);
+new AzureadPlaygroundStack(
+  app,
+  `Prod-AzureadPlaygroundStack`,
+  prodAzureadPlaygroundStackProps,
+);
 new GithubStack(app, `Prod-GithubStack`, prodGithubStackProps);
 new ServicePrincipalStack(
   app,

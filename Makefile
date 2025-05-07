@@ -17,7 +17,7 @@ GOOGLE_PROJECT_ID ?= $(shell gcloud config get-value project)
 OUTPUT_DIR ?= $(PWD)/cdktf.out
 TF_BACKEND ?= local
 STACKS ?= \
-	Dev-AzureadStack \
+	Dev-AzureadPlaygroundStack \
 	Dev-BackendStack \
 	Dev-GithubStack \
 	Dev-ServicePrincipalStack \

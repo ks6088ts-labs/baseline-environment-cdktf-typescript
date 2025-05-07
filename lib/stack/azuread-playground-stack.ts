@@ -11,7 +11,7 @@ import { Group } from '../construct/azuread/group';
 import { GroupMember } from '../construct/azuread/group-member';
 import { createBackend } from '../utils';
 
-export interface AzureadStackProps {
+export interface AzureadPlaygroundStackProps {
   user?: {
     name: string;
   };
@@ -22,7 +22,7 @@ export interface AzureadStackProps {
   groupMember?: {};
 }
 
-export const devAzureadStackProps: AzureadStackProps = {
+export const devAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {
   user: {
     name: 'ks6088ts',
   },
@@ -33,10 +33,14 @@ export const devAzureadStackProps: AzureadStackProps = {
   groupMember: {},
 };
 
-export const prodAzureadStackProps: AzureadStackProps = {};
+export const prodAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {};
 
-export class AzureadStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: AzureadStackProps) {
+export class AzureadPlaygroundStack extends TerraformStack {
+  constructor(
+    scope: Construct,
+    id: string,
+    props: AzureadPlaygroundStackProps,
+  ) {
     super(scope, id);
 
     // Backend
