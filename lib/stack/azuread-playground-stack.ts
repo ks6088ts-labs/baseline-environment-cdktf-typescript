@@ -13,6 +13,7 @@ import { User } from '../construct/azuread/user';
 import { Group } from '../construct/azuread/group';
 import { GroupMember } from '../construct/azuread/group-member';
 import { Application } from '../construct/azuread/application';
+import { ServicePrincipal } from '../construct/azuread/service-principal';
 import { createBackend } from '../utils';
 
 export interface AzureadPlaygroundStackProps {
@@ -44,6 +45,7 @@ export const devAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {
   application: {
     name: 'dev-application-baseline-environment-cdktf-typescript',
   },
+  servicePrincipal: {},
 };
 
 export const prodAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {};
@@ -107,10 +109,18 @@ export class AzureadPlaygroundStack extends TerraformStack {
       });
     }
 
+    let application: Application | undefined = undefined;
     if (props.application) {
       // Application
-      new Application(this, 'Application', {
+      application = new Application(this, 'Application', {
         name: props.application.name,
+      });
+    }
+
+    if (props.servicePrincipal && application) {
+      // Service Principal
+      new ServicePrincipal(this, 'ServicePrincipal', {
+        clientId: application.application.clientId,
       });
     }
   }
