@@ -4,8 +4,11 @@ import {
   devAzurermPlaygroundStackProps,
 } from '../lib/stack/azurerm-playground-stack';
 import { BackendStack, devBackendStackProps } from '../lib/stack/backend-stack';
-import { AzureadStack, devAzureadStackProps } from '../lib/stack/azuread-stack';
-import { GithubStack, devGithubStackProps } from '../lib/stack/github-stack';
+import {
+  AzureadPlaygroundStack,
+  devAzureadPlaygroundStackProps,
+} from '../lib/stack/azuread-playground-stack';
+import { GithubStack, prodGithubStackProps } from '../lib/stack/github-stack';
 import {
   ServicePrincipalStack,
   devServicePrincipalStackProps,
@@ -44,9 +47,13 @@ describe('Unit testing using assertions', () => {
     console.log(synthesized);
   });
 
-  it('Test AzureadStack', () => {
+  it('Test AzureadPlaygroundStack', () => {
     const app = Testing.app();
-    const stack = new AzureadStack(app, 'azureadStack', devAzureadStackProps);
+    const stack = new AzureadPlaygroundStack(
+      app,
+      'azureadPlaygroundStack',
+      devAzureadPlaygroundStackProps,
+    );
     const synthesized = Testing.synth(stack);
 
     // FIXME: TORIAEZU
@@ -56,7 +63,7 @@ describe('Unit testing using assertions', () => {
 
   it('Test GithubStack', () => {
     const app = Testing.app();
-    const stack = new GithubStack(app, 'githubStack', devGithubStackProps);
+    const stack = new GithubStack(app, 'githubStack', prodGithubStackProps);
     const synthesized = Testing.synth(stack);
 
     // FIXME: TORIAEZU

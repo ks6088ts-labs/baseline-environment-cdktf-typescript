@@ -10,11 +10,10 @@ import {
   dataAzureadClientConfig,
   dataAzureadApplicationPublishedAppIds,
   dataAzureadServicePrincipal,
-  application,
-  servicePrincipal,
   applicationFederatedIdentityCredential,
 } from '@cdktf/provider-azuread';
-
+import { Application } from '../construct/azuread/application';
+import { ServicePrincipal } from '../construct/azuread/service-principal';
 import { createBackend } from '../utils';
 
 export interface ServicePrincipalStackProps {
@@ -60,6 +59,11 @@ export const prodServicePrincipalStackProps: ServicePrincipalStackProps = {
 };
 
 export class ServicePrincipalStack extends TerraformStack {
+  public readonly armClientId: string;
+  public readonly armSubscriptionId: string;
+  public readonly armTenantId: string;
+  public readonly armUseOidc: string;
+
   constructor(scope: Construct, id: string, props: ServicePrincipalStackProps) {
     super(scope, id);
 
@@ -102,50 +106,42 @@ export class ServicePrincipalStack extends TerraformStack {
       );
 
     // Resources
-    const applicationResource = new application.Application(
-      this,
-      'application',
-      {
-        displayName: props.name,
-        owners: [clientConfig.objectId],
-        requiredResourceAccess: props.resourceAccess
-          ? [
-              {
-                resourceAppId:
-                  applicationPublishedAppIds.result.lookup('MicrosoftGraph'),
-                resourceAccess: props.resourceAccess.map((resourceAccess) => ({
-                  id: servicePrincipalMicrosoftGraph.appRoleIds.lookup(
-                    resourceAccess.name,
-                  ),
-                  type: resourceAccess.type,
-                })),
-              },
-            ]
-          : undefined,
-      },
-    );
+    const application = new Application(this, 'application', {
+      name: props.name,
+      owners: [clientConfig.objectId],
+      requiredResourceAccess: props.resourceAccess
+        ? [
+            {
+              resourceAppId:
+                applicationPublishedAppIds.result.lookup('MicrosoftGraph'),
+              resourceAccess: props.resourceAccess.map((resourceAccess) => ({
+                id: servicePrincipalMicrosoftGraph.appRoleIds.lookup(
+                  resourceAccess.name,
+                ),
+                type: resourceAccess.type,
+              })),
+            },
+          ]
+        : undefined,
+    });
 
-    const servicePrincipalResource = new servicePrincipal.ServicePrincipal(
-      this,
-      'servicePrincipal',
-      {
-        clientId: applicationResource.clientId,
-        appRoleAssignmentRequired: false,
-        owners: [clientConfig.objectId],
-      },
-    );
+    const servicePrincipal = new ServicePrincipal(this, 'servicePrincipal', {
+      clientId: application.application.clientId,
+      appRoleAssignmentRequired: false,
+      owners: [clientConfig.objectId],
+    });
 
     new roleAssignment.RoleAssignment(this, 'roleAssignment', {
       scope: subscription.id,
       roleDefinitionName: 'Contributor',
-      principalId: servicePrincipalResource.objectId,
+      principalId: servicePrincipal.servicePrincipal.objectId,
     });
 
     new applicationFederatedIdentityCredential.ApplicationFederatedIdentityCredential(
       this,
       'federatedIdentityCredential',
       {
-        applicationId: applicationResource.id,
+        applicationId: application.application.id,
         displayName: 'federatedIdentityCredential',
         description: 'Generated federated identity credential',
         audiences: ['api://AzureADTokenExchange'],
@@ -153,5 +149,10 @@ export class ServicePrincipalStack extends TerraformStack {
         subject: `repo:${props.githubOrganization}/${props.githubRepository}:environment:${props.githubEnvironment}`,
       },
     );
+
+    this.armClientId = application.application.clientId;
+    this.armSubscriptionId = subscription.subscriptionId;
+    this.armTenantId = clientConfig.tenantId;
+    this.armUseOidc = 'true';
   }
 }

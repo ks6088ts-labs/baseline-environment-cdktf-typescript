@@ -10,6 +10,8 @@ export interface IamWorkloadIdentityPoolProviderProps {
 }
 
 export class IamWorkloadIdentityPoolProvider extends Construct {
+  public readonly workloadIdentityPoolProvider: iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProvider;
+
   constructor(
     scope: Construct,
     id: string,
@@ -18,17 +20,18 @@ export class IamWorkloadIdentityPoolProvider extends Construct {
     super(scope, id);
 
     // Resources
-    new iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProvider(
-      this,
-      'iam_workload_identity_pool_provider',
-      {
-        workloadIdentityPoolId: props.workloadIdentityPoolId,
-        workloadIdentityPoolProviderId: props.name,
-        displayName: props.name,
-        attributeCondition: props.attributeCondition,
-        attributeMapping: props.attributeMapping,
-        oidc: props.oidc,
-      },
-    );
+    this.workloadIdentityPoolProvider =
+      new iamWorkloadIdentityPoolProvider.IamWorkloadIdentityPoolProvider(
+        this,
+        'iam_workload_identity_pool_provider',
+        {
+          workloadIdentityPoolId: props.workloadIdentityPoolId,
+          workloadIdentityPoolProviderId: props.name,
+          displayName: props.name,
+          attributeCondition: props.attributeCondition,
+          attributeMapping: props.attributeMapping,
+          oidc: props.oidc,
+        },
+      );
   }
 }
