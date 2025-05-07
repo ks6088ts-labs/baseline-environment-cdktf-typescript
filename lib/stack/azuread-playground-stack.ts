@@ -103,7 +103,7 @@ export class AzureadPlaygroundStack extends TerraformStack {
     }
 
     if (props.groupMember && user && group) {
-      new GroupMember(this, 'GroupMember', {
+      new GroupMember(this, 'GroupMember-User', {
         groupObjectId: group.group.objectId,
         memberObjectId: user.user.objectId,
       });
@@ -117,10 +117,18 @@ export class AzureadPlaygroundStack extends TerraformStack {
       });
     }
 
+    let servicePrincipal: ServicePrincipal | undefined = undefined;
     if (props.servicePrincipal && application) {
       // Service Principal
-      new ServicePrincipal(this, 'ServicePrincipal', {
+      servicePrincipal = new ServicePrincipal(this, 'ServicePrincipal', {
         clientId: application.application.clientId,
+      });
+    }
+
+    if (props.groupMember && servicePrincipal && group) {
+      new GroupMember(this, 'GroupMember-ServicePrincipal', {
+        groupObjectId: group.group.objectId,
+        memberObjectId: servicePrincipal.servicePrincipal.objectId,
       });
     }
   }
