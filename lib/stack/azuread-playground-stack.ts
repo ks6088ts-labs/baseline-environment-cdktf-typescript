@@ -12,6 +12,7 @@ import {
 import { User } from '../construct/azuread/user';
 import { Group } from '../construct/azuread/group';
 import { GroupMember } from '../construct/azuread/group-member';
+import { Application } from '../construct/azuread/application';
 import { createBackend } from '../utils';
 
 export interface AzureadPlaygroundStackProps {
@@ -24,6 +25,10 @@ export interface AzureadPlaygroundStackProps {
     description?: string;
   };
   groupMember?: {};
+  application?: {
+    name: string;
+  };
+  servicePrincipal?: {};
 }
 
 export const devAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {
@@ -36,6 +41,9 @@ export const devAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {
     description: 'Developers group for dev environment',
   },
   groupMember: {},
+  application: {
+    name: 'dev-application-baseline-environment-cdktf-typescript',
+  },
 };
 
 export const prodAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {};
@@ -96,6 +104,13 @@ export class AzureadPlaygroundStack extends TerraformStack {
       new GroupMember(this, 'GroupMember', {
         groupObjectId: group.group.objectId,
         memberObjectId: user.user.objectId,
+      });
+    }
+
+    if (props.application) {
+      // Application
+      new Application(this, 'Application', {
+        name: props.application.name,
       });
     }
   }
