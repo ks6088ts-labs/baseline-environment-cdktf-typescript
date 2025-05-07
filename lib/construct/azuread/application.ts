@@ -3,6 +3,8 @@ import { application } from '@cdktf/provider-azuread';
 
 export interface ApplicationProps {
   name: string;
+  owners?: string[];
+  requiredResourceAccess?: application.ApplicationRequiredResourceAccess[];
 }
 
 export class Application extends Construct {
@@ -13,6 +15,8 @@ export class Application extends Construct {
     // Resources
     this.application = new application.Application(this, 'application', {
       displayName: props.name,
+      owners: props.owners,
+      requiredResourceAccess: props.requiredResourceAccess,
     });
   }
 }
