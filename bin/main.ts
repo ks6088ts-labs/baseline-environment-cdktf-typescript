@@ -15,7 +15,7 @@ import {
   devAzureadPlaygroundStackProps,
   prodAzureadPlaygroundStackProps,
 } from '../lib/stack/azuread-playground-stack';
-import { GithubStack, prodGithubStackProps } from '../lib/stack/github-stack';
+import { GithubEnvironmentSecretStack } from '../lib/stack/github-environment-secret-stack';
 import {
   ServicePrincipalStack,
   devServicePrincipalStackProps,
@@ -61,27 +61,50 @@ const devGooglePlaygroundStack = new GooglePlaygroundStack(
   `Dev-GooglePlaygroundStack`,
   devGooglePlaygroundStackProps,
 );
-new GithubStack(app, `Dev-GithubStack`, {
+new GithubEnvironmentSecretStack(
+  app,
+  `Dev-GithubEnvironmentSecretStack-Azure`,
+  {
+    createRepository: false,
+    repositoryName: 'baseline-environment-cdktf-typescript',
+    visibility: 'public',
+    environment: 'dev',
+    organization: 'ks6088ts-labs',
+    secrets: {
+      ARM_CLIENT_ID: devServicePrincipalStack.armClientId,
+      ARM_SUBSCRIPTION_ID: devServicePrincipalStack.armSubscriptionId,
+      ARM_TENANT_ID: devServicePrincipalStack.armTenantId,
+      ARM_USE_OIDC: devServicePrincipalStack.armUseOidc,
+    },
+  },
+);
+new GithubEnvironmentSecretStack(app, `Dev-GithubEnvironmentSecretStack-Aws`, {
   createRepository: false,
   repositoryName: 'baseline-environment-cdktf-typescript',
   visibility: 'public',
   environment: 'dev',
   organization: 'ks6088ts-labs',
   secrets: {
-    // Azure
-    ARM_CLIENT_ID: devServicePrincipalStack.armClientId,
-    ARM_SUBSCRIPTION_ID: devServicePrincipalStack.armSubscriptionId,
-    ARM_TENANT_ID: devServicePrincipalStack.armTenantId,
-    ARM_USE_OIDC: devServicePrincipalStack.armUseOidc,
-    // AWS
     AWS_ID: devAwsPlaygroundStack.awsId,
     AWS_ROLE_NAME: devAwsPlaygroundStack.awsRoleName,
-    // Google
-    GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
-      devGooglePlaygroundStack.googleWorkloadIdentityProvider,
-    GOOGLE_SERVICE_ACCOUNT: devGooglePlaygroundStack.googleServiceAccount,
   },
 });
+new GithubEnvironmentSecretStack(
+  app,
+  `Dev-GithubEnvironmentSecretStack-Google`,
+  {
+    createRepository: false,
+    repositoryName: 'baseline-environment-cdktf-typescript',
+    visibility: 'public',
+    environment: 'dev',
+    organization: 'ks6088ts-labs',
+    secrets: {
+      GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
+        devGooglePlaygroundStack.googleWorkloadIdentityProvider,
+      GOOGLE_SERVICE_ACCOUNT: devGooglePlaygroundStack.googleServiceAccount,
+    },
+  },
+);
 
 // Production Environment
 new AzurermPlaygroundStack(
@@ -110,6 +133,5 @@ new GooglePlaygroundStack(
   `Prod-GooglePlaygroundStack`,
   prodGooglePlaygroundStackProps,
 );
-new GithubStack(app, `Prod-GithubStack`, prodGithubStackProps);
 
 app.synth();
