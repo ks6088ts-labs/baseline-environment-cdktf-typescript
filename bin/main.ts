@@ -61,22 +61,37 @@ const devGooglePlaygroundStack = new GooglePlaygroundStack(
   `Dev-GooglePlaygroundStack`,
   devGooglePlaygroundStackProps,
 );
-new GithubStack(app, `Dev-GithubStack`, {
+new GithubStack(app, `Dev-GithubStack-Azure`, {
   createRepository: false,
   repositoryName: 'baseline-environment-cdktf-typescript',
   visibility: 'public',
   environment: 'dev',
   organization: 'ks6088ts-labs',
   secrets: {
-    // Azure
     ARM_CLIENT_ID: devServicePrincipalStack.armClientId,
     ARM_SUBSCRIPTION_ID: devServicePrincipalStack.armSubscriptionId,
     ARM_TENANT_ID: devServicePrincipalStack.armTenantId,
     ARM_USE_OIDC: devServicePrincipalStack.armUseOidc,
-    // AWS
+  },
+});
+new GithubStack(app, `Dev-GithubStack-Aws`, {
+  createRepository: false,
+  repositoryName: 'baseline-environment-cdktf-typescript',
+  visibility: 'public',
+  environment: 'dev',
+  organization: 'ks6088ts-labs',
+  secrets: {
     AWS_ID: devAwsPlaygroundStack.awsId,
     AWS_ROLE_NAME: devAwsPlaygroundStack.awsRoleName,
-    // Google
+  },
+});
+new GithubStack(app, `Dev-GithubStack-Google`, {
+  createRepository: false,
+  repositoryName: 'baseline-environment-cdktf-typescript',
+  visibility: 'public',
+  environment: 'dev',
+  organization: 'ks6088ts-labs',
+  secrets: {
     GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
       devGooglePlaygroundStack.googleWorkloadIdentityProvider,
     GOOGLE_SERVICE_ACCOUNT: devGooglePlaygroundStack.googleServiceAccount,
@@ -110,11 +125,5 @@ new GooglePlaygroundStack(
   `Prod-GooglePlaygroundStack`,
   prodGooglePlaygroundStackProps,
 );
-new GithubStack(app, `Prod-GithubStack`, {
-  createRepository: false,
-  repositoryName: 'baseline-environment-cdktf-typescript',
-  environment: 'prod',
-  organization: 'ks6088ts-labs',
-});
 
 app.synth();

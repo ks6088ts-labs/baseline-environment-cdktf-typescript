@@ -19,11 +19,13 @@ TF_BACKEND ?= local
 STACKS ?= \
 	Dev-AzureadPlaygroundStack \
 	Dev-BackendStack \
-	Dev-GithubStack \
 	Dev-ServicePrincipalStack \
 	Dev-AzurermPlaygroundStack \
 	Dev-AwsPlaygroundStack \
 	Dev-GooglePlaygroundStack \
+	Dev-GithubStack-Azure \
+	Dev-GithubStack-Aws \
+	Dev-GithubStack-Google \
 
 .PHONY: help
 help:
@@ -83,14 +85,13 @@ synth: ## synthesize the given stacks
 		--output $(OUTPUT_DIR)/tf
 
 .PHONY: ci-test
-ci-test: install-deps-dev lint build assets test synth lint-hcl diff ## run CI test
+ci-test: install-deps-dev lint build test synth lint-hcl diff ## run CI test
 
 .PHONY: diff
-diff: synth ## perform a diff (terraform plan) for the given stack
-	@for stack in $(STACKS); do \
-		echo "Running tests for stack: $$stack"; \
-		TF_BACKEND=$(TF_BACKEND) cdktf diff $$stack --output $(OUTPUT_DIR)/tf --skip-synth; \
-	done
+diff: ## perform a diff (terraform plan) for the given stack
+	TF_BACKEND=$(TF_BACKEND) cdktf diff \
+		--output $(OUTPUT_DIR)/json \
+		$(STACKS)
 
 .PHONY: deploy
 deploy: ## create or update the given stacks
@@ -108,10 +109,9 @@ destroy: ## destroy the given stacks
 
 .PHONY: output
 output: ## show the output of the given stacks
-	@for stack in $(STACKS); do \
-		echo "Retrieving output: $$stack"; \
-		TF_BACKEND=$(TF_BACKEND) cdktf output $$stack --output $(OUTPUT_DIR)/json; \
-	done
+	TF_BACKEND=$(TF_BACKEND) cdktf output \
+		--output $(OUTPUT_DIR)/json \
+		$(STACKS)
 
 .PHONY: update
 update: ## update dependencies
