@@ -8,7 +8,7 @@ import {
   AzureadPlaygroundStack,
   devAzureadPlaygroundStackProps,
 } from '../lib/stack/azuread-playground-stack';
-import { GithubStack } from '../lib/stack/github-stack';
+import { GithubEnvironmentSecretStack } from '../lib/stack/github-environment-secret-stack';
 import {
   ServicePrincipalStack,
   devServicePrincipalStackProps,
@@ -61,14 +61,18 @@ describe('Unit testing using assertions', () => {
     console.log(synthesized);
   });
 
-  it('Test GithubStack', () => {
+  it('Test GithubEnvironmentSecretStack', () => {
     const app = Testing.app();
-    const stack = new GithubStack(app, 'githubStack', {
-      createRepository: false,
-      repositoryName: 'baseline-environment-cdktf-typescript',
-      environment: 'prod',
-      organization: 'ks6088ts-labs',
-    });
+    const stack = new GithubEnvironmentSecretStack(
+      app,
+      'githubEnvironmentSecretStack',
+      {
+        createRepository: false,
+        repositoryName: 'baseline-environment-cdktf-typescript',
+        environment: 'prod',
+        organization: 'ks6088ts-labs',
+      },
+    );
     const synthesized = Testing.synth(stack);
 
     // FIXME: TORIAEZU

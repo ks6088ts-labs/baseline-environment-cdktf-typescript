@@ -23,9 +23,9 @@ STACKS ?= \
 	Dev-AzurermPlaygroundStack \
 	Dev-AwsPlaygroundStack \
 	Dev-GooglePlaygroundStack \
-	Dev-GithubStack-Azure \
-	Dev-GithubStack-Aws \
-	Dev-GithubStack-Google \
+	Dev-GithubEnvironmentSecretStack-Azure \
+	Dev-GithubEnvironmentSecretStack-Aws \
+	Dev-GithubEnvironmentSecretStack-Google \
 
 .PHONY: help
 help:

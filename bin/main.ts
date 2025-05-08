@@ -15,7 +15,7 @@ import {
   devAzureadPlaygroundStackProps,
   prodAzureadPlaygroundStackProps,
 } from '../lib/stack/azuread-playground-stack';
-import { GithubStack } from '../lib/stack/github-stack';
+import { GithubEnvironmentSecretStack } from '../lib/stack/github-environment-secret-stack';
 import {
   ServicePrincipalStack,
   devServicePrincipalStackProps,
@@ -61,20 +61,24 @@ const devGooglePlaygroundStack = new GooglePlaygroundStack(
   `Dev-GooglePlaygroundStack`,
   devGooglePlaygroundStackProps,
 );
-new GithubStack(app, `Dev-GithubStack-Azure`, {
-  createRepository: false,
-  repositoryName: 'baseline-environment-cdktf-typescript',
-  visibility: 'public',
-  environment: 'dev',
-  organization: 'ks6088ts-labs',
-  secrets: {
-    ARM_CLIENT_ID: devServicePrincipalStack.armClientId,
-    ARM_SUBSCRIPTION_ID: devServicePrincipalStack.armSubscriptionId,
-    ARM_TENANT_ID: devServicePrincipalStack.armTenantId,
-    ARM_USE_OIDC: devServicePrincipalStack.armUseOidc,
+new GithubEnvironmentSecretStack(
+  app,
+  `Dev-GithubEnvironmentSecretStack-Azure`,
+  {
+    createRepository: false,
+    repositoryName: 'baseline-environment-cdktf-typescript',
+    visibility: 'public',
+    environment: 'dev',
+    organization: 'ks6088ts-labs',
+    secrets: {
+      ARM_CLIENT_ID: devServicePrincipalStack.armClientId,
+      ARM_SUBSCRIPTION_ID: devServicePrincipalStack.armSubscriptionId,
+      ARM_TENANT_ID: devServicePrincipalStack.armTenantId,
+      ARM_USE_OIDC: devServicePrincipalStack.armUseOidc,
+    },
   },
-});
-new GithubStack(app, `Dev-GithubStack-Aws`, {
+);
+new GithubEnvironmentSecretStack(app, `Dev-GithubEnvironmentSecretStack-Aws`, {
   createRepository: false,
   repositoryName: 'baseline-environment-cdktf-typescript',
   visibility: 'public',
@@ -85,18 +89,22 @@ new GithubStack(app, `Dev-GithubStack-Aws`, {
     AWS_ROLE_NAME: devAwsPlaygroundStack.awsRoleName,
   },
 });
-new GithubStack(app, `Dev-GithubStack-Google`, {
-  createRepository: false,
-  repositoryName: 'baseline-environment-cdktf-typescript',
-  visibility: 'public',
-  environment: 'dev',
-  organization: 'ks6088ts-labs',
-  secrets: {
-    GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
-      devGooglePlaygroundStack.googleWorkloadIdentityProvider,
-    GOOGLE_SERVICE_ACCOUNT: devGooglePlaygroundStack.googleServiceAccount,
+new GithubEnvironmentSecretStack(
+  app,
+  `Dev-GithubEnvironmentSecretStack-Google`,
+  {
+    createRepository: false,
+    repositoryName: 'baseline-environment-cdktf-typescript',
+    visibility: 'public',
+    environment: 'dev',
+    organization: 'ks6088ts-labs',
+    secrets: {
+      GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
+        devGooglePlaygroundStack.googleWorkloadIdentityProvider,
+      GOOGLE_SERVICE_ACCOUNT: devGooglePlaygroundStack.googleServiceAccount,
+    },
   },
-});
+);
 
 // Production Environment
 new AzurermPlaygroundStack(

@@ -6,7 +6,7 @@ import { RepositoryEnvironment } from '../construct/github/repositoryEnvironment
 import { ActionsEnvironmentSecret } from '../construct/github/actionsEnvironmentSecret';
 import { createBackend } from '../utils';
 
-export interface GithubStackProps {
+export interface GithubEnvironmentSecretStackProps {
   createRepository: boolean;
   repositoryName: string;
   visibility?: string;
@@ -15,8 +15,12 @@ export interface GithubStackProps {
   secrets?: { [key: string]: string };
 }
 
-export class GithubStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: GithubStackProps) {
+export class GithubEnvironmentSecretStack extends TerraformStack {
+  constructor(
+    scope: Construct,
+    id: string,
+    props: GithubEnvironmentSecretStackProps,
+  ) {
     super(scope, id);
 
     // Backend
