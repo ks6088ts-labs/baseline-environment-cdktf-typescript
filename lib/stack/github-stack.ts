@@ -15,13 +15,6 @@ export interface GithubStackProps {
   secrets?: { [key: string]: string };
 }
 
-export const prodGithubStackProps: GithubStackProps = {
-  createRepository: false,
-  repositoryName: 'baseline-environment-cdktf-typescript',
-  environment: 'prod',
-  organization: 'ks6088ts-labs',
-};
-
 export class GithubStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: GithubStackProps) {
     super(scope, id);

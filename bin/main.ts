@@ -15,7 +15,7 @@ import {
   devAzureadPlaygroundStackProps,
   prodAzureadPlaygroundStackProps,
 } from '../lib/stack/azuread-playground-stack';
-import { GithubStack, prodGithubStackProps } from '../lib/stack/github-stack';
+import { GithubStack } from '../lib/stack/github-stack';
 import {
   ServicePrincipalStack,
   devServicePrincipalStackProps,
@@ -110,6 +110,11 @@ new GooglePlaygroundStack(
   `Prod-GooglePlaygroundStack`,
   prodGooglePlaygroundStackProps,
 );
-new GithubStack(app, `Prod-GithubStack`, prodGithubStackProps);
+new GithubStack(app, `Prod-GithubStack`, {
+  createRepository: false,
+  repositoryName: 'baseline-environment-cdktf-typescript',
+  environment: 'prod',
+  organization: 'ks6088ts-labs',
+});
 
 app.synth();
