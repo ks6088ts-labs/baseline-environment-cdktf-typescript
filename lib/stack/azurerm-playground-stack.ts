@@ -44,6 +44,7 @@ import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnosti
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
 import { ApplicationInsights } from '../construct/azurerm/application-insights';
 import { EventgridNamespace } from '../construct/azurerm/eventgrid-namespace';
+import { EventgridDomain } from '../construct/azurerm/eventgrid-domain';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -176,6 +177,9 @@ export interface AzurermPlaygroundStackProps {
   monitorWorkspace?: {};
   applicationInsights?: {};
   eventgridNamespace?: {};
+  eventgridDomain?: {
+    inputSchema: string;
+  };
   dashboardGrafana?: {};
 }
 
@@ -692,6 +696,9 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   monitorWorkspace: {},
   applicationInsights: {},
   eventgridNamespace: {},
+  eventgridDomain: {
+    inputSchema: 'CloudEventSchemaV1_0',
+  },
   dashboardGrafana: {},
 };
 
@@ -1298,6 +1305,16 @@ export class AzurermPlaygroundStack extends TerraformStack {
           tags: props.tags,
           resourceGroupName: resourceGroup.resourceGroup.name,
           sku: 'Standard',
+        });
+      }
+
+      if (props.eventgridDomain) {
+        new EventgridDomain(this, `EventgridDomain`, {
+          name: `eg-domain-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          inputSchema: props.eventgridDomain.inputSchema,
         });
       }
     }
