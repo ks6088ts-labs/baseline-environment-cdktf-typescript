@@ -48,6 +48,7 @@ import { EventgridDomain } from '../construct/azurerm/eventgrid-domain';
 import { EventgridDomainTopic } from '../construct/azurerm/eventgrid-domain-topic';
 import { EventgridTopic } from '../construct/azurerm/eventgrid-topic';
 import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription';
+import { EventhubNamespace } from '@cdktf/provider-azurerm/lib/eventhub-namespace';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -189,6 +190,9 @@ export interface AzurermPlaygroundStackProps {
   };
   eventgridTopic?: {
     inputSchema: string;
+  };
+  eventhubNamespace?: {
+    sku: string;
   };
   dashboardGrafana?: {};
 }
@@ -715,6 +719,9 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   },
   eventgridTopic: {
     inputSchema: 'EventGridSchema',
+  },
+  eventhubNamespace: {
+    sku: 'Standard',
   },
   dashboardGrafana: {},
 };
@@ -1369,6 +1376,16 @@ export class AzurermPlaygroundStack extends TerraformStack {
           inputSchema: props.eventgridTopic.inputSchema,
         });
       }
+    }
+
+    if (props.eventhubNamespace) {
+      new EventhubNamespace(this, `EventhubNamespace`, {
+        name: `eh-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        sku: props.eventhubNamespace.sku,
+      });
     }
   }
 }
