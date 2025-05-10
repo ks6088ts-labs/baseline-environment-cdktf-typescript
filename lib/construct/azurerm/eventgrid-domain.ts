@@ -10,19 +10,24 @@ interface EventgridDomainProps {
 }
 
 export class EventgridDomain extends Construct {
+  public readonly eventgridDomain: eventgridDomain.EventgridDomain;
   constructor(scope: Construct, id: string, props: EventgridDomainProps) {
     super(scope, id);
 
     // Resources
-    new eventgridDomain.EventgridDomain(this, 'eventgrid_domain', {
-      name: props.name,
-      location: props.location,
-      tags: props.tags,
-      resourceGroupName: props.resourceGroupName,
-      identity: {
-        type: 'SystemAssigned',
+    this.eventgridDomain = new eventgridDomain.EventgridDomain(
+      this,
+      'eventgrid_domain',
+      {
+        name: props.name,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: props.resourceGroupName,
+        identity: {
+          type: 'SystemAssigned',
+        },
+        inputSchema: props.inputSchema,
       },
-      inputSchema: props.inputSchema,
-    });
+    );
   }
 }
