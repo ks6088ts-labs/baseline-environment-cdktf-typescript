@@ -48,7 +48,8 @@ import { EventgridDomain } from '../construct/azurerm/eventgrid-domain';
 import { EventgridDomainTopic } from '../construct/azurerm/eventgrid-domain-topic';
 import { EventgridTopic } from '../construct/azurerm/eventgrid-topic';
 import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription';
-import { EventhubNamespace } from '@cdktf/provider-azurerm/lib/eventhub-namespace';
+import { EventhubNamespace } from '../construct/azurerm/eventhub-namespace';
+import { Eventhub } from '../construct/azurerm/eventhub';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -193,6 +194,10 @@ export interface AzurermPlaygroundStackProps {
   };
   eventhubNamespace?: {
     sku: string;
+  };
+  eventhub?: {
+    messageRetention: number;
+    partitionCount: number;
   };
   dashboardGrafana?: {};
 }
@@ -722,6 +727,10 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   },
   eventhubNamespace: {
     sku: 'Standard',
+  },
+  eventhub: {
+    messageRetention: 1,
+    partitionCount: 2,
   },
   dashboardGrafana: {},
 };
@@ -1379,13 +1388,26 @@ export class AzurermPlaygroundStack extends TerraformStack {
     }
 
     if (props.eventhubNamespace) {
-      new EventhubNamespace(this, `EventhubNamespace`, {
-        name: `eh-${props.name}`,
-        location: props.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        sku: props.eventhubNamespace.sku,
-      });
+      const eventhubNamespace = new EventhubNamespace(
+        this,
+        `EventhubNamespace`,
+        {
+          name: `ehn-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          sku: props.eventhubNamespace.sku,
+        },
+      );
+
+      if (props.eventhub) {
+        new Eventhub(this, `Eventhub`, {
+          name: `eh-${props.name}`,
+          namespaceId: eventhubNamespace.eventhubNamespace.id,
+          messageRetention: props.eventhub.messageRetention,
+          partitionCount: props.eventhub.partitionCount,
+        });
+      }
     }
   }
 }
