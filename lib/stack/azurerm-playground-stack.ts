@@ -1299,6 +1299,16 @@ export class AzurermPlaygroundStack extends TerraformStack {
       }
     }
 
+    if (props.applicationInsights && logAnalyticsWorkspace) {
+      new ApplicationInsights(this, `ApplicationInsights`, {
+        name: `app-insights-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        workspaceId: logAnalyticsWorkspace.logAnalyticsWorkspace.id,
+      });
+    }
+
     if (props.monitorWorkspace) {
       const monitorWorkspace = new MonitorWorkspace(this, `MonitorWorkspace`, {
         name: convertName(`mw-${props.name}`, 44),
@@ -1306,16 +1316,6 @@ export class AzurermPlaygroundStack extends TerraformStack {
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
       });
-
-      if (props.applicationInsights && logAnalyticsWorkspace) {
-        new ApplicationInsights(this, `ApplicationInsights`, {
-          name: `app-insights-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          workspaceId: logAnalyticsWorkspace.logAnalyticsWorkspace.id,
-        });
-      }
 
       if (props.dashboardGrafana) {
         new DashboardGrafana(this, `DashboardGrafana`, {
@@ -1330,61 +1330,61 @@ export class AzurermPlaygroundStack extends TerraformStack {
           ],
         });
       }
+    }
 
-      if (props.eventgridNamespace) {
-        new EventgridNamespace(this, `EventgridNamespace`, {
-          name: `eg-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          sku: 'Standard',
-        });
-      }
+    if (props.eventgridNamespace) {
+      new EventgridNamespace(this, `EventgridNamespace`, {
+        name: `eg-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        sku: 'Standard',
+      });
+    }
 
-      if (props.eventgridDomain) {
-        const eventgridDomain = new EventgridDomain(this, `EventgridDomain`, {
-          name: `eg-domain-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          inputSchema: props.eventgridDomain.inputSchema,
-        });
+    if (props.eventgridDomain) {
+      const eventgridDomain = new EventgridDomain(this, `EventgridDomain`, {
+        name: `eg-domain-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        inputSchema: props.eventgridDomain.inputSchema,
+      });
 
-        if (props.eventgridDomainTopic) {
-          const eventgridDomainTopic = new EventgridDomainTopic(
-            this,
-            `EventgridDomainTopic`,
-            {
-              name: `eg-domain-topic-${props.name}`,
-              domainName: eventgridDomain.eventgridDomain.name,
-              resourceGroupName: resourceGroup.resourceGroup.name,
+      if (props.eventgridDomainTopic) {
+        const eventgridDomainTopic = new EventgridDomainTopic(
+          this,
+          `EventgridDomainTopic`,
+          {
+            name: `eg-domain-topic-${props.name}`,
+            domainName: eventgridDomain.eventgridDomain.name,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+          },
+        );
+
+        if (props.eventgridEventSubscription && storageAccount) {
+          new EventgridEventSubscription(this, `EventgridEventSubscription`, {
+            name: `eg-domain-topic-subscription-${props.name}`,
+            scope: eventgridDomainTopic.eventgridDomainTopic.id,
+            eventDeliverySchema:
+              props.eventgridEventSubscription.eventDeliverySchema,
+            storageQueueEndpoint: {
+              queueName: storageAccount.storageQueue.name,
+              storageAccountId: storageAccount.storageAccount.id,
             },
-          );
-
-          if (props.eventgridEventSubscription && storageAccount) {
-            new EventgridEventSubscription(this, `EventgridEventSubscription`, {
-              name: `eg-domain-topic-subscription-${props.name}`,
-              scope: eventgridDomainTopic.eventgridDomainTopic.id,
-              eventDeliverySchema:
-                props.eventgridEventSubscription.eventDeliverySchema,
-              storageQueueEndpoint: {
-                queueName: storageAccount.storageQueue.name,
-                storageAccountId: storageAccount.storageAccount.id,
-              },
-            });
-          }
+          });
         }
       }
+    }
 
-      if (props.eventgridTopic) {
-        new EventgridTopic(this, `EventgridTopic`, {
-          name: `eg-topic-${props.name}`,
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          inputSchema: props.eventgridTopic.inputSchema,
-        });
-      }
+    if (props.eventgridTopic) {
+      new EventgridTopic(this, `EventgridTopic`, {
+        name: `eg-topic-${props.name}`,
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        inputSchema: props.eventgridTopic.inputSchema,
+      });
     }
 
     if (props.eventhubNamespace) {
