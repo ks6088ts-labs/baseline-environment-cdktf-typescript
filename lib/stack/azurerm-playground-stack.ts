@@ -46,6 +46,7 @@ import { ApplicationInsights } from '../construct/azurerm/application-insights';
 import { EventgridNamespace } from '../construct/azurerm/eventgrid-namespace';
 import { EventgridDomain } from '../construct/azurerm/eventgrid-domain';
 import { EventgridDomainTopic } from '../construct/azurerm/eventgrid-domain-topic';
+import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -182,6 +183,9 @@ export interface AzurermPlaygroundStackProps {
     inputSchema: string;
   };
   eventgridDomainTopic?: {};
+  eventgridEventSubscription?: {
+    eventDeliverySchema: string;
+  };
   dashboardGrafana?: {};
 }
 
@@ -702,6 +706,9 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     inputSchema: 'CloudEventSchemaV1_0',
   },
   eventgridDomainTopic: {},
+  eventgridEventSubscription: {
+    eventDeliverySchema: 'CloudEventSchemaV1_0',
+  },
   dashboardGrafana: {},
 };
 
@@ -1321,11 +1328,28 @@ export class AzurermPlaygroundStack extends TerraformStack {
         });
 
         if (props.eventgridDomainTopic) {
-          new EventgridDomainTopic(this, `EventgridDomainTopic`, {
-            name: `eg-domain-topic-${props.name}`,
-            domainName: eventgridDomain.eventgridDomain.name,
-            resourceGroupName: resourceGroup.resourceGroup.name,
-          });
+          const eventgridDomainTopic = new EventgridDomainTopic(
+            this,
+            `EventgridDomainTopic`,
+            {
+              name: `eg-domain-topic-${props.name}`,
+              domainName: eventgridDomain.eventgridDomain.name,
+              resourceGroupName: resourceGroup.resourceGroup.name,
+            },
+          );
+
+          if (props.eventgridEventSubscription && storageAccount) {
+            new EventgridEventSubscription(this, `EventgridEventSubscription`, {
+              name: `eg-domain-topic-subscription-${props.name}`,
+              scope: eventgridDomainTopic.eventgridDomainTopic.id,
+              eventDeliverySchema:
+                props.eventgridEventSubscription.eventDeliverySchema,
+              storageQueueEndpoint: {
+                queueName: storageAccount.storageQueue.name,
+                storageAccountId: storageAccount.storageAccount.id,
+              },
+            });
+          }
         }
       }
     }

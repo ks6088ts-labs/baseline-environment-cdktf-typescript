@@ -8,14 +8,19 @@ interface EventgridDomainTopicProps {
 }
 
 export class EventgridDomainTopic extends Construct {
+  public readonly eventgridDomainTopic: eventgridDomainTopic.EventgridDomainTopic;
   constructor(scope: Construct, id: string, props: EventgridDomainTopicProps) {
     super(scope, id);
 
     // Resources
-    new eventgridDomainTopic.EventgridDomainTopic(this, 'eventgrid_domain', {
-      name: props.name,
-      domainName: props.domainName,
-      resourceGroupName: props.resourceGroupName,
-    });
+    this.eventgridDomainTopic = new eventgridDomainTopic.EventgridDomainTopic(
+      this,
+      'eventgrid_domain',
+      {
+        name: props.name,
+        domainName: props.domainName,
+        resourceGroupName: props.resourceGroupName,
+      },
+    );
   }
 }
