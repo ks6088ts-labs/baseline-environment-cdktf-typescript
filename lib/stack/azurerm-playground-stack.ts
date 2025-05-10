@@ -597,8 +597,8 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   containerApp: {
     containers: [
       {
-        name: 'nginx',
-        image: 'nginx:latest',
+        name: 'azure-event-grid-viewer',
+        image: 'microsoftlearning/azure-event-grid-viewer:latest',
         cpu: 0.5,
         memory: '1Gi',
         env: [
@@ -714,7 +714,7 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     eventDeliverySchema: 'CloudEventSchemaV1_0',
   },
   eventgridTopic: {
-    inputSchema: 'CloudEventSchemaV1_0',
+    inputSchema: 'EventGridSchema',
   },
   dashboardGrafana: {},
 };
