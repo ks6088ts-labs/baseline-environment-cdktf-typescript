@@ -43,6 +43,7 @@ import { PrivateEndpoint } from '../construct/azurerm/private-endpoint';
 import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
 import { ApplicationInsights } from '../construct/azurerm/application-insights';
+import { EventgridNamespace } from '../construct/azurerm/eventgrid-namespace';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
@@ -174,6 +175,7 @@ export interface AzurermPlaygroundStackProps {
   monitorDiagnosticSetting?: {};
   monitorWorkspace?: {};
   applicationInsights?: {};
+  eventgridNamespace?: {};
   dashboardGrafana?: {};
 }
 
@@ -689,6 +691,7 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   monitorDiagnosticSetting: {},
   monitorWorkspace: {},
   applicationInsights: {},
+  eventgridNamespace: {},
   dashboardGrafana: {},
 };
 
@@ -1285,6 +1288,16 @@ export class AzurermPlaygroundStack extends TerraformStack {
               resourceId: monitorWorkspace.monitorWorkspace.id,
             },
           ],
+        });
+      }
+
+      if (props.eventgridNamespace) {
+        new EventgridNamespace(this, `EventgridNamespace`, {
+          name: `eg-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          sku: 'Standard',
         });
       }
     }
