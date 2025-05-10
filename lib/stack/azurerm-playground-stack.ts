@@ -4,16 +4,16 @@ import {
   TerraformOutput,
   TerraformResourceLifecycle,
 } from 'cdktf';
-import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
-import { RoleAssignment } from '../construct/azurerm/role-assignment';
-import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
-import { AppConfiguration } from '../construct/azurerm/app-configuration';
 import {
   provider,
   linuxFunctionApp,
   functionAppFunction,
   containerRegistry,
 } from '@cdktf/provider-azurerm';
+import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
+import { RoleAssignment } from '../construct/azurerm/role-assignment';
+import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
+import { AppConfiguration } from '../construct/azurerm/app-configuration';
 import { AiFoundryProject } from '../construct/azurerm/ai-foundry-project';
 import { AiFoundry } from '../construct/azurerm/ai-foundry';
 import { AiServices } from '../construct/azurerm/ai-services';
@@ -47,7 +47,7 @@ import { EventgridNamespace } from '../construct/azurerm/eventgrid-namespace';
 import { EventgridDomain } from '../construct/azurerm/eventgrid-domain';
 import { EventgridDomainTopic } from '../construct/azurerm/eventgrid-domain-topic';
 import { EventgridTopic } from '../construct/azurerm/eventgrid-topic';
-import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription';
+import { EventgridEventSubscription } from '../construct/azurerm/eventgrid-event-subscription';
 import { EventhubNamespace } from '../construct/azurerm/eventhub-namespace';
 import { Eventhub } from '../construct/azurerm/eventhub';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
