@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   release:
     strategy:
@@ -53,3 +56,9 @@ jobs:
         with:
           name: v${{steps.set_version.outputs.no-dash}}
           path: cdktf.out/tf
+      - name: Create Release
+        run: |
+          tar -czf hcl.tar.gz ./cdktf.out/tf
+          gh release create ${{github.ref_name}} --generate-notes hcl.tar.gz
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
