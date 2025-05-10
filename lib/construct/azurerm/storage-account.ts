@@ -1,5 +1,9 @@
 import { Construct } from 'constructs';
-import { storageAccount, storageContainer } from '@cdktf/provider-azurerm';
+import {
+  storageAccount,
+  storageContainer,
+  storageQueue,
+} from '@cdktf/provider-azurerm';
 
 export interface StorageContainerProps {
   name: string;
@@ -53,5 +57,10 @@ export class StorageAccount extends Construct {
       );
       this.storageContainers.push(containerResource);
     }
+
+    new storageQueue.StorageQueue(this, 'storage_queue', {
+      name: `${props.name}-queue`,
+      storageAccountName: this.storageAccount.name,
+    });
   }
 }
