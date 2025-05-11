@@ -150,6 +150,7 @@ export interface AzurermPlaygroundStackProps {
     skuName: string;
   };
   functionAppFlexConsumption?: {
+    location: string;
     runtimeName: string;
     runtimeVersion: string;
   };
@@ -682,18 +683,17 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     testData: testData,
     configJson: configJson,
   },
-  // FIXME: Uncomment the following lines to enable Flex Consumption
-  // servicePlanFlexConsumption: {
-  //   // View currently supported regions: https://learn.microsoft.com/en-us/azure/azure-functions/flex-consumption-how-to?tabs=azure-cli%2Cvs-code-publish&pivots=programming-language-csharp#view-currently-supported-regions
-  //   // $ az functionapp list-flexconsumption-locations --output table
-  //   location: 'eastus',
-  //   osType: 'Linux',
-  //   skuName: 'FC1',
-  // },
-  // functionAppFlexConsumption: {
-  //   runtimeName: 'python',
-  //   runtimeVersion: '3.11',
-  // },
+  servicePlanFlexConsumption: {
+    location: 'japaneast',
+    osType: 'Linux',
+    skuName: 'FC1',
+  },
+  functionAppFlexConsumption: {
+    location: 'japaneast',
+    runtimeName: 'python',
+    runtimeVersion: '3.11',
+  },
+  // FIXME: disable for now
   // functionAppFunctionFlexConsumption: {
   //   name: 'helloFunction',
   //   language: 'Python',
@@ -711,7 +711,8 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     skuName: 'S1',
     capacity: 1,
   },
-  monitorDiagnosticSetting: {},
+  // FIXME: disable for now
+  // monitorDiagnosticSetting: {},
   monitorWorkspace: {},
   applicationInsights: {},
   eventgridNamespace: {},
@@ -1100,14 +1101,18 @@ export class AzurermPlaygroundStack extends TerraformStack {
     }
 
     if (props.servicePlanFlexConsumption) {
-      const servicePlan = new ServicePlan(this, `ServicePlanFlexConsumption`, {
-        name: `aspfc-${props.name}`,
-        location: props.servicePlanFlexConsumption.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        osType: props.servicePlanFlexConsumption.osType,
-        skuName: props.servicePlanFlexConsumption.skuName,
-      });
+      const servicePlanFlexConsumption = new ServicePlan(
+        this,
+        `ServicePlanFlexConsumption`,
+        {
+          name: `aspfc-${props.name}`,
+          location: props.servicePlanFlexConsumption.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          osType: props.servicePlanFlexConsumption.osType,
+          skuName: props.servicePlanFlexConsumption.skuName,
+        },
+      );
 
       if (props.functionAppFlexConsumption && storageAccount) {
         const functionAppFlexConsumption = new FunctionAppFlexConsumption(
@@ -1115,14 +1120,17 @@ export class AzurermPlaygroundStack extends TerraformStack {
           `FunctionAppFlexConsumption`,
           {
             name: `fafc-${props.name}`,
-            location: props.location,
+            location: props.functionAppFlexConsumption.location,
             tags: props.tags,
             resourceGroupName: resourceGroup.resourceGroup.name,
-            servicePlanId: servicePlan.servicePlan.id,
+            servicePlanId: servicePlanFlexConsumption.servicePlan.id,
             storageContainerEndpoint: `${storageAccount.storageAccount.primaryBlobEndpoint}container1`,
             storageAccessKey: storageAccount.storageAccount.primaryAccessKey,
             runtimeName: props.functionAppFlexConsumption.runtimeName,
             runtimeVersion: props.functionAppFlexConsumption.runtimeVersion,
+            applicationInsightsConnectionString: applicationInsights
+              ? applicationInsights.applicationInsights.connectionString
+              : undefined,
           },
         );
 
