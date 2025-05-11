@@ -38,6 +38,10 @@ export class MonitorDiagnosticSetting extends Construct {
               },
             },
           ],
+          // Workaround for BUG: https://github.com/terraform-providers/terraform-provider-azurerm/issues/10388
+          lifecycle: {
+            ignoreChanges: ['enabled_log', 'metric'],
+          },
         },
       );
   }

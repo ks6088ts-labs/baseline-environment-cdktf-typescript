@@ -13,6 +13,7 @@ export interface FunctionAppFlexConsumptionProps {
   runtimeVersion: string;
   maximumInstanceCount?: number;
   instanceMemoryInMb?: number;
+  applicationInsightsConnectionString?: string;
 }
 
 export class FunctionAppFlexConsumption extends Construct {
@@ -44,7 +45,10 @@ export class FunctionAppFlexConsumption extends Construct {
           runtimeVersion: props.runtimeVersion,
           maximumInstanceCount: props.maximumInstanceCount,
           instanceMemoryInMb: props.instanceMemoryInMb,
-          siteConfig: {},
+          siteConfig: {
+            applicationInsightsConnectionString:
+              props.applicationInsightsConnectionString,
+          },
           identity: {
             type: 'SystemAssigned',
           },
