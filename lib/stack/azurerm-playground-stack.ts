@@ -890,6 +890,21 @@ export class AzurermPlaygroundStack extends TerraformStack {
       );
     }
 
+    let applicationInsights: ApplicationInsights | undefined = undefined;
+    if (props.applicationInsights && logAnalyticsWorkspace) {
+      applicationInsights = new ApplicationInsights(
+        this,
+        `ApplicationInsights`,
+        {
+          name: `app-insights-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          workspaceId: logAnalyticsWorkspace.logAnalyticsWorkspace.id,
+        },
+      );
+    }
+
     if (props.appConfiguration) {
       new AppConfiguration(this, `AppConfiguration`, {
         name: `app-configuration-${props.name}`,
@@ -1062,6 +1077,12 @@ export class AzurermPlaygroundStack extends TerraformStack {
               storageAccount.storageAccount.primaryAccessKey,
             servicePlanId: servicePlan.servicePlan.id,
             applicationStack: props.linuxFunctionApp.applicationStack,
+            applicationInsightsConnectionString: applicationInsights
+              ? applicationInsights.applicationInsights.connectionString
+              : undefined,
+            applicationInsightsKey: applicationInsights
+              ? applicationInsights.applicationInsights.instrumentationKey
+              : undefined,
           },
         );
 
@@ -1297,16 +1318,6 @@ export class AzurermPlaygroundStack extends TerraformStack {
           ],
         });
       }
-    }
-
-    if (props.applicationInsights && logAnalyticsWorkspace) {
-      new ApplicationInsights(this, `ApplicationInsights`, {
-        name: `app-insights-${props.name}`,
-        location: props.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        workspaceId: logAnalyticsWorkspace.logAnalyticsWorkspace.id,
-      });
     }
 
     if (props.monitorWorkspace) {
