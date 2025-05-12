@@ -9,6 +9,7 @@ import {
   linuxFunctionApp,
   functionAppFunction,
   containerRegistry,
+  linuxWebApp,
 } from '@cdktf/provider-azurerm';
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 import { RoleAssignment } from '../construct/azurerm/role-assignment';
@@ -30,6 +31,7 @@ import {
   StorageContainerProps,
 } from '../construct/azurerm/storage-account';
 import { ServicePlan } from '../construct/azurerm/service-plan';
+import { LinuxWebApp } from '../construct/azurerm/linux-web-app';
 import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
@@ -133,6 +135,10 @@ export interface AzurermPlaygroundStackProps {
     location: string;
     osType: string;
     skuName: string;
+  };
+  linuxWebApp?: {
+    appCommandLine?: string;
+    applicationStack?: linuxWebApp.LinuxWebAppSiteConfigApplicationStack;
   };
   linuxFunctionApp?: {
     applicationStack?: linuxFunctionApp.LinuxFunctionAppSiteConfigApplicationStack;
@@ -666,6 +672,13 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     osType: 'Linux',
     skuName: 'B1',
   },
+  linuxWebApp: {
+    appCommandLine:
+      'gunicorn -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 main:app',
+    applicationStack: {
+      pythonVersion: '3.11',
+    },
+  },
   linuxFunctionApp: {
     applicationStack: {
       pythonVersion: '3.11',
@@ -1063,6 +1076,18 @@ export class AzurermPlaygroundStack extends TerraformStack {
         osType: props.servicePlan.osType,
         skuName: props.servicePlan.skuName,
       });
+
+      if (props.linuxWebApp) {
+        new LinuxWebApp(this, `LinuxWebApp`, {
+          name: `wa-${props.name}`,
+          location: props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          servicePlanId: servicePlan.servicePlan.id,
+          appCommandLine: props.linuxWebApp.appCommandLine,
+          applicationStack: props.linuxWebApp.applicationStack,
+        });
+      }
 
       if (props.linuxFunctionApp && storageAccount) {
         const linuxFunctionApp = new LinuxFunctionApp(
