@@ -24,7 +24,7 @@
     "@cdktf/provider-azuread": "13.4.0",
     "@cdktf/provider-azurerm": "13.28.0",
     "@cdktf/provider-github": "^14.6.0",
-    "@cdktf/provider-google": "^14.34.0",
+    "@cdktf/provider-google": "^14.35.1",
     "cdktf": "^0.20.12",
     "cdktf-cli": "^0.20.12",
     "constructs": "^10.4.2"
