@@ -15,8 +15,8 @@ importers:
         specifier: 13.4.0
         version: 13.4.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
-        specifier: 13.28.0
-        version: 13.28.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+        specifier: 13.29.0
+        version: 13.29.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-github':
         specifier: ^14.6.0
         version: 14.6.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
@@ -266,8 +266,8 @@ packages:
       cdktf: ^0.20.0
       constructs: ^10.3.0
 
-  '@cdktf/provider-azurerm@13.28.0':
-    resolution: {integrity: sha512-OZQxl3YtpfGd4EWqRjF3pK4+76gjDaY6Cs1ReeTKenSGhwf5/Tj2qR3DZPu2tIhAc35G6s8G0WLMgdmPh3bGLg==}
+  '@cdktf/provider-azurerm@13.29.0':
+    resolution: {integrity: sha512-bd1XkxJqAdoZHEHlD8TXNWy0FOfXS7s/QcPI7ZUft4Y3lldwBC5/KB57XjFyJuL8ddZ3Me57/BiKQ//qqVTnnw==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
@@ -2469,8 +2469,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.9.0-dev.20250520:
-    resolution: {integrity: sha512-2xyK59gIyyjHf2/QKcjNXKhLt/Haj9N4D+YPUgDBlzFzuGMH0s8vLU4kkSAlYx4YHKW8pgKRaj3VJzr42XCF3g==}
+  typescript@5.9.0-dev.20250525:
+    resolution: {integrity: sha512-C5nvU5aYBSr/sPMlp+P50fu6VY8m+7EmVSlN+XKGLZnJLL0Lu7tfRSsg1clT5gVpXD14WhntVVEGYEJoJNdAGQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2978,7 +2978,7 @@ snapshots:
       cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-azurerm@13.28.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-azurerm@13.29.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
@@ -3993,7 +3993,7 @@ snapshots:
     dependencies:
       semver: 7.7.2
       shelljs: 0.8.5
-      typescript: 5.9.0-dev.20250520
+      typescript: 5.9.0-dev.20250525
 
   dunder-proto@1.0.1:
     dependencies:
@@ -5666,7 +5666,7 @@ snapshots:
 
   typescript@5.8.3: {}
 
-  typescript@5.9.0-dev.20250520: {}
+  typescript@5.9.0-dev.20250525: {}
 
   undici-types@5.26.5: {}
 
