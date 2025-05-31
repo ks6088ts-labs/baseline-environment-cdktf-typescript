@@ -590,6 +590,18 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
             capacity: 3,
           },
         },
+        // Video generation models > Region availability: https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#region-availability-6
+        {
+          name: 'sora',
+          model: {
+            name: 'sora',
+            version: '2025-05-02',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 60,
+          },
+        },
       ],
     },
     {
@@ -839,6 +851,368 @@ export const prodAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   },
   privateDnsZone: {},
   privateEndpoint: {},
+};
+
+export const aiAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
+  name: `Ai-AzurermPlaygroundStack-${getRandomIdentifier('Ai-AzurermPlaygroundStack')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  resourceGroup: {},
+  aiServices: [
+    {
+      location: 'japaneast',
+      deployments: [
+        {
+          name: 'o3-mini',
+          model: {
+            name: 'o3-mini',
+            version: '2025-01-31',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'o1',
+          model: {
+            name: 'o1',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-4o-mini',
+          model: {
+            name: 'gpt-4o-mini',
+            version: '2024-07-18',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
+        {
+          name: 'text-embedding-3-large',
+          model: {
+            name: 'text-embedding-3-large',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'text-embedding-3-small',
+          model: {
+            name: 'text-embedding-3-small',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+      ],
+    },
+    {
+      location: 'eastus',
+      deployments: [
+        {
+          name: 'o3-mini',
+          model: {
+            name: 'o3-mini',
+            version: '2025-01-31',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'o1',
+          model: {
+            name: 'o1',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-4o-mini',
+          model: {
+            name: 'gpt-4o-mini',
+            version: '2024-07-18',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
+        {
+          name: 'text-embedding-3-large',
+          model: {
+            name: 'text-embedding-3-large',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'text-embedding-3-small',
+          model: {
+            name: 'text-embedding-3-small',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+      ],
+    },
+    {
+      location: 'eastus2',
+      deployments: [
+        {
+          name: 'gpt-4.1',
+          model: {
+            name: 'gpt-4.1',
+            version: '2025-04-14',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'gpt-4.5-preview',
+          model: {
+            name: 'gpt-4.5-preview',
+            version: '2025-02-27',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 150,
+          },
+        },
+        {
+          name: 'o4-mini',
+          model: {
+            name: 'o4-mini',
+            version: '2025-04-16',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'o3',
+          model: {
+            name: 'o3',
+            version: '2025-04-16',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'o3-mini',
+          model: {
+            name: 'o3-mini',
+            version: '2025-01-31',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'o1',
+          model: {
+            name: 'o1',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 500,
+          },
+        },
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-4o-transcribe',
+          model: {
+            name: 'gpt-4o-transcribe',
+            version: '2025-03-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 160,
+          },
+        },
+        {
+          name: 'gpt-4o-mini',
+          model: {
+            name: 'gpt-4o-mini',
+            version: '2024-07-18',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
+        {
+          name: 'gpt-4o-mini-tts',
+          model: {
+            name: 'gpt-4o-mini-tts',
+            version: '2025-03-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 160,
+          },
+        },
+        {
+          name: 'gpt-4o-mini-transcribe',
+          model: {
+            name: 'gpt-4o-mini-transcribe',
+            version: '2025-03-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 160,
+          },
+        },
+        {
+          name: 'gpt-4o-mini-realtime-preview',
+          model: {
+            name: 'gpt-4o-mini-realtime-preview',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 6,
+          },
+        },
+        {
+          name: 'gpt-4o-mini-audio-preview',
+          model: {
+            name: 'gpt-4o-mini-audio-preview',
+            version: '2024-12-17',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2000,
+          },
+        },
+        {
+          name: 'text-embedding-3-large',
+          model: {
+            name: 'text-embedding-3-large',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'text-embedding-3-small',
+          model: {
+            name: 'text-embedding-3-small',
+            version: '1',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 350,
+          },
+        },
+        {
+          name: 'whisper',
+          model: {
+            name: 'whisper',
+            version: '001',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 3,
+          },
+        },
+        // Video generation models > Region availability: https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#region-availability-6
+        {
+          name: 'sora',
+          model: {
+            name: 'sora',
+            version: '2025-05-02',
+          },
+          sku: {
+            name: 'Standard',
+            capacity: 60,
+          },
+        },
+      ],
+    },
+    {
+      location: 'westus3',
+      deployments: [
+        {
+          name: 'gpt-image-1',
+          model: {
+            name: 'gpt-image-1',
+            version: '2025-04-15',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 2,
+          },
+        },
+      ],
+    },
+  ],
 };
 
 export class AzurermPlaygroundStack extends TerraformStack {
