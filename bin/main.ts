@@ -4,6 +4,7 @@ import {
   AzurermPlaygroundStack,
   devAzurermPlaygroundStackProps,
   prodAzurermPlaygroundStackProps,
+  aiAzurermPlaygroundStackProps,
 } from '../lib/stack/azurerm-playground-stack';
 import {
   BackendStack,
@@ -132,6 +133,13 @@ new GooglePlaygroundStack(
   app,
   `Prod-GooglePlaygroundStack`,
   prodGooglePlaygroundStackProps,
+);
+
+// Miscellaneous Stacks
+new AzurermPlaygroundStack(
+  app,
+  `Ai-AzurermPlaygroundStack`,
+  aiAzurermPlaygroundStackProps,
 );
 
 app.synth();
