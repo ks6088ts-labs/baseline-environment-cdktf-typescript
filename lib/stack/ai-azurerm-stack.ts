@@ -47,7 +47,7 @@ export interface AiAzurermStackProps {
 }
 
 export const aiAzurermStackProps: AiAzurermStackProps = {
-  name: `AiAzurermStackProps-${getRandomIdentifier('AiAzurermStackProps')}`,
+  name: `AiAzurermStack-${getRandomIdentifier('AiAzurermStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
