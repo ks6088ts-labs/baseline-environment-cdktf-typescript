@@ -3,13 +3,8 @@ import { TerraformStack, TerraformOutput } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 // import { RoleAssignment } from '../construct/azurerm/role-assignment';
-import { Cosmosdb } from '../construct/azurerm/cosmosdb';
 import { KeyVault } from '../construct/azurerm/key-vault';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
-import {
-  StorageAccount,
-  StorageContainerProps,
-} from '../construct/azurerm/storage-account';
 import { Iothub } from '../construct/azurerm/iothub';
 import { VirtualNetwork } from '../construct/azurerm/virtual-network';
 import { Subnet } from '../construct/azurerm/subnet';
@@ -20,14 +15,15 @@ import { PrivateEndpoint } from '../construct/azurerm/private-endpoint';
 // import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
 import { EventgridNamespace } from '../construct/azurerm/eventgrid-namespace';
-import { EventgridDomain } from '../construct/azurerm/eventgrid-domain';
-import { EventgridDomainTopic } from '../construct/azurerm/eventgrid-domain-topic';
+// import { EventgridDomain } from '../construct/azurerm/eventgrid-domain';
+// import { EventgridDomainTopic } from '../construct/azurerm/eventgrid-domain-topic';
 import { EventgridTopic } from '../construct/azurerm/eventgrid-topic';
-import { EventgridEventSubscription } from '../construct/azurerm/eventgrid-event-subscription';
+// import { EventgridEventSubscription } from '../construct/azurerm/eventgrid-event-subscription';
 import { EventhubNamespace } from '../construct/azurerm/eventhub-namespace';
 import { Eventhub } from '../construct/azurerm/eventhub';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 import { convertName, getRandomIdentifier, createBackend } from '../utils';
+
 export interface AzurermPlaygroundStackProps {
   name: string;
   location: string;
@@ -39,17 +35,8 @@ export interface AzurermPlaygroundStackProps {
     location: string;
     sku: string | undefined;
   };
-  storageAccount?: {
-    accountTier: string;
-    accountReplicationType: string;
-    storageContainers?: StorageContainerProps[];
-  };
   keyVault?: {
     skuName: string;
-  };
-  cosmosdb?: {
-    location: string;
-    partitionKeyPaths: string[];
   };
   iothub?: {
     location: string;
@@ -107,10 +94,6 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   keyVault: {
     skuName: 'standard',
   },
-  cosmosdb: {
-    location: 'japaneast',
-    partitionKeyPaths: ['/partitionKey'],
-  },
   iothub: {
     location: 'japaneast',
     skuName: 'S1',
@@ -149,20 +132,6 @@ export const prodAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   resourceGroup: {},
   userAssignedIdentity: {},
   roleAssignment: {},
-  storageAccount: {
-    accountTier: 'Standard',
-    accountReplicationType: 'LRS',
-    storageContainers: [
-      {
-        name: 'container1',
-        containerAccessType: 'private',
-      },
-      {
-        name: 'container2',
-        containerAccessType: 'private',
-      },
-    ],
-  },
   keyVault: {
     skuName: 'standard',
   },
@@ -190,6 +159,7 @@ export const prodAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
   privateDnsZone: {},
   privateEndpoint: {},
 };
+
 export class AzurermPlaygroundStack extends TerraformStack {
   constructor(
     scope: Construct,
@@ -236,28 +206,6 @@ export class AzurermPlaygroundStack extends TerraformStack {
           resourceGroupName: resourceGroup.resourceGroup.name,
         },
       );
-    }
-
-    if (props.cosmosdb) {
-      new Cosmosdb(this, `Cosmosdb`, {
-        name: convertName(`cosmosdb-${props.name}`, 50),
-        location: props.cosmosdb.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        partitionKeyPaths: props.cosmosdb.partitionKeyPaths,
-      });
-    }
-
-    let storageAccount: StorageAccount | undefined = undefined;
-    if (props.storageAccount) {
-      storageAccount = new StorageAccount(this, `StorageAccount`, {
-        name: convertName(`st-${props.name}`, 24),
-        location: props.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        accountTier: props.storageAccount.accountTier,
-        accountReplicationType: props.storageAccount.accountReplicationType,
-      });
     }
 
     let keyVault: KeyVault | undefined = undefined;
@@ -381,12 +329,12 @@ export class AzurermPlaygroundStack extends TerraformStack {
 
       // Create Private Endpoints for other services
       const endpointConfigs = [
-        {
-          id: 'StorageAccount',
-          condition: !!storageAccount,
-          resourceId: storageAccount?.storageAccount.id,
-          subresource: 'blob',
-        },
+        // {
+        //   id: 'StorageAccount',
+        //   condition: !!storageAccount,
+        //   resourceId: storageAccount?.storageAccount.id,
+        //   subresource: 'blob',
+        // },
         {
           id: 'KeyVault',
           condition: !!keyVault,
@@ -486,37 +434,36 @@ export class AzurermPlaygroundStack extends TerraformStack {
     }
 
     if (props.eventgridDomain) {
-      const eventgridDomain = new EventgridDomain(this, `EventgridDomain`, {
-        name: `eg-domain-${props.name}`,
-        location: props.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        inputSchema: props.eventgridDomain.inputSchema,
-      });
+      // const eventgridDomain = new EventgridDomain(this, `EventgridDomain`, {
+      //   name: `eg-domain-${props.name}`,
+      //   location: props.location,
+      //   tags: props.tags,
+      //   resourceGroupName: resourceGroup.resourceGroup.name,
+      //   inputSchema: props.eventgridDomain.inputSchema,
+      // });
 
       if (props.eventgridDomainTopic) {
-        const eventgridDomainTopic = new EventgridDomainTopic(
-          this,
-          `EventgridDomainTopic`,
-          {
-            name: `eg-domain-topic-${props.name}`,
-            domainName: eventgridDomain.eventgridDomain.name,
-            resourceGroupName: resourceGroup.resourceGroup.name,
-          },
-        );
-
-        if (props.eventgridEventSubscription && storageAccount) {
-          new EventgridEventSubscription(this, `EventgridEventSubscription`, {
-            name: `eg-domain-topic-subscription-${props.name}`,
-            scope: eventgridDomainTopic.eventgridDomainTopic.id,
-            eventDeliverySchema:
-              props.eventgridEventSubscription.eventDeliverySchema,
-            storageQueueEndpoint: {
-              queueName: storageAccount.storageQueue.name,
-              storageAccountId: storageAccount.storageAccount.id,
-            },
-          });
-        }
+        // const eventgridDomainTopic = new EventgridDomainTopic(
+        //   this,
+        //   `EventgridDomainTopic`,
+        //   {
+        //     name: `eg-domain-topic-${props.name}`,
+        //     domainName: eventgridDomain.eventgridDomain.name,
+        //     resourceGroupName: resourceGroup.resourceGroup.name,
+        //   },
+        // );
+        // if (props.eventgridEventSubscription && storageAccount) {
+        //   new EventgridEventSubscription(this, `EventgridEventSubscription`, {
+        //     name: `eg-domain-topic-subscription-${props.name}`,
+        //     scope: eventgridDomainTopic.eventgridDomainTopic.id,
+        //     eventDeliverySchema:
+        //       props.eventgridEventSubscription.eventDeliverySchema,
+        //     storageQueueEndpoint: {
+        //       queueName: storageAccount.storageQueue.name,
+        //       storageAccountId: storageAccount.storageAccount.id,
+        //     },
+        //   });
+        // }
       }
     }
 
