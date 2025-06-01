@@ -17,17 +17,19 @@ Baseline Environment in CDK for Terraform using TypeScript
 ## How to use
 
 ```shell
+STACKS="Azurerm-Ai-Stack Azurerm-App-Stack Azurerm-Data-Stack Azurerm-Iot-Stack Azurerm-Monitoring-Stack Azurerm-Security-Stack"
+
 # Set the Azure subscription ID
 export ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 
 # Perform a diff to see what will be deployed
-cdktf diff Ai-AzurermStack
+cdktf diff Azurerm-Ai-Stack
 
 # Deploy the stack
-cdktf deploy --auto-approve Ai-AzurermStack
+cdktf deploy --auto-approve Azurerm-Ai-Stack
 
 # Destroy the stack
-cdktf destroy --auto-approve Ai-AzurermStack
+cdktf destroy --auto-approve Azurerm-Ai-Stack
 ```
 
 ## Tips

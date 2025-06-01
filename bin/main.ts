@@ -142,14 +142,14 @@ new GooglePlaygroundStack(
 // Azure Resource Stacks
 const azurermAiStack = new AzurermAiStack(
   app,
-  `Azurerm-AiStack`,
+  `Azurerm-Ai-Stack`,
   azurermAiStackProps,
 );
 // const azurermAppStack =
-new AzurermAppStack(app, `Azurerm-AppStack`, azurermAppStackProps);
+new AzurermAppStack(app, `Azurerm-App-Stack`, azurermAppStackProps);
 const azurermDataStack = new AzurermDataStack(
   app,
-  `Azurerm-DataStack`,
+  `Azurerm-Data-Stack`,
   azurermDataStackProps,
 );
 
@@ -190,12 +190,12 @@ if (azurermDataStack.keyVault) {
 // }
 new AzurermNetworkStack(
   app,
-  `Azurerm-NetworkStack`,
+  `Azurerm-Network-Stack`,
   createAzurermNetworkStackProps(privateEndpointConfigs),
 );
 new AzurermIotStack(
   app,
-  `Azurerm-IotStack`,
+  `Azurerm-Iot-Stack`,
   azurermIotStackProps,
   azurermDataStack.storageAccount,
 );
@@ -207,7 +207,7 @@ for (const service of azurermAiStack.aiServices) {
     scope: service.aiServices.id,
   });
 }
-new AzurermSecurityStack(app, `Azurerm-SecurityStack`, {
+new AzurermSecurityStack(app, `Azurerm-Security-Stack`, {
   name: `AzurermSecurityStack-${getRandomIdentifier('AzurermSecurityStack')}`,
   location: 'japaneast',
   tags: {
@@ -222,7 +222,7 @@ new AzurermSecurityStack(app, `Azurerm-SecurityStack`, {
 
 new AzurermMonitoringStack(
   app,
-  `Azurerm-MonitoringStack`,
+  `Azurerm-Monitoring-Stack`,
   azurermMonitoringStackProps,
 );
 app.synth();
