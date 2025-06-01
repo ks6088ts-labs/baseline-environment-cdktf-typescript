@@ -1,10 +1,5 @@
 import { Testing } from 'cdktf';
 import {
-  AzurermPlaygroundStack,
-  devAzurermPlaygroundStackProps,
-} from '../lib/stack/azurerm-playground-stack';
-import { BackendStack, devBackendStackProps } from '../lib/stack/backend-stack';
-import {
   AzureadPlaygroundStack,
   devAzureadPlaygroundStackProps,
 } from '../lib/stack/azuread-playground-stack';
@@ -23,30 +18,6 @@ import {
 } from '../lib/stack/google-playground-stack';
 
 describe('Unit testing using assertions', () => {
-  it('Test AzurermPlaygroundStack', () => {
-    const app = Testing.app();
-    const stack = new AzurermPlaygroundStack(
-      app,
-      'azurermPlaygroundStack',
-      devAzurermPlaygroundStackProps,
-    );
-    const synthesized = Testing.synth(stack);
-
-    // FIXME: TORIAEZU
-    expect(synthesized).toMatch(/"azurerm_resource_group"/);
-    console.log(synthesized);
-  });
-
-  it('Test BackendStack', () => {
-    const app = Testing.app();
-    const stack = new BackendStack(app, 'backendStack', devBackendStackProps);
-    const synthesized = Testing.synth(stack);
-
-    // FIXME: TORIAEZU
-    expect(synthesized).toMatch(/"azurerm_resource_group"/);
-    console.log(synthesized);
-  });
-
   it('Test AzureadPlaygroundStack', () => {
     const app = Testing.app();
     const stack = new AzureadPlaygroundStack(

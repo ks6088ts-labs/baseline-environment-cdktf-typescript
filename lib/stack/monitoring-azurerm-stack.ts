@@ -1,28 +1,29 @@
 import { Construct } from 'constructs';
 import { TerraformStack, TerraformOutput } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
+import { getRandomIdentifier, createBackend, convertName } from '../utils';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
+import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-workspace';
 // import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
-import { convertName, getRandomIdentifier, createBackend } from '../utils';
 
-export interface AzurermPlaygroundStackProps {
+export interface MonitoringAzurermStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
   logAnalyticsWorkspace?: {
     location: string;
-    sku: string | undefined;
+    sku: string;
   };
   monitorDiagnosticSetting?: {};
   monitorWorkspace?: {};
   dashboardGrafana?: {};
 }
 
-export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
-  name: `Dev-AzurermPlaygroundStack-${getRandomIdentifier('Dev-AzurermPlaygroundStack')}`,
+export const monitoringAzurermStackProps: MonitoringAzurermStackProps = {
+  name: `MonitoringAzurermStack-${getRandomIdentifier('MonitoringAzurermStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -33,26 +34,16 @@ export const devAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     location: 'japaneast',
     sku: 'PerGB2018',
   },
-  // FIXME: disable for now
-  // monitorDiagnosticSetting: {},
+  monitorDiagnosticSetting: {},
   monitorWorkspace: {},
   dashboardGrafana: {},
 };
 
-export const prodAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
-  name: `Prod-AzurermPlaygroundStack-${getRandomIdentifier('Prod-AzurermPlaygroundStack')}`,
-  location: 'japaneast',
-  tags: {
-    owner: 'ks6088ts',
-  },
-  resourceGroup: {},
-};
-
-export class AzurermPlaygroundStack extends TerraformStack {
+export class MonitoringAzurermStack extends TerraformStack {
   constructor(
     scope: Construct,
     id: string,
-    props: AzurermPlaygroundStackProps,
+    props: MonitoringAzurermStackProps,
   ) {
     super(scope, id);
 
@@ -82,22 +73,37 @@ export class AzurermPlaygroundStack extends TerraformStack {
       value: resourceGroup.resourceGroup.name,
     });
 
-    // if (props.monitorDiagnosticSetting && logAnalyticsWorkspace) {
-    //   for (const aiService of aiServicesArray) {
-    //     const name = `MonitorDiagnosticSetting-${aiService.aiServices.name}`;
-    //     new MonitorDiagnosticSetting(this, name, {
-    //       name: name,
-    //       targetResourceId: aiService.aiServices.id,
-    //       logAnalyticsWorkspaceId:
-    //         logAnalyticsWorkspace.logAnalyticsWorkspace.id,
-    //       enabledLog: [
-    //         {
-    //           categoryGroup: 'Audit',
-    //         },
-    //       ],
-    //     });
-    //   }
-    // }
+    let logAnalyticsWorkspace: LogAnalyticsWorkspace | undefined = undefined;
+    if (props.logAnalyticsWorkspace) {
+      logAnalyticsWorkspace = new LogAnalyticsWorkspace(
+        this,
+        `LogAnalyticsWorkspace`,
+        {
+          name: `law-${props.name}`,
+          location: props.logAnalyticsWorkspace?.location || props.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          sku: props.logAnalyticsWorkspace?.sku,
+        },
+      );
+    }
+
+    if (props.monitorDiagnosticSetting && logAnalyticsWorkspace) {
+      // for (const aiService of aiServicesArray) {
+      //   const name = `MonitorDiagnosticSetting-${aiService.aiServices.name}`;
+      //   new MonitorDiagnosticSetting(this, name, {
+      //     name: name,
+      //     targetResourceId: aiService.aiServices.id,
+      //     logAnalyticsWorkspaceId:
+      //       logAnalyticsWorkspace.logAnalyticsWorkspace.id,
+      //     enabledLog: [
+      //       {
+      //         categoryGroup: 'Audit',
+      //       },
+      //     ],
+      //   });
+      // }
+    }
 
     if (props.monitorWorkspace) {
       const monitorWorkspace = new MonitorWorkspace(this, `MonitorWorkspace`, {

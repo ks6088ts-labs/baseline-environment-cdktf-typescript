@@ -21,13 +21,13 @@ Baseline Environment in CDK for Terraform using TypeScript
 export ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 
 # Perform a diff to see what will be deployed
-cdktf diff Dev-BackendStack
+cdktf diff Ai-AzurermStack
 
 # Deploy the stack
-cdktf deploy --auto-approve Dev-BackendStack
+cdktf deploy --auto-approve Ai-AzurermStack
 
 # Destroy the stack
-cdktf destroy --auto-approve Dev-BackendStack
+cdktf destroy --auto-approve Ai-AzurermStack
 ```
 
 ## Tips

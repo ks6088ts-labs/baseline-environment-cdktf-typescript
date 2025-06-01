@@ -2,11 +2,6 @@
 import { App } from 'cdktf';
 import { getRandomIdentifier } from '../lib/utils';
 import {
-  AzurermPlaygroundStack,
-  devAzurermPlaygroundStackProps,
-  prodAzurermPlaygroundStackProps,
-} from '../lib/stack/azurerm-playground-stack';
-import {
   AiAzurermStack,
   aiAzurermStackProps,
 } from '../lib/stack/ai-azurerm-stack';
@@ -29,10 +24,9 @@ import {
 } from '../lib/stack/iot-azurerm-stack';
 import { SecurityAzurermStack } from '../lib/stack/security-azurerm-stack';
 import {
-  BackendStack,
-  devBackendStackProps,
-  prodBackendStackProps,
-} from '../lib/stack/backend-stack';
+  MonitoringAzurermStack,
+  monitoringAzurermStackProps,
+} from '../lib/stack/monitoring-azurerm-stack';
 import {
   AzureadPlaygroundStack,
   devAzureadPlaygroundStackProps,
@@ -58,12 +52,6 @@ import {
 const app = new App();
 
 // Development Environment
-new AzurermPlaygroundStack(
-  app,
-  `Dev-AzurermPlaygroundStack`,
-  devAzurermPlaygroundStackProps,
-);
-new BackendStack(app, `Dev-BackendStack`, devBackendStackProps);
 new AzureadPlaygroundStack(
   app,
   `Dev-AzureadPlaygroundStack`,
@@ -130,12 +118,6 @@ new GithubEnvironmentSecretStack(
 );
 
 // Production Environment
-new AzurermPlaygroundStack(
-  app,
-  `Prod-AzurermPlaygroundStack`,
-  prodAzurermPlaygroundStackProps,
-);
-new BackendStack(app, `Prod-BackendStack`, prodBackendStackProps);
 new AzureadPlaygroundStack(
   app,
   `Prod-AzureadPlaygroundStack`,
@@ -238,4 +220,9 @@ new SecurityAzurermStack(app, `Security-AzurermStack`, {
   },
 });
 
+new MonitoringAzurermStack(
+  app,
+  `Monitoring-AzurermStack`,
+  monitoringAzurermStackProps,
+);
 app.synth();
