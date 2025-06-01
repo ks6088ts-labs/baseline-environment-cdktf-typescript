@@ -18,6 +18,10 @@ import {
   dataAzurermStackProps,
 } from '../lib/stack/data-azurerm-stack';
 import {
+  NetworkAzurermStack,
+  networkAzurermStackProps,
+} from '../lib/stack/network-azurerm-stack';
+import {
   BackendStack,
   devBackendStackProps,
   prodBackendStackProps,
@@ -150,5 +154,6 @@ new GooglePlaygroundStack(
 new AiAzurermStack(app, `Ai-AzurermStack`, aiAzurermStackProps);
 new AppAzurermStack(app, `App-AzurermStack`, appAzurermStackProps);
 new DataAzurermStack(app, `Data-AzurermStack`, dataAzurermStackProps);
+new NetworkAzurermStack(app, `Network-AzurermStack`, networkAzurermStackProps);
 
 app.synth();
