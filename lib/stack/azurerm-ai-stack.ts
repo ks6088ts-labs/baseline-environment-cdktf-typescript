@@ -24,7 +24,7 @@ interface AiServicesDeployment {
   };
 }
 
-export interface AiAzurermStackProps {
+export interface AzurermAiStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -46,8 +46,8 @@ export interface AiAzurermStackProps {
   aiFoundryProject: {};
 }
 
-export const aiAzurermStackProps: AiAzurermStackProps = {
-  name: `AiAzurermStack-${getRandomIdentifier('AiAzurermStack')}`,
+export const azurermAiStackProps: AzurermAiStackProps = {
+  name: `AzurermAiStack-${getRandomIdentifier('AzurermAiStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -427,9 +427,9 @@ export const aiAzurermStackProps: AiAzurermStackProps = {
   aiFoundryProject: {},
 };
 
-export class AiAzurermStack extends TerraformStack {
+export class AzurermAiStack extends TerraformStack {
   public readonly aiServices: AiServices[] = [];
-  constructor(scope: Construct, id: string, props: AiAzurermStackProps) {
+  constructor(scope: Construct, id: string, props: AzurermAiStackProps) {
     super(scope, id);
 
     // Backend

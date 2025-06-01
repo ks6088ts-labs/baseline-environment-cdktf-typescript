@@ -10,14 +10,14 @@ import { BastionHost } from '../construct/azurerm/bastion';
 import { PrivateDnsZone } from '../construct/azurerm/private-dns-zone';
 import { PrivateEndpoint } from '../construct/azurerm/private-endpoint';
 
-export interface NetworkAzurermStackPropsPrivateEndpointConfig {
+export interface AzurermNetworkStackPropsPrivateEndpointConfig {
   id: string;
   name: string;
   resourceId: string;
   subresource: string;
 }
 
-export interface NetworkAzurermStackProps {
+export interface AzurermNetworkStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -40,15 +40,15 @@ export interface NetworkAzurermStackProps {
     }[];
   };
   privateEndpoint?: {
-    configs?: NetworkAzurermStackPropsPrivateEndpointConfig[];
+    configs?: AzurermNetworkStackPropsPrivateEndpointConfig[];
   };
 }
 
-export function createNetworkAzurermStackProps(
-  privateEndpointConfigs: NetworkAzurermStackPropsPrivateEndpointConfig[],
-): NetworkAzurermStackProps {
+export function createAzurermNetworkStackProps(
+  privateEndpointConfigs: AzurermNetworkStackPropsPrivateEndpointConfig[],
+): AzurermNetworkStackProps {
   return {
-    name: `NetworkAzurermStack-${getRandomIdentifier('NetworkAzurermStack')}`,
+    name: `AzurermNetworkStack-${getRandomIdentifier('AzurermNetworkStack')}`,
     location: 'japaneast',
     tags: {
       owner: 'ks6088ts',
@@ -89,8 +89,8 @@ export function createNetworkAzurermStackProps(
   };
 }
 
-export class NetworkAzurermStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: NetworkAzurermStackProps) {
+export class AzurermNetworkStack extends TerraformStack {
+  constructor(scope: Construct, id: string, props: AzurermNetworkStackProps) {
     super(scope, id);
 
     // Backend

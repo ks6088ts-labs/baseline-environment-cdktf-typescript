@@ -10,7 +10,7 @@ import {
 import { Cosmosdb } from '../construct/azurerm/cosmosdb';
 import { KeyVault } from '../construct/azurerm/key-vault';
 
-export interface DataAzurermStackProps {
+export interface AzurermDataStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -29,8 +29,8 @@ export interface DataAzurermStackProps {
   };
 }
 
-export const dataAzurermStackProps: DataAzurermStackProps = {
-  name: `DataAzurermStack-${getRandomIdentifier('DataAzurermStack')}`,
+export const azurermDataStackProps: AzurermDataStackProps = {
+  name: `AzurermDataStack-${getRandomIdentifier('AzurermDataStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -59,10 +59,10 @@ export const dataAzurermStackProps: DataAzurermStackProps = {
   },
 };
 
-export class DataAzurermStack extends TerraformStack {
+export class AzurermDataStack extends TerraformStack {
   public readonly storageAccount: StorageAccount | undefined;
   public readonly keyVault: KeyVault | undefined;
-  constructor(scope: Construct, id: string, props: DataAzurermStackProps) {
+  constructor(scope: Construct, id: string, props: AzurermDataStackProps) {
     super(scope, id);
 
     // Backend

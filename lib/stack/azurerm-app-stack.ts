@@ -76,7 +76,7 @@ import { ApiManagement } from '../construct/azurerm/api-management';
 //   disabled: false,
 // });
 
-export interface AppAzurermStackProps {
+export interface AzurermAppStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -163,8 +163,8 @@ export interface AppAzurermStackProps {
   };
 }
 
-export const appAzurermStackProps: AppAzurermStackProps = {
-  name: `AppAzurermStack-${getRandomIdentifier('AppAzurermStack')}`,
+export const azurermAppStackProps: AzurermAppStackProps = {
+  name: `AzurermAppStack-${getRandomIdentifier('AzurermAppStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -277,9 +277,9 @@ export const appAzurermStackProps: AppAzurermStackProps = {
   },
 };
 
-export class AppAzurermStack extends TerraformStack {
+export class AzurermAppStack extends TerraformStack {
   public readonly containerRegistry: ContainerRegistry | undefined;
-  constructor(scope: Construct, id: string, props: AppAzurermStackProps) {
+  constructor(scope: Construct, id: string, props: AzurermAppStackProps) {
     super(scope, id);
 
     // Backend
