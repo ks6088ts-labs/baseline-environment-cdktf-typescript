@@ -23,6 +23,10 @@ import {
   createNetworkAzurermStackProps,
 } from '../lib/stack/network-azurerm-stack';
 import {
+  IotAzurermStack,
+  iotAzurermStackProps,
+} from '../lib/stack/iot-azurerm-stack';
+import {
   BackendStack,
   devBackendStackProps,
   prodBackendStackProps,
@@ -204,6 +208,12 @@ new NetworkAzurermStack(
   app,
   `Network-AzurermStack`,
   createNetworkAzurermStackProps(privateEndpointConfigs),
+);
+new IotAzurermStack(
+  app,
+  `Iot-AzurermStack`,
+  iotAzurermStackProps,
+  dataAzurermStack.storageAccount,
 );
 
 app.synth();

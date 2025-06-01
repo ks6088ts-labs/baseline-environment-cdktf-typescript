@@ -69,12 +69,12 @@ export function createNetworkAzurermStackProps(
         addressPrefixes: ['10.242.0.0/16'],
       },
     ],
-    virtualMachine: {
-      vmSize: 'Standard_DS2_v2',
-    },
-    bastionHost: {
-      sku: 'Basic',
-    },
+    // virtualMachine: {
+    //   vmSize: 'Standard_DS2_v2',
+    // },
+    // bastionHost: {
+    //   sku: 'Basic',
+    // },
     privateDnsZone: {
       configs: [
         { id: 'OpenAi', name: 'privatelink.openai.azure.com' },
