@@ -11,7 +11,7 @@ export interface RoleAssignmentProps {
   scope: string;
 }
 
-export interface SecurityAzurermStackProps {
+export interface AzurermSecurityStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -22,8 +22,8 @@ export interface SecurityAzurermStackProps {
   };
 }
 
-export class SecurityAzurermStack extends TerraformStack {
-  constructor(scope: Construct, id: string, props: SecurityAzurermStackProps) {
+export class AzurermSecurityStack extends TerraformStack {
+  constructor(scope: Construct, id: string, props: AzurermSecurityStackProps) {
     super(scope, id);
 
     // Backend

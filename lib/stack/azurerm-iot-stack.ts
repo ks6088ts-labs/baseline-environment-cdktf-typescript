@@ -13,7 +13,7 @@ import { EventhubNamespace } from '../construct/azurerm/eventhub-namespace';
 import { Eventhub } from '../construct/azurerm/eventhub';
 import { StorageAccount } from '../construct/azurerm/storage-account';
 
-export interface IotAzurermStackProps {
+export interface AzurermIotStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -43,8 +43,8 @@ export interface IotAzurermStackProps {
   };
 }
 
-export const iotAzurermStackProps: IotAzurermStackProps = {
-  name: `IotAzurermStack-${getRandomIdentifier('IotAzurermStack')}`,
+export const azurermIotStackProps: AzurermIotStackProps = {
+  name: `AzurermIotStack-${getRandomIdentifier('AzurermIotStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -75,11 +75,11 @@ export const iotAzurermStackProps: IotAzurermStackProps = {
   },
 };
 
-export class IotAzurermStack extends TerraformStack {
+export class AzurermIotStack extends TerraformStack {
   constructor(
     scope: Construct,
     id: string,
-    props: IotAzurermStackProps,
+    props: AzurermIotStackProps,
     storageAccount?: StorageAccount,
   ) {
     super(scope, id);

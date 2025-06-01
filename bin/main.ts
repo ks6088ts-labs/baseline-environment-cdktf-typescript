@@ -2,31 +2,31 @@
 import { App } from 'cdktf';
 import { getRandomIdentifier } from '../lib/utils';
 import {
-  AiAzurermStack,
-  aiAzurermStackProps,
-} from '../lib/stack/ai-azurerm-stack';
+  AzurermAiStack,
+  azurermAiStackProps,
+} from '../lib/stack/azurerm-ai-stack';
 import {
-  AppAzurermStack,
-  appAzurermStackProps,
-} from '../lib/stack/app-azurerm-stack';
+  AzurermAppStack,
+  azurermAppStackProps,
+} from '../lib/stack/azurerm-app-stack';
 import {
-  DataAzurermStack,
-  dataAzurermStackProps,
-} from '../lib/stack/data-azurerm-stack';
+  AzurermDataStack,
+  azurermDataStackProps,
+} from '../lib/stack/azurerm-data-stack';
 import {
-  NetworkAzurermStack,
-  NetworkAzurermStackPropsPrivateEndpointConfig,
-  createNetworkAzurermStackProps,
-} from '../lib/stack/network-azurerm-stack';
+  AzurermNetworkStack,
+  AzurermNetworkStackPropsPrivateEndpointConfig,
+  createAzurermNetworkStackProps,
+} from '../lib/stack/azurerm-network-stack';
 import {
-  IotAzurermStack,
-  iotAzurermStackProps,
-} from '../lib/stack/iot-azurerm-stack';
-import { SecurityAzurermStack } from '../lib/stack/security-azurerm-stack';
+  AzurermIotStack,
+  azurermIotStackProps,
+} from '../lib/stack/azurerm-iot-stack';
+import { AzurermSecurityStack } from '../lib/stack/azurerm-security-stack';
 import {
-  MonitoringAzurermStack,
-  monitoringAzurermStackProps,
-} from '../lib/stack/monitoring-azurerm-stack';
+  AzurermMonitoringStack,
+  azurermMonitoringStackProps,
+} from '../lib/stack/azurerm-monitoring-stack';
 import {
   AzureadPlaygroundStack,
   devAzureadPlaygroundStackProps,
@@ -140,22 +140,22 @@ new GooglePlaygroundStack(
 );
 
 // Azure Resource Stacks
-const aiAzurermStack = new AiAzurermStack(
+const azurermAiStack = new AzurermAiStack(
   app,
-  `Ai-AzurermStack`,
-  aiAzurermStackProps,
+  `Azurerm-AiStack`,
+  azurermAiStackProps,
 );
-// const appAzurermStack =
-new AppAzurermStack(app, `App-AzurermStack`, appAzurermStackProps);
-const dataAzurermStack = new DataAzurermStack(
+// const azurermAppStack =
+new AzurermAppStack(app, `Azurerm-AppStack`, azurermAppStackProps);
+const azurermDataStack = new AzurermDataStack(
   app,
-  `Data-AzurermStack`,
-  dataAzurermStackProps,
+  `Azurerm-DataStack`,
+  azurermDataStackProps,
 );
 
-let privateEndpointConfigs: NetworkAzurermStackPropsPrivateEndpointConfig[] =
+let privateEndpointConfigs: AzurermNetworkStackPropsPrivateEndpointConfig[] =
   [];
-aiAzurermStack.aiServices.forEach((service) => {
+azurermAiStack.aiServices.forEach((service) => {
   privateEndpointConfigs.push({
     id: 'OpenAi',
     name: `OpenAi-${service.aiServices.name}`,
@@ -163,52 +163,52 @@ aiAzurermStack.aiServices.forEach((service) => {
     subresource: 'account',
   });
 });
-if (dataAzurermStack.storageAccount) {
+if (azurermDataStack.storageAccount) {
   privateEndpointConfigs.push({
     id: 'StorageAccount',
-    name: `StorageAccount-${dataAzurermStack.storageAccount.storageAccount.name}`,
-    resourceId: dataAzurermStack.storageAccount.storageAccount.id,
+    name: `StorageAccount-${azurermDataStack.storageAccount.storageAccount.name}`,
+    resourceId: azurermDataStack.storageAccount.storageAccount.id,
     subresource: 'blob',
   });
 }
-if (dataAzurermStack.keyVault) {
+if (azurermDataStack.keyVault) {
   privateEndpointConfigs.push({
     id: 'KeyVault',
-    name: `KeyVault-${dataAzurermStack.keyVault.keyVault.name}`,
-    resourceId: dataAzurermStack.keyVault.keyVault.id,
+    name: `KeyVault-${azurermDataStack.keyVault.keyVault.name}`,
+    resourceId: azurermDataStack.keyVault.keyVault.id,
     subresource: 'vault',
   });
 }
 // Disable this for now, as it requires a Premium SKU for the container registry
-// if (appAzurermStack.containerRegistry) {
+// if (azurermAppStack.containerRegistry) {
 //   privateEndpointConfigs.push({
 //     id: 'ContainerRegistry',
-//     name: `ContainerRegistry-${appAzurermStack.containerRegistry.containerRegistry.name}`,
-//     resourceId: appAzurermStack.containerRegistry.containerRegistry.id,
+//     name: `ContainerRegistry-${azurermAppStack.containerRegistry.containerRegistry.name}`,
+//     resourceId: azurermAppStack.containerRegistry.containerRegistry.id,
 //     subresource: 'registry',
 //   });
 // }
-new NetworkAzurermStack(
+new AzurermNetworkStack(
   app,
-  `Network-AzurermStack`,
-  createNetworkAzurermStackProps(privateEndpointConfigs),
+  `Azurerm-NetworkStack`,
+  createAzurermNetworkStackProps(privateEndpointConfigs),
 );
-new IotAzurermStack(
+new AzurermIotStack(
   app,
-  `Iot-AzurermStack`,
-  iotAzurermStackProps,
-  dataAzurermStack.storageAccount,
+  `Azurerm-IotStack`,
+  azurermIotStackProps,
+  azurermDataStack.storageAccount,
 );
 
 let roleAssignmentProps = [];
-for (const service of aiAzurermStack.aiServices) {
+for (const service of azurermAiStack.aiServices) {
   roleAssignmentProps.push({
     roleDefinitionName: 'Cognitive Services OpenAI User',
     scope: service.aiServices.id,
   });
 }
-new SecurityAzurermStack(app, `Security-AzurermStack`, {
-  name: `SecurityAzurermStack-${getRandomIdentifier('SecurityAzurermStack')}`,
+new AzurermSecurityStack(app, `Azurerm-SecurityStack`, {
+  name: `AzurermSecurityStack-${getRandomIdentifier('AzurermSecurityStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -220,9 +220,9 @@ new SecurityAzurermStack(app, `Security-AzurermStack`, {
   },
 });
 
-new MonitoringAzurermStack(
+new AzurermMonitoringStack(
   app,
-  `Monitoring-AzurermStack`,
-  monitoringAzurermStackProps,
+  `Azurerm-MonitoringStack`,
+  azurermMonitoringStackProps,
 );
 app.synth();

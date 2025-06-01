@@ -8,7 +8,7 @@ import { LogAnalyticsWorkspace } from '../construct/azurerm/log-analytics-worksp
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
 import { DashboardGrafana } from '../construct/azurerm/dashboard-grafana';
 
-export interface MonitoringAzurermStackProps {
+export interface AzurermMonitoringStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
@@ -22,8 +22,8 @@ export interface MonitoringAzurermStackProps {
   dashboardGrafana?: {};
 }
 
-export const monitoringAzurermStackProps: MonitoringAzurermStackProps = {
-  name: `MonitoringAzurermStack-${getRandomIdentifier('MonitoringAzurermStack')}`,
+export const azurermMonitoringStackProps: AzurermMonitoringStackProps = {
+  name: `AzurermMonitoringStack-${getRandomIdentifier('AzurermMonitoringStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
@@ -39,11 +39,11 @@ export const monitoringAzurermStackProps: MonitoringAzurermStackProps = {
   dashboardGrafana: {},
 };
 
-export class MonitoringAzurermStack extends TerraformStack {
+export class AzurermMonitoringStack extends TerraformStack {
   constructor(
     scope: Construct,
     id: string,
-    props: MonitoringAzurermStackProps,
+    props: AzurermMonitoringStackProps,
   ) {
     super(scope, id);
 
