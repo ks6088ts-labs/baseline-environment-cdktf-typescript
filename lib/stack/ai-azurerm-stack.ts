@@ -428,6 +428,7 @@ export const aiAzurermStackProps: AiAzurermStackProps = {
 };
 
 export class AiAzurermStack extends TerraformStack {
+  public readonly aiServices: AiServices[] = [];
   constructor(scope: Construct, id: string, props: AiAzurermStackProps) {
     super(scope, id);
 
@@ -457,7 +458,7 @@ export class AiAzurermStack extends TerraformStack {
       value: resourceGroup.resourceGroup.name,
     });
 
-    props.aiServices.map((aiService, i) => {
+    this.aiServices = props.aiServices.map((aiService, i) => {
       return new AiServices(this, `AiServices-${aiService.location}-${i}`, {
         name: `ai-services-${props.name}-${i}`,
         location: aiService.location,

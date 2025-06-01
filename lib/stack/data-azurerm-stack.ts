@@ -8,6 +8,7 @@ import {
   StorageContainerProps,
 } from '../construct/azurerm/storage-account';
 import { Cosmosdb } from '../construct/azurerm/cosmosdb';
+import { KeyVault } from '../construct/azurerm/key-vault';
 
 export interface DataAzurermStackProps {
   name: string;
@@ -22,6 +23,9 @@ export interface DataAzurermStackProps {
   cosmosdb?: {
     location: string;
     partitionKeyPaths: string[];
+  };
+  keyVault?: {
+    skuName: string;
   };
 }
 
@@ -50,9 +54,14 @@ export const dataAzurermStackProps: DataAzurermStackProps = {
     location: 'japaneast',
     partitionKeyPaths: ['/partitionKey'],
   },
+  keyVault: {
+    skuName: 'standard',
+  },
 };
 
 export class DataAzurermStack extends TerraformStack {
+  public readonly storageAccount: StorageAccount | undefined;
+  public readonly keyVault: KeyVault | undefined;
   constructor(scope: Construct, id: string, props: DataAzurermStackProps) {
     super(scope, id);
 
@@ -93,13 +102,24 @@ export class DataAzurermStack extends TerraformStack {
     }
 
     if (props.storageAccount) {
-      new StorageAccount(this, `StorageAccount`, {
+      this.storageAccount = new StorageAccount(this, `StorageAccount`, {
         name: convertName(`st-${props.name}`, 24),
         location: props.location,
         tags: props.tags,
         resourceGroupName: resourceGroup.resourceGroup.name,
         accountTier: props.storageAccount.accountTier,
         accountReplicationType: props.storageAccount.accountReplicationType,
+      });
+    }
+
+    if (props.keyVault) {
+      this.keyVault = new KeyVault(this, `KeyVault`, {
+        name: convertName(`kv-${props.name}`, 24),
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        skuName: props.keyVault.skuName,
+        purgeProtectionEnabled: false,
       });
     }
   }
