@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { App } from 'cdktf';
+import { getRandomIdentifier } from '../lib/utils';
 import {
   AzurermPlaygroundStack,
   devAzurermPlaygroundStackProps,
@@ -26,6 +27,7 @@ import {
   IotAzurermStack,
   iotAzurermStackProps,
 } from '../lib/stack/iot-azurerm-stack';
+import { SecurityAzurermStack } from '../lib/stack/security-azurerm-stack';
 import {
   BackendStack,
   devBackendStackProps,
@@ -215,5 +217,25 @@ new IotAzurermStack(
   iotAzurermStackProps,
   dataAzurermStack.storageAccount,
 );
+
+let roleAssignmentProps = [];
+for (const service of aiAzurermStack.aiServices) {
+  roleAssignmentProps.push({
+    roleDefinitionName: 'Cognitive Services OpenAI User',
+    scope: service.aiServices.id,
+  });
+}
+new SecurityAzurermStack(app, `Security-AzurermStack`, {
+  name: `SecurityAzurermStack-${getRandomIdentifier('SecurityAzurermStack')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+  },
+  resourceGroup: {},
+  userAssignedIdentity: {},
+  roleAssignment: {
+    configs: roleAssignmentProps,
+  },
+});
 
 app.synth();

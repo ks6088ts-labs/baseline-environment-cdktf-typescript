@@ -1,8 +1,6 @@
 import { Construct } from 'constructs';
 import { TerraformStack, TerraformOutput } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
-// import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
-// import { RoleAssignment } from '../construct/azurerm/role-assignment';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
 // import { MonitorDiagnosticSetting } from '../construct/azurerm/monitor-diagnostic-setting';
 import { MonitorWorkspace } from '../construct/azurerm/monitor-workspace';
@@ -14,8 +12,6 @@ export interface AzurermPlaygroundStackProps {
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
-  userAssignedIdentity?: {};
-  roleAssignment?: {};
   logAnalyticsWorkspace?: {
     location: string;
     sku: string | undefined;
@@ -50,8 +46,6 @@ export const prodAzurermPlaygroundStackProps: AzurermPlaygroundStackProps = {
     owner: 'ks6088ts',
   },
   resourceGroup: {},
-  userAssignedIdentity: {},
-  roleAssignment: {},
 };
 
 export class AzurermPlaygroundStack extends TerraformStack {
@@ -87,34 +81,6 @@ export class AzurermPlaygroundStack extends TerraformStack {
     new TerraformOutput(this, 'resource_group_name', {
       value: resourceGroup.resourceGroup.name,
     });
-
-    // let userAssignedIdentity: UserAssignedIdentity | undefined = undefined;
-    // if (props.userAssignedIdentity) {
-    //   userAssignedIdentity = new UserAssignedIdentity(
-    //     this,
-    //     `UserAssignedIdentity`,
-    //     {
-    //       name: `uai-${props.name}`,
-    //       location: props.location,
-    //       tags: props.tags,
-    //       resourceGroupName: resourceGroup.resourceGroup.name,
-    //     },
-    //   );
-    // }
-
-    // if (props.roleAssignment && userAssignedIdentity) {
-    //   for (const aiService of aiServicesArray) {
-    //     new RoleAssignment(
-    //       this,
-    //       `RoleAssignment-${aiService.aiServices.name}`,
-    //       {
-    //         principalId: userAssignedIdentity.userAssignedIdentity.principalId,
-    //         roleDefinitionName: 'Cognitive Services OpenAI User',
-    //         scope: aiService.aiServices.id,
-    //       },
-    //     );
-    //   }
-    // }
 
     // if (props.monitorDiagnosticSetting && logAnalyticsWorkspace) {
     //   for (const aiService of aiServicesArray) {
