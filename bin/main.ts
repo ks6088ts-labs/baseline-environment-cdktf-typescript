@@ -18,6 +18,11 @@ import {
   dataAzurermStackProps,
 } from '../lib/stack/data-azurerm-stack';
 import {
+  NetworkAzurermStack,
+  NetworkAzurermStackPropsPrivateEndpointConfig,
+  createNetworkAzurermStackProps,
+} from '../lib/stack/network-azurerm-stack';
+import {
   BackendStack,
   devBackendStackProps,
   prodBackendStackProps,
@@ -146,9 +151,59 @@ new GooglePlaygroundStack(
   prodGooglePlaygroundStackProps,
 );
 
-// Miscellaneous Stacks
-new AiAzurermStack(app, `Ai-AzurermStack`, aiAzurermStackProps);
+// Azure Resource Stacks
+const aiAzurermStack = new AiAzurermStack(
+  app,
+  `Ai-AzurermStack`,
+  aiAzurermStackProps,
+);
+// const appAzurermStack =
 new AppAzurermStack(app, `App-AzurermStack`, appAzurermStackProps);
-new DataAzurermStack(app, `Data-AzurermStack`, dataAzurermStackProps);
+const dataAzurermStack = new DataAzurermStack(
+  app,
+  `Data-AzurermStack`,
+  dataAzurermStackProps,
+);
+
+let privateEndpointConfigs: NetworkAzurermStackPropsPrivateEndpointConfig[] =
+  [];
+aiAzurermStack.aiServices.forEach((service) => {
+  privateEndpointConfigs.push({
+    id: 'OpenAi',
+    name: `OpenAi-${service.aiServices.name}`,
+    resourceId: service.aiServices.id,
+    subresource: 'account',
+  });
+});
+if (dataAzurermStack.storageAccount) {
+  privateEndpointConfigs.push({
+    id: 'StorageAccount',
+    name: `StorageAccount-${dataAzurermStack.storageAccount.storageAccount.name}`,
+    resourceId: dataAzurermStack.storageAccount.storageAccount.id,
+    subresource: 'blob',
+  });
+}
+if (dataAzurermStack.keyVault) {
+  privateEndpointConfigs.push({
+    id: 'KeyVault',
+    name: `KeyVault-${dataAzurermStack.keyVault.keyVault.name}`,
+    resourceId: dataAzurermStack.keyVault.keyVault.id,
+    subresource: 'vault',
+  });
+}
+// Disable this for now, as it requires a Premium SKU for the container registry
+// if (appAzurermStack.containerRegistry) {
+//   privateEndpointConfigs.push({
+//     id: 'ContainerRegistry',
+//     name: `ContainerRegistry-${appAzurermStack.containerRegistry.containerRegistry.name}`,
+//     resourceId: appAzurermStack.containerRegistry.containerRegistry.id,
+//     subresource: 'registry',
+//   });
+// }
+new NetworkAzurermStack(
+  app,
+  `Network-AzurermStack`,
+  createNetworkAzurermStackProps(privateEndpointConfigs),
+);
 
 app.synth();

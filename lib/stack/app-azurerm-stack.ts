@@ -30,51 +30,51 @@ import { FunctionAppFunction } from '../construct/azurerm/function-app-function'
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
 import { ApiManagement } from '../construct/azurerm/api-management';
 
-const pythonFunctionCode = `
-import logging
-import azure.functions as func
+// const pythonFunctionCode = `
+// import logging
+// import azure.functions as func
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
-`;
+// def main(req: func.HttpRequest) -> func.HttpResponse:
+//     logging.info('Python HTTP trigger function processed a request.')
+//     name = req.params.get('name')
+//     if not name:
+//         try:
+//             req_body = req.get_json()
+//         except ValueError:
+//             pass
+//         else:
+//             name = req_body.get('name')
+//     if name:
+//         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+//     else:
+//         return func.HttpResponse(
+//              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+//              status_code=200
+//         )
+// `;
 
-const testData = JSON.stringify({
-  name: 'Azure',
-});
+// const testData = JSON.stringify({
+//   name: 'Azure',
+// });
 
-const configJson = JSON.stringify({
-  scriptFile: '__init__.py',
-  bindings: [
-    {
-      authLevel: 'function',
-      direction: 'in',
-      methods: ['get', 'post'],
-      name: 'req',
-      type: 'httpTrigger',
-    },
-    {
-      direction: 'out',
-      name: '$return',
-      type: 'http',
-    },
-  ],
-  disabled: false,
-});
+// const configJson = JSON.stringify({
+//   scriptFile: '__init__.py',
+//   bindings: [
+//     {
+//       authLevel: 'function',
+//       direction: 'in',
+//       methods: ['get', 'post'],
+//       name: 'req',
+//       type: 'httpTrigger',
+//     },
+//     {
+//       direction: 'out',
+//       name: '$return',
+//       type: 'http',
+//     },
+//   ],
+//   disabled: false,
+// });
 
 export interface AppAzurermStackProps {
   name: string;
@@ -233,18 +233,19 @@ export const appAzurermStackProps: AppAzurermStackProps = {
       pythonVersion: '3.12',
     },
   },
-  functionAppFunction: {
-    name: 'helloFunction',
-    language: 'Python',
-    file: [
-      {
-        name: '__init__.py',
-        content: pythonFunctionCode,
-      },
-    ],
-    testData: testData,
-    configJson: configJson,
-  },
+  // FIXME: disable for now
+  // functionAppFunction: {
+  //   name: 'helloFunction',
+  //   language: 'Python',
+  //   file: [
+  //     {
+  //       name: '__init__.py',
+  //       content: pythonFunctionCode,
+  //     },
+  //   ],
+  //   testData: testData,
+  //   configJson: configJson,
+  // },
   servicePlanFlexConsumption: {
     location: 'japaneast',
     osType: 'Linux',
@@ -277,6 +278,7 @@ export const appAzurermStackProps: AppAzurermStackProps = {
 };
 
 export class AppAzurermStack extends TerraformStack {
+  public readonly containerRegistry: ContainerRegistry | undefined;
   constructor(scope: Construct, id: string, props: AppAzurermStackProps) {
     super(scope, id);
 
@@ -307,14 +309,18 @@ export class AppAzurermStack extends TerraformStack {
     });
 
     if (props.containerRegistry) {
-      new ContainerRegistry(this, `ContainerRegistry`, {
-        name: convertName(`acr-${props.name}`),
-        location: props.containerRegistry.location,
-        tags: props.tags,
-        resourceGroupName: resourceGroup.resourceGroup.name,
-        sku: props.containerRegistry.sku,
-        adminEnabled: props.containerRegistry.adminEnabled,
-      });
+      this.containerRegistry = new ContainerRegistry(
+        this,
+        `ContainerRegistry`,
+        {
+          name: convertName(`acr-${props.name}`),
+          location: props.containerRegistry.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          sku: props.containerRegistry.sku,
+          adminEnabled: props.containerRegistry.adminEnabled,
+        },
+      );
     }
 
     if (props.containerAppEnvironment) {
