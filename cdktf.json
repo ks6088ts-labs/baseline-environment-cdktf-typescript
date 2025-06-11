@@ -5,7 +5,8 @@
   "sendCrashReports": "false",
   "terraformProviders": [
     "hashicorp/azurerm@~> 4.26.0",
-    "hashicorp/azuread@~> 3.3.0"
+    "hashicorp/azuread@~> 3.3.0",
+    "azure/azapi@~> 2.4"
   ],
   "terraformModules": [],
   "context": {}
