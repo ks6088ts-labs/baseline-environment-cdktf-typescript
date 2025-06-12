@@ -48,6 +48,10 @@ import {
   devGooglePlaygroundStackProps,
   prodGooglePlaygroundStackProps,
 } from '../lib/stack/google-playground-stack';
+import {
+  AzapiAiFoundryStack,
+  azapiAiFoundryStackProps,
+} from '../lib/stack/azapi-ai-foundry-stack';
 
 const app = new App();
 
@@ -225,4 +229,11 @@ new AzurermMonitoringStack(
   `Azurerm-Monitoring-Stack`,
   azurermMonitoringStackProps,
 );
+
+new AzapiAiFoundryStack(
+  app,
+  `Azapi-Ai-Foundry-Stack`,
+  azapiAiFoundryStackProps,
+);
+
 app.synth();
