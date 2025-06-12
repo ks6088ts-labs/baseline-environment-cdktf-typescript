@@ -16,7 +16,7 @@ export class AiFoundryProject extends Construct {
     // Resources
     const account = new Resource(scope, 'ai_foundry_project_account', {
       type: 'Microsoft.CognitiveServices/accounts@2025-04-01-preview',
-      name: `${props.name}-account`,
+      name: props.name,
       parentId: props.resourceGroupId,
       location: props.location,
       tags: props.tags,
