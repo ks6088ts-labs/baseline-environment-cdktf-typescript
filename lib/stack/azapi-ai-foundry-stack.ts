@@ -14,7 +14,7 @@ export interface AzapiAiFoundryStackProps {
 }
 
 export const azapiAiFoundryStackProps: AzapiAiFoundryStackProps = {
-  name: `AzApiAiFoundryStack-${getRandomIdentifier('AzApiAiFoundryStack')}`,
+  name: `AzapiAiFoundryStack-${getRandomIdentifier('AzapiAiFoundryStack')}`,
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
