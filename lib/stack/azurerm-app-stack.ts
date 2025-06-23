@@ -87,22 +87,22 @@ export interface AzurermAppStackProps {
     adminEnabled: boolean;
   };
   containerAppEnvironment?: {};
-  containerApp?: {
-    containers: [
-      {
+  containerApps?: {
+    name: string;
+    containers: {
+      name: string;
+      image: string;
+      cpu: number;
+      memory: string;
+      env: {
         name: string;
-        image: string;
-        cpu: number;
-        memory: string;
-        env: [
-          {
-            name: string;
-            value: string;
-          },
-        ];
-      },
-    ];
-  };
+        value: string;
+      }[];
+    }[];
+    ingress: {
+      targetPort: number;
+    };
+  }[];
   kubernetesCluster?: {
     nodeCount: number;
     vmSize: string;
@@ -176,22 +176,48 @@ export const azurermAppStackProps: AzurermAppStackProps = {
     adminEnabled: true,
   },
   containerAppEnvironment: {},
-  containerApp: {
-    containers: [
-      {
-        name: 'azure-event-grid-viewer',
-        image: 'microsoftlearning/azure-event-grid-viewer:latest',
-        cpu: 0.5,
-        memory: '1Gi',
-        env: [
-          {
-            name: 'ENV_VAR1',
-            value: 'value1',
-          },
-        ],
+  containerApps: [
+    {
+      name: 'azure-event-grid-viewer',
+      containers: [
+        {
+          name: 'azure-event-grid-viewer',
+          image: 'microsoftlearning/azure-event-grid-viewer:latest',
+          cpu: 0.5,
+          memory: '1Gi',
+          env: [
+            {
+              name: 'ENV_VAR1',
+              value: 'value1',
+            },
+          ],
+        },
+      ],
+      ingress: {
+        targetPort: 80,
       },
-    ],
-  },
+    },
+    {
+      name: 'template-streamlit',
+      containers: [
+        {
+          name: 'template-streamlit',
+          image: 'ks6088ts/template-streamlit:latest',
+          cpu: 0.5,
+          memory: '1Gi',
+          env: [
+            {
+              name: 'ENV_VAR1',
+              value: 'value1',
+            },
+          ],
+        },
+      ],
+      ingress: {
+        targetPort: 8000,
+      },
+    },
+  ],
   kubernetesCluster: {
     nodeCount: 1,
     vmSize: 'Standard_DS2_v2',
@@ -335,16 +361,19 @@ export class AzurermAppStack extends TerraformStack {
         },
       );
 
-      if (props.containerApp) {
-        new ContainerApp(this, `ContainerApp`, {
-          name: convertName(`ca-${props.name}`),
-          location: props.location,
-          tags: props.tags,
-          resourceGroupName: resourceGroup.resourceGroup.name,
-          containerAppEnvironmentId:
-            containerAppEnvironment.containerAppEnvironment.id,
-          containerAppTemplateContainers: props.containerApp.containers,
-        });
+      if (props.containerApps && props.containerApps.length > 0) {
+        for (const containerApp of props.containerApps) {
+          new ContainerApp(this, `ContainerApp-${containerApp.name}`, {
+            name: convertName(`ca-${containerApp.name}`),
+            location: props.location,
+            tags: props.tags,
+            resourceGroupName: resourceGroup.resourceGroup.name,
+            containerAppEnvironmentId:
+              containerAppEnvironment.containerAppEnvironment.id,
+            containerAppTemplateContainers: containerApp.containers,
+            containerAppIngress: containerApp.ingress,
+          });
+        }
       }
     }
 
