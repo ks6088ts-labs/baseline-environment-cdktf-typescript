@@ -8,6 +8,9 @@ interface ContainerAppProps {
   resourceGroupName: string;
   containerAppEnvironmentId: string;
   containerAppTemplateContainers: containerApp.ContainerAppTemplateContainer[];
+  containerAppIngress: {
+    targetPort: number;
+  };
 }
 
 export class ContainerApp extends Construct {
@@ -25,7 +28,7 @@ export class ContainerApp extends Construct {
         container: props.containerAppTemplateContainers,
       },
       ingress: {
-        targetPort: 80,
+        targetPort: props.containerAppIngress.targetPort,
         externalEnabled: true,
         trafficWeight: [
           {
