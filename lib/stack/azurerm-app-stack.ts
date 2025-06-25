@@ -178,6 +178,7 @@ export const azurermAppStackProps: AzurermAppStackProps = {
   containerAppEnvironment: {},
   containerApps: [
     {
+      // Azure Event Grid Viewer: https://github.com/Azure-Samples/azure-event-grid-viewer
       name: 'azure-event-grid-viewer',
       containers: [
         {
@@ -198,6 +199,7 @@ export const azurermAppStackProps: AzurermAppStackProps = {
       },
     },
     {
+      // template-streamlit: https://github.com/ks6088ts-labs/template-streamlit
       name: 'template-streamlit',
       containers: [
         {
@@ -215,6 +217,27 @@ export const azurermAppStackProps: AzurermAppStackProps = {
       ],
       ingress: {
         targetPort: 8000,
+      },
+    },
+    {
+      // n8n: https://github.com/n8n-io/n8n
+      name: 'n8n',
+      containers: [
+        {
+          name: 'n8n',
+          image: 'n8nio/n8n:latest',
+          cpu: 0.5,
+          memory: '1Gi',
+          env: [
+            {
+              name: 'ENV_VAR1',
+              value: 'value1',
+            },
+          ],
+        },
+      ],
+      ingress: {
+        targetPort: 5678,
       },
     },
   ],
