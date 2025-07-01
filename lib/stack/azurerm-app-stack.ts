@@ -94,6 +94,7 @@ export interface AzurermAppStackProps {
       image: string;
       cpu: number;
       memory: string;
+      command?: string[];
       env: {
         name: string;
         value: string;
@@ -178,6 +179,7 @@ export const azurermAppStackProps: AzurermAppStackProps = {
   containerAppEnvironment: {},
   containerApps: [
     {
+      // Azure Event Grid Viewer: https://github.com/Azure-Samples/azure-event-grid-viewer
       name: 'azure-event-grid-viewer',
       containers: [
         {
@@ -198,6 +200,7 @@ export const azurermAppStackProps: AzurermAppStackProps = {
       },
     },
     {
+      // template-streamlit: https://github.com/ks6088ts-labs/template-streamlit
       name: 'template-streamlit',
       containers: [
         {
@@ -211,6 +214,31 @@ export const azurermAppStackProps: AzurermAppStackProps = {
               value: 'value1',
             },
           ],
+        },
+      ],
+      ingress: {
+        targetPort: 8000,
+      },
+    },
+    {
+      // template-fastapi: https://github.com/ks6088ts-labs/template-fastapi
+      name: 'template-fastapi',
+      containers: [
+        {
+          name: 'template-fastapi',
+          image: 'ks6088ts/template-fastapi:latest',
+          cpu: 0.5,
+          memory: '1Gi',
+          command: [
+            'fastapi',
+            'run',
+            'main.py',
+            '--host',
+            '0.0.0.0',
+            '--port',
+            '8000',
+          ],
+          env: [],
         },
       ],
       ingress: {
