@@ -405,6 +405,33 @@ export const azurermAiStackProps: AzurermAiStackProps = {
         },
       ],
     },
+    {
+      location: 'norwayeast',
+      deployments: [
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'o3-deep-research',
+          model: {
+            name: 'o3-deep-research',
+            version: '2025-06-26',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 3000,
+          },
+        },
+      ],
+    },
   ],
   storageAccount: {
     accountTier: 'Standard',
