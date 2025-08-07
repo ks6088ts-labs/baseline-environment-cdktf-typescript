@@ -200,6 +200,50 @@ export const azurermAiStackProps: AzurermAiStackProps = {
       location: 'eastus2',
       deployments: [
         {
+          name: 'gpt-5',
+          model: {
+            name: 'gpt-5',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'gpt-5-mini',
+          model: {
+            name: 'gpt-5-mini',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'gpt-5-nano',
+          model: {
+            name: 'gpt-5-nano',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'gpt-5-chat',
+          model: {
+            name: 'gpt-5-chat',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
           name: 'gpt-4.1',
           model: {
             name: 'gpt-4.1',
