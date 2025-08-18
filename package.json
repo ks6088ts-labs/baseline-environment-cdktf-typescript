@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@cdktf/provider-aws": "^21.6.0",
-    "@cdktf/provider-azuread": "14.0.0",
+    "@cdktf/provider-azuread": "14.1.0",
     "@cdktf/provider-azurerm": "14.7.1",
     "@cdktf/provider-github": "^15.0.0",
     "@cdktf/provider-google": "^16.9.0",
