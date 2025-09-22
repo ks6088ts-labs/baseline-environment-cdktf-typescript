@@ -21,8 +21,8 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-google':
-        specifier: ^16.9.0
-        version: 16.9.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^16.12.0
+        version: 16.12.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       cdktf:
         specifier: ^0.21.0
         version: 0.21.0(constructs@10.4.2)
@@ -283,8 +283,8 @@ packages:
       cdktf: ^0.21.0
       constructs: ^10.4.2
 
-  '@cdktf/provider-google@16.9.0':
-    resolution: {integrity: sha512-4H7tDMETMLy94i6kK4UZ1jRNm2gcpO9x/Lgd6VisC92idVwK0cmK9l0v/M+Tb/NSjnrjhE0GgJAilSmO3FIq9w==}
+  '@cdktf/provider-google@16.12.0':
+    resolution: {integrity: sha512-PQBs0LXSUraXZWB8uQvXbUtbHZkJYLL3MX18KYAbIqoKbZSef+3mfLM5mzBo51j5qTv4gQAqpdMDJGrQwij2AQ==}
     engines: {node: '>= 20.9.0'}
     peerDependencies:
       cdktf: ^0.21.0
@@ -3045,7 +3045,7 @@ snapshots:
       cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-google@16.9.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-google@16.12.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
