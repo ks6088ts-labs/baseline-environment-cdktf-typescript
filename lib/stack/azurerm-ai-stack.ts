@@ -244,6 +244,17 @@ export const azurermAiStackProps: AzurermAiStackProps = {
           },
         },
         {
+          name: 'gpt-5-codex',
+          model: {
+            name: 'gpt-5-codex',
+            version: '2025-09-15',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
           name: 'gpt-4.1',
           model: {
             name: 'gpt-4.1',
