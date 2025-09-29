@@ -12,8 +12,8 @@ importers:
         specifier: ^21.11.1
         version: 21.11.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azuread':
-        specifier: 14.1.0
-        version: 14.1.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
+        specifier: 14.2.0
+        version: 14.2.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
         specifier: 14.13.1
         version: 14.13.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
@@ -255,8 +255,8 @@ packages:
       cdktf: ^0.21.0
       constructs: ^10.4.2
 
-  '@cdktf/provider-azuread@14.1.0':
-    resolution: {integrity: sha512-v0eaohZxKKN5KM3+WSsfqXBO6S2VPomsXDtaRxd8VMRnzWPzHJjWlXCvt5wajoJEt7tPgPfd6khS7HrF7a+0mg==}
+  '@cdktf/provider-azuread@14.2.0':
+    resolution: {integrity: sha512-DZm4R6mSEEF0GC0LzCW690ZPWDQjnIU3luQDzT/voYtRjUXJv6KhMunT6ZCvxfNsTbMLlV2BKXG+sZbWV/l3zQ==}
     engines: {node: '>= 20.9.0'}
     peerDependencies:
       cdktf: ^0.21.0
@@ -3024,7 +3024,7 @@ snapshots:
       cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-azuread@14.1.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-azuread@14.2.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
