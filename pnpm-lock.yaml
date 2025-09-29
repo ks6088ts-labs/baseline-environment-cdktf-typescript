@@ -15,8 +15,8 @@ importers:
         specifier: 14.1.0
         version: 14.1.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
-        specifier: 14.13.1
-        version: 14.13.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
+        specifier: 14.14.0
+        version: 14.14.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-github':
         specifier: ^15.0.0
         version: 15.0.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
@@ -262,8 +262,8 @@ packages:
       cdktf: ^0.21.0
       constructs: ^10.4.2
 
-  '@cdktf/provider-azurerm@14.13.1':
-    resolution: {integrity: sha512-jKnXUdSAIzBM43gwcLX5axv+2MvYJ4LbfcPkbt1k3LtLgDKC8ExTzEogoDa7x+3LvmGBo/R+EdDgDOR979jr7Q==}
+  '@cdktf/provider-azurerm@14.14.0':
+    resolution: {integrity: sha512-2i1vDMZzQ2qnKudzxtLNygjY4m6ufCf0VTUwIXiM3DpXb13EshItlQmLFt2iQGXLnUJMqWmRjGss7Ye9vaFNeA==}
     engines: {node: '>= 20.9.0'}
     peerDependencies:
       cdktf: ^0.21.0
@@ -3029,7 +3029,7 @@ snapshots:
       cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-azurerm@14.13.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-azurerm@14.14.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
