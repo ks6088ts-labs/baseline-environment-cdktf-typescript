@@ -41,7 +41,7 @@ jobs:
         run: |
           make install-deps-dev && make synth
       - name: Set Versions
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: set_version
         with:
           script: |
