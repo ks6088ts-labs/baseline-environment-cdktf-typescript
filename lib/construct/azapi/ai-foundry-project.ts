@@ -10,6 +10,8 @@ export interface AiFoundryProjectProps {
 }
 
 export class AiFoundryProject extends Construct {
+  public readonly id: string;
+
   constructor(scope: Construct, id: string, props: AiFoundryProjectProps) {
     super(scope, id);
 
@@ -34,6 +36,7 @@ export class AiFoundryProject extends Construct {
         },
       },
     });
+    this.id = account.id;
 
     new Resource(scope, 'ai_foundry_project_project', {
       type: 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview',
