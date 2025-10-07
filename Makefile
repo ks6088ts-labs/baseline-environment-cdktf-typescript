@@ -111,6 +111,10 @@ output: ## show the output of the given stacks
 		--output $(OUTPUT_DIR)/json \
 		$(STACKS)
 
+.PHONY: list
+list: ## list stacks
+	cdktf list
+
 .PHONY: update
 update: ## update dependencies
 	pnpm update --latest

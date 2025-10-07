@@ -14,34 +14,10 @@ Baseline Environment in CDK for Terraform using TypeScript
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Azure Subscription](https://azure.microsoft.com/en-us)
 
-## How to use
+## Deploy stacks
 
-```shell
-STACKS="Azurerm-Ai-Stack Azurerm-App-Stack Azurerm-Data-Stack Azurerm-Iot-Stack Azurerm-Monitoring-Stack Azurerm-Security-Stack"
+See [docs/infra](./docs/infra/)
 
-# Set the Azure subscription ID
-export ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
+## Scenarios
 
-# Perform a diff to see what will be deployed
-cdktf diff Azurerm-Ai-Stack
-
-# Deploy the stack
-cdktf deploy --auto-approve Azurerm-Ai-Stack
-
-# Destroy the stack
-cdktf destroy --auto-approve Azurerm-Ai-Stack
-```
-
-## Tips
-
-### Use remote backend
-
-To use a remote backend, you need to set up a storage account and a container in Azure.
-Then, you can select the backend configurations by setting the `TF_BACKEND` environment variable such as `azurerm` or `local`. The actual implementation of the backend is in the [lib/utils.ts](./lib/utils.ts) file.
-
-For example, to use the remote backend, you can run the following command:
-
-```shell
-# Deploy all the stacks with remote backend
-make deploy TF_BACKEND=azurerm
-```
+See [docs/scenarios](./docs/scenarios/)

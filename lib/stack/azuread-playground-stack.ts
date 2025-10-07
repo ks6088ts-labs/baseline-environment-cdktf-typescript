@@ -48,13 +48,6 @@ export const devAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {
   servicePrincipal: {},
 };
 
-export const prodAzureadPlaygroundStackProps: AzureadPlaygroundStackProps = {
-  user: {
-    name: 'prod-ks6088ts',
-    password: 'P@ssw0rd!',
-  },
-};
-
 export class AzureadPlaygroundStack extends TerraformStack {
   constructor(
     scope: Construct,

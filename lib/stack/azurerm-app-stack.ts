@@ -169,6 +169,8 @@ export const azurermAppStackProps: AzurermAppStackProps = {
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
+    SecurityControl: 'Ignore',
+    CostControl: 'Ignore',
   },
   resourceGroup: {},
   containerRegistry: {
@@ -236,6 +238,31 @@ export const azurermAppStackProps: AzurermAppStackProps = {
             '--host',
             '0.0.0.0',
             '--port',
+            '8000',
+          ],
+          env: [],
+        },
+      ],
+      ingress: {
+        targetPort: 8000,
+      },
+    },
+    {
+      // template-langgraph: https://github.com/ks6088ts-labs/template-langgraph
+      name: 'template-langgraph',
+      containers: [
+        {
+          name: 'template-langgraph',
+          image: 'ks6088ts/template-langgraph:latest',
+          cpu: 0.5,
+          memory: '1Gi',
+          command: [
+            'streamlit',
+            'run',
+            'template_langgraph/services/streamlits/main.py',
+            '--server.address',
+            '0.0.0.0',
+            '--server.port',
             '8000',
           ],
           env: [],

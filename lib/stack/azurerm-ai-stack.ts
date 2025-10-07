@@ -51,6 +51,8 @@ export const azurermAiStackProps: AzurermAiStackProps = {
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
+    SecurityControl: 'Ignore',
+    CostControl: 'Ignore',
   },
   resourceGroup: {},
   aiServices: [

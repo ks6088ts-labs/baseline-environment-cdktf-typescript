@@ -1,4 +1,6 @@
-# Azure AI Foundry Stack
+# Azure
+
+## Deployment
 
 ```shell
 # Login to Azure
@@ -7,11 +9,21 @@ az login
 # Set your subscription ID
 export ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 
+# Set backend (azurerm or local)
+TF_BACKEND=azurerm
+
+# Set stacks to deploy (To see available stacks, run `make list`)
+STACKS="Azapi-Ai-Foundry-Stack Azurerm-App-Stack Azurerm-Data-Stack Azurerm-Network-Stack Azurerm-Security-Stack"
+
 # Deploy resources
-TF_BACKEND=azurerm STACKS="Azapi-Ai-Foundry-Stack" make deploy
+make deploy \
+    TF_BACKEND=$TF_BACKEND \
+    STACKS=$STACKS
 
 # Destroy resources
-TF_BACKEND=azurerm STACKS="Azapi-Ai-Foundry-Stack" make destroy
+make destroy \
+    TF_BACKEND=$TF_BACKEND \
+    STACKS=$STACKS
 ```
 
 ## References
