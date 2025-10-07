@@ -61,10 +61,6 @@ export const devGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
   },
 };
 
-export const prodGooglePlaygroundStackProps: GooglePlaygroundStackProps = {
-  name: `Prod-GooglePlaygroundStack-${getRandomIdentifier('Prod-GooglePlaygroundStack')}`,
-};
-
 export class GooglePlaygroundStack extends TerraformStack {
   public readonly googleWorkloadIdentityProvider: string;
   public readonly googleServiceAccount: string;

@@ -62,11 +62,6 @@ export const devAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
   },
 };
 
-export const prodAwsPlaygroundStackProps: AwsPlaygroundStackProps = {
-  name: `Prod-AwsPlaygroundStack-${getRandomIdentifier('Prod-AwsPlaygroundStack')}`,
-  region: 'ap-northeast-3',
-};
-
 export class AwsPlaygroundStack extends TerraformStack {
   public readonly awsId: string;
   public readonly awsRoleName: string;

@@ -41,23 +41,6 @@ export const devServicePrincipalStackProps: ServicePrincipalStackProps = {
   ],
 };
 
-export const prodServicePrincipalStackProps: ServicePrincipalStackProps = {
-  name: 'baseline-environment-cdktf-typescript_prod',
-  githubOrganization: 'ks6088ts-labs',
-  githubRepository: 'baseline-environment-cdktf-typescript',
-  githubEnvironment: 'prod',
-  resourceAccess: [
-    {
-      name: 'Directory.Read.All',
-      type: 'Role',
-    },
-    {
-      name: 'Application.Read.All',
-      type: 'Role',
-    },
-  ],
-};
-
 export class ServicePrincipalStack extends TerraformStack {
   public readonly armClientId: string;
   public readonly armSubscriptionId: string;
