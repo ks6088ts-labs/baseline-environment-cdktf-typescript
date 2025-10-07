@@ -16,7 +16,7 @@ export class AiFoundryProject extends Construct {
     super(scope, id);
 
     // Resources
-    const account = new Resource(scope, 'ai_foundry_project_account', {
+    const account = new Resource(scope, `ai_foundry_project_account_${id}`, {
       type: 'Microsoft.CognitiveServices/accounts@2025-04-01-preview',
       name: props.name,
       parentId: props.resourceGroupId,
@@ -38,7 +38,7 @@ export class AiFoundryProject extends Construct {
     });
     this.id = account.id;
 
-    new Resource(scope, 'ai_foundry_project_project', {
+    new Resource(scope, `ai_foundry_project_project_${id}`, {
       type: 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview',
       name: `${props.name}-project`,
       parentId: account.id,

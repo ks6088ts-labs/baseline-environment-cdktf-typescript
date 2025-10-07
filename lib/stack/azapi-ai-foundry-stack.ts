@@ -19,13 +19,17 @@ interface AiFoundryDeploymentConfig {
   };
 }
 
+interface AiFoundryProjects {
+  location: string;
+  deployments: AiFoundryDeploymentConfig[];
+}
+
 export interface AzapiAiFoundryStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
-  aiFoundryLocation: string;
-  deployments?: AiFoundryDeploymentConfig[];
+  aiFoundryProjects?: AiFoundryProjects[];
 }
 
 export const azapiAiFoundryStackProps: AzapiAiFoundryStackProps = {
@@ -35,18 +39,38 @@ export const azapiAiFoundryStackProps: AzapiAiFoundryStackProps = {
     owner: 'ks6088ts',
   },
   resourceGroup: {},
-  aiFoundryLocation: 'eastus2',
-  deployments: [
+  aiFoundryProjects: [
     {
-      name: 'gpt-4o',
-      model: {
-        name: 'gpt-4o',
-        version: '2024-11-20',
-      },
-      sku: {
-        name: 'GlobalStandard',
-        capacity: 450,
-      },
+      location: 'eastus',
+      deployments: [
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+      ],
+    },
+    {
+      location: 'eastus2',
+      deployments: [
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+      ],
     },
   ],
 };
@@ -83,20 +107,30 @@ export class AzapiAiFoundryStack extends TerraformStack {
       value: resourceGroup.resourceGroup.name,
     });
 
-    const aiFoundryProject = new AiFoundryProject(this, `AiFoundryProject`, {
-      name: `ai-foundry-${props.name}`,
-      location: props.aiFoundryLocation,
-      tags: props.tags,
-      resourceGroupId: resourceGroup.resourceGroup.id,
-      customSubDomainName: `ai-foundry-${props.name}`,
-    });
+    props.aiFoundryProjects?.forEach((project) => {
+      const aiFoundryProject = new AiFoundryProject(
+        this,
+        `AiFoundryProject-${project.location}`,
+        {
+          name: `ai-foundry-${props.name}-${project.location}`,
+          location: project.location,
+          tags: props.tags,
+          resourceGroupId: resourceGroup.resourceGroup.id,
+          customSubDomainName: `ai-foundry-${props.name}-${project.location}`,
+        },
+      );
 
-    props.deployments?.forEach((deployment) => {
-      new AiFoundryDeployment(this, deployment.name, {
-        aiFoundryProjectId: aiFoundryProject.id,
-        name: deployment.name,
-        model: deployment.model,
-        sku: deployment.sku,
+      project.deployments.forEach((deployment) => {
+        new AiFoundryDeployment(
+          this,
+          `AiFoundryDeployment-${project.location}-${deployment.name}`,
+          {
+            aiFoundryProjectId: aiFoundryProject.id,
+            name: deployment.name,
+            model: deployment.model,
+            sku: deployment.sku,
+          },
+        );
       });
     });
   }
