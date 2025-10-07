@@ -19,13 +19,17 @@ interface AiFoundryDeploymentConfig {
   };
 }
 
+interface AiFoundryProjects {
+  location: string;
+  deployments: AiFoundryDeploymentConfig[];
+}
+
 export interface AzapiAiFoundryStackProps {
   name: string;
   location: string;
   tags?: { [key: string]: string };
   resourceGroup: {};
-  aiFoundryLocation: string;
-  deployments?: AiFoundryDeploymentConfig[];
+  aiFoundryProjects?: AiFoundryProjects[];
 }
 
 export const azapiAiFoundryStackProps: AzapiAiFoundryStackProps = {
@@ -33,20 +37,163 @@ export const azapiAiFoundryStackProps: AzapiAiFoundryStackProps = {
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
+    SecurityControl: 'Ignore',
+    CostControl: 'Ignore',
   },
   resourceGroup: {},
-  aiFoundryLocation: 'eastus2',
-  deployments: [
+  aiFoundryProjects: [
     {
-      name: 'gpt-4o',
-      model: {
-        name: 'gpt-4o',
-        version: '2024-11-20',
-      },
-      sku: {
-        name: 'GlobalStandard',
-        capacity: 450,
-      },
+      location: 'eastus2',
+      deployments: [
+        {
+          name: 'gpt-5',
+          model: {
+            name: 'gpt-5',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'gpt-5-mini',
+          model: {
+            name: 'gpt-5-mini',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-5-nano',
+          model: {
+            name: 'gpt-5-nano',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-5-chat',
+          model: {
+            name: 'gpt-5-chat',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'codex-mini',
+          model: {
+            name: 'codex-mini',
+            version: '2025-05-16',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'sora',
+          model: {
+            name: 'sora',
+            version: '2025-05-02',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 60,
+          },
+        },
+        {
+          name: 'model-router',
+          model: {
+            name: 'model-router',
+            version: '2025-08-07',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-4o',
+          model: {
+            name: 'gpt-4o',
+            version: '2024-11-20',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'text-embedding-3-small',
+          model: {
+            name: 'text-embedding-3-small',
+            version: '1',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'text-embedding-3-large',
+          model: {
+            name: 'text-embedding-3-large',
+            version: '1',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
+          name: 'gpt-5-codex',
+          model: {
+            name: 'gpt-5-codex',
+            version: '2025-09-15',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 450,
+          },
+        },
+        {
+          name: 'gpt-realtime',
+          model: {
+            name: 'gpt-realtime',
+            version: '2025-08-28',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 10,
+          },
+        },
+      ],
+    },
+    {
+      location: 'westus',
+      deployments: [
+        {
+          name: 'o3-deep-research',
+          model: {
+            name: 'o3-deep-research',
+            version: '2025-06-26',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1,
+          },
+        },
+      ],
     },
   ],
 };
@@ -83,20 +230,27 @@ export class AzapiAiFoundryStack extends TerraformStack {
       value: resourceGroup.resourceGroup.name,
     });
 
-    const aiFoundryProject = new AiFoundryProject(this, `AiFoundryProject`, {
-      name: `ai-foundry-${props.name}`,
-      location: props.aiFoundryLocation,
-      tags: props.tags,
-      resourceGroupId: resourceGroup.resourceGroup.id,
-      customSubDomainName: `ai-foundry-${props.name}`,
-    });
+    props.aiFoundryProjects?.forEach((project) => {
+      const name = `ai-foundry-${props.name}-${project.location}`;
+      const aiFoundryProject = new AiFoundryProject(this, name, {
+        name: name,
+        location: project.location,
+        tags: props.tags,
+        resourceGroupId: resourceGroup.resourceGroup.id,
+        customSubDomainName: name,
+      });
 
-    props.deployments?.forEach((deployment) => {
-      new AiFoundryDeployment(this, deployment.name, {
-        aiFoundryProjectId: aiFoundryProject.id,
-        name: deployment.name,
-        model: deployment.model,
-        sku: deployment.sku,
+      project.deployments.forEach((deployment) => {
+        new AiFoundryDeployment(
+          this,
+          `AiFoundryDeployment-${project.location}-${deployment.name}`,
+          {
+            aiFoundryProjectId: aiFoundryProject.id,
+            name: deployment.name,
+            model: deployment.model,
+            sku: deployment.sku,
+          },
+        );
       });
     });
   }
