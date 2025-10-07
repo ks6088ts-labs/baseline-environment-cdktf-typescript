@@ -48,6 +48,8 @@ export const azurermIotStackProps: AzurermIotStackProps = {
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
+    SecurityControl: 'Ignore',
+    CostControl: 'Ignore',
   },
   resourceGroup: {},
   iothub: {

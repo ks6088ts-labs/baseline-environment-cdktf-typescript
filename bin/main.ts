@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { App } from 'cdktf';
-import { getRandomIdentifier } from '../lib/utils';
 import {
   AzurermAiStack,
   azurermAiStackProps,
@@ -21,7 +20,10 @@ import {
   AzurermIotStack,
   azurermIotStackProps,
 } from '../lib/stack/azurerm-iot-stack';
-import { AzurermSecurityStack } from '../lib/stack/azurerm-security-stack';
+import {
+  AzurermSecurityStack,
+  azurermSecurityStackProps,
+} from '../lib/stack/azurerm-security-stack';
 import {
   AzurermMonitoringStack,
   azurermMonitoringStackProps,
@@ -141,18 +143,11 @@ new AzurermNetworkStack(
 
 new AzurermIotStack(app, `Azurerm-Iot-Stack`, azurermIotStackProps, undefined);
 
-new AzurermSecurityStack(app, `Azurerm-Security-Stack`, {
-  name: `AzurermSecurityStack-${getRandomIdentifier('AzurermSecurityStack')}`,
-  location: 'japaneast',
-  tags: {
-    owner: 'ks6088ts',
-  },
-  resourceGroup: {},
-  userAssignedIdentity: {},
-  roleAssignment: {
-    configs: [],
-  },
-});
+new AzurermSecurityStack(
+  app,
+  `Azurerm-Security-Stack`,
+  azurermSecurityStackProps,
+);
 
 new AzurermMonitoringStack(
   app,

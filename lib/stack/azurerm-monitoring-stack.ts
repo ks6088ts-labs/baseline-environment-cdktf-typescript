@@ -27,6 +27,8 @@ export const azurermMonitoringStackProps: AzurermMonitoringStackProps = {
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
+    SecurityControl: 'Ignore',
+    CostControl: 'Ignore',
   },
   resourceGroup: {},
   // ref. https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions

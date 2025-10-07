@@ -169,6 +169,8 @@ export const azurermAppStackProps: AzurermAppStackProps = {
   location: 'japaneast',
   tags: {
     owner: 'ks6088ts',
+    SecurityControl: 'Ignore',
+    CostControl: 'Ignore',
   },
   resourceGroup: {},
   containerRegistry: {

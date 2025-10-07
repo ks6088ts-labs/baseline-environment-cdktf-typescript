@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { TerraformStack, TerraformOutput } from 'cdktf';
 import { provider } from '@cdktf/provider-azurerm';
-import { createBackend } from '../utils';
+import { getRandomIdentifier, createBackend } from '../utils';
 import { ResourceGroup } from '../construct/azurerm/resource-group';
 import { UserAssignedIdentity } from '../construct/azurerm/user-assigned-identity';
 import { RoleAssignment } from '../construct/azurerm/role-assignment';
@@ -22,6 +22,20 @@ export interface AzurermSecurityStackProps {
   };
 }
 
+export const azurermSecurityStackProps: AzurermSecurityStackProps = {
+  name: `AzurermSecurityStack-${getRandomIdentifier('AzurermSecurityStack')}`,
+  location: 'japaneast',
+  tags: {
+    owner: 'ks6088ts',
+    SecurityControl: 'Ignore',
+    CostControl: 'Ignore',
+  },
+  resourceGroup: {},
+  userAssignedIdentity: {},
+  roleAssignment: {
+    configs: [],
+  },
+};
 export class AzurermSecurityStack extends TerraformStack {
   constructor(scope: Construct, id: string, props: AzurermSecurityStackProps) {
     super(scope, id);
