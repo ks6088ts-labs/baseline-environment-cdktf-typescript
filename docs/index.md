@@ -1,6 +1,6 @@
-# Logs
+# Notes
 
-**Scaffolding the project**
+## Scaffolding the project
 
 ```shell
 ❯ cdktf init --template=typescript --local
@@ -18,20 +18,21 @@ Note: You can always add providers using 'cdktf provider add' later on
 ? What providers do you want to use? azuread, azurerm
 ```
 
-**Deploy the stack**
+## Tips
+
+### Use remote backend
+
+To use a remote backend, you need to set up a storage account and a container in Azure.
+Then, you can select the backend configurations by setting the `TF_BACKEND` environment variable such as `azurerm` or `local`. The actual implementation of the backend is in the [lib/utils.ts](./lib/utils.ts) file.
+
+For example, to use the remote backend, you can run the following command:
 
 ```shell
-# Login to Azure
-az login
-
-# Set the subscription
-export ARM_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
-
-# Create or update the given stacks
-make deploy
+# Deploy all the stacks with remote backend
+make deploy TF_BACKEND=azurerm
 ```
 
-# References
+## References
 
 - [Install CDK for Terraform and run a quick start demo](https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install)
 - [HCL Interoperability](https://developer.hashicorp.com/terraform/cdktf/concepts/hcl-interoperability)
@@ -40,10 +41,3 @@ make deploy
 - [CDK for Terraform](https://github.com/hashicorp/terraform-cdk)
 - [CDKTF prebuilt bindings for hashicorp/azurerm provider](https://github.com/cdktf/cdktf-provider-azurerm)
 - [hashicorp/terraform-cdk/examples/typescript](https://github.com/hashicorp/terraform-cdk/tree/main/examples/typescript)
-
-# Quick demos
-
-## Send custom events to web endpoint with Azure Event Grid
-
-- `Azure Event Grid Viewer` is deployed on Azure Container Apps in `Dev-AzurermPlaygroundStack`
-- Configure Event Grid Topic to send custom events to the web endpoint. (ref. [Quickstart: Send custom events to web endpoint with the Azure portal and Azure Event Grid](https://learn.microsoft.com/azure/event-grid/custom-event-quickstart-portal))
