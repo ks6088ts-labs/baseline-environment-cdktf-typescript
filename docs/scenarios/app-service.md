@@ -27,6 +27,11 @@ pip install -r requirements.txt
 # Run the web app locally
 uvicorn main:app --reload
 
+# using uv
+# uv venv
+# uv pip install -r requirements.txt
+# uv uvicorn main:app --reload
+
 # Create a zip file for deployment under the current directory
 zip -r app.zip . -x ".venv/*" ".git/*" ".github/*" "app.zip" "infra/*" "*.pyc"
 

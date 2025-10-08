@@ -35,8 +35,8 @@ func azure functionapp publish $FUNC_APP_NAME --typescript --force
 
 ```shell
 # Clone the repository
-git clone git@github.com:Azure-Samples/functions-quickstart-python-http-azd.git
-cd functions-quickstart-python-http-azd
+git clone git@github.com:ks6088ts-labs/azure-functions-python.git
+cd azure-functions-python
 
 # Set up the environment
 python -m venv .venv

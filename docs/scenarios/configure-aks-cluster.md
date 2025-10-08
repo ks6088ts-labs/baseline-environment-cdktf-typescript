@@ -2,13 +2,10 @@
 
 ```shell
 # Retrieve outputs
-make output STACKS=Dev-AzurermPlaygroundStack TF_BACKEND=azurerm
-#   Dev-AzurermPlaygroundStack
-#   aks_cluster_name = k8s-Dev-AzurermPlaygroundStack-rwk5
-#   resource_group_name = rg-Dev-AzurermPlaygroundStack-rwk5
+make output STACKS=Azurerm-App-Stack TF_BACKEND=azurerm
 
-RESOURCE_GROUP_NAME=rg-Dev-AzurermPlaygroundStack-rwk5
-AKS_CLUSTER_NAME=k8s-Dev-AzurermPlaygroundStack-rwk5
+RESOURCE_GROUP_NAME=rg-AzurermAppStack-xxxx
+AKS_CLUSTER_NAME=k8szurermpptackxxxx
 
 az aks get-credentials \
   --resource-group $RESOURCE_GROUP_NAME \
