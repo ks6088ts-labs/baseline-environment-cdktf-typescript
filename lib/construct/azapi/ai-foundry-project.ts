@@ -35,6 +35,11 @@ export class AiFoundryProject extends Construct {
           type: 'SystemAssigned',
         },
       },
+      lifecycle: {
+        // FIXME: ignore changes to properties for now
+        // https://learn.microsoft.com/en-us/rest/api/aiservices/accountmanagement/accounts/create?view=rest-aiservices-accountmanagement-2024-10-01&tabs=HTTP#accountproperties
+        ignoreChanges: ['body.properties'],
+      },
     });
     this.id = account.id;
 
