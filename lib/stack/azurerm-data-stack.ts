@@ -9,6 +9,7 @@ import {
 } from '../construct/azurerm/storage-account';
 import { Cosmosdb } from '../construct/azurerm/cosmosdb';
 import { KeyVault } from '../construct/azurerm/key-vault';
+import { DatabricksWorkspace } from '../construct/azurerm/databricks-workspace';
 
 export interface AzurermDataStackProps {
   name: string;
@@ -26,6 +27,9 @@ export interface AzurermDataStackProps {
   };
   keyVault?: {
     skuName: string;
+  };
+  databricksWorkspace?: {
+    sku: string;
   };
 }
 
@@ -58,6 +62,9 @@ export const azurermDataStackProps: AzurermDataStackProps = {
   },
   keyVault: {
     skuName: 'standard',
+  },
+  databricksWorkspace: {
+    sku: 'standard',
   },
 };
 
@@ -122,6 +129,16 @@ export class AzurermDataStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         skuName: props.keyVault.skuName,
         purgeProtectionEnabled: false,
+      });
+    }
+
+    if (props.databricksWorkspace) {
+      new DatabricksWorkspace(this, `DatabricksWorkspace`, {
+        name: convertName(`dbw-${props.name}`, 24),
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        sku: props.databricksWorkspace.sku,
       });
     }
   }
