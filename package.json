@@ -20,10 +20,10 @@
     "node": ">=18.0"
   },
   "dependencies": {
-    "@cdktf/provider-aws": "^21.12.0",
+    "@cdktf/provider-aws": "^21.15.0",
     "@cdktf/provider-azuread": "14.2.0",
-    "@cdktf/provider-azurerm": "14.15.0",
-    "@cdktf/provider-github": "^15.0.0",
+    "@cdktf/provider-azurerm": "14.18.0",
+    "@cdktf/provider-github": "^15.1.1",
     "@cdktf/provider-google": "^16.12.0",
     "cdktf": "^0.21.0",
     "cdktf-cli": "^0.21.0",
@@ -31,10 +31,10 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.7.0",
+    "@types/node": "^24.9.2",
     "jest": "^30.2.0",
     "prettier": "^3.6.2",
-    "ts-jest": "^29.4.4",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
