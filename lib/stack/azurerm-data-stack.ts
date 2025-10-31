@@ -9,6 +9,7 @@ import {
 } from '../construct/azurerm/storage-account';
 import { Cosmosdb } from '../construct/azurerm/cosmosdb';
 import { KeyVault } from '../construct/azurerm/key-vault';
+import { PostgresqlFlexibleServer } from '../construct/azurerm/postgresql-flexible-server';
 import { DatabricksWorkspace } from '../construct/azurerm/databricks-workspace';
 
 export interface AzurermDataStackProps {
@@ -27,6 +28,12 @@ export interface AzurermDataStackProps {
   };
   keyVault?: {
     skuName: string;
+  };
+  postgresqlFlexibleServer?: {
+    skuName: string;
+    administratorLogin: string;
+    administratorPassword: string;
+    version: string;
   };
   databricksWorkspace?: {
     sku: string;
@@ -62,6 +69,12 @@ export const azurermDataStackProps: AzurermDataStackProps = {
   },
   keyVault: {
     skuName: 'standard',
+  },
+  postgresqlFlexibleServer: {
+    skuName: 'B_Standard_B1ms',
+    administratorLogin: 'psqladmin',
+    administratorPassword: 'P@ssw0rd1234!', // random password generator should be used in production
+    version: '17',
   },
   databricksWorkspace: {
     sku: 'standard',
@@ -129,6 +142,20 @@ export class AzurermDataStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         skuName: props.keyVault.skuName,
         purgeProtectionEnabled: false,
+      });
+    }
+
+    if (props.postgresqlFlexibleServer) {
+      new PostgresqlFlexibleServer(this, `PostgresqlFlexibleServer`, {
+        name: convertName(`psqlfs-${props.name}`, 24),
+        location: props.location,
+        tags: props.tags,
+        resourceGroupName: resourceGroup.resourceGroup.name,
+        skuName: props.postgresqlFlexibleServer.skuName,
+        administratorLogin: props.postgresqlFlexibleServer.administratorLogin,
+        administratorPassword:
+          props.postgresqlFlexibleServer.administratorPassword,
+        version: props.postgresqlFlexibleServer.version,
       });
     }
 
