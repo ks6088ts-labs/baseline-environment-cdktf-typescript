@@ -17,6 +17,7 @@ export interface StorageAccountProps {
   resourceGroupName: string;
   accountTier: string;
   accountReplicationType: string;
+  isHnsEnabled?: boolean;
   storageContainers?: StorageContainerProps[];
 }
 
@@ -39,6 +40,7 @@ export class StorageAccount extends Construct {
         resourceGroupName: props.resourceGroupName,
         accountTier: props.accountTier,
         accountReplicationType: props.accountReplicationType,
+        isHnsEnabled: props.isHnsEnabled,
         identity: {
           type: 'SystemAssigned',
         },

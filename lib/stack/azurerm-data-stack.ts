@@ -20,6 +20,7 @@ export interface AzurermDataStackProps {
   storageAccount?: {
     accountTier: string;
     accountReplicationType: string;
+    isHnsEnabled?: boolean;
     storageContainers?: StorageContainerProps[];
   };
   cosmosdb?: {
@@ -52,6 +53,7 @@ export const azurermDataStackProps: AzurermDataStackProps = {
   storageAccount: {
     accountTier: 'Standard',
     accountReplicationType: 'LRS',
+    isHnsEnabled: true,
     storageContainers: [
       {
         name: 'dev',
@@ -131,6 +133,7 @@ export class AzurermDataStack extends TerraformStack {
         resourceGroupName: resourceGroup.resourceGroup.name,
         accountTier: props.storageAccount.accountTier,
         accountReplicationType: props.storageAccount.accountReplicationType,
+        isHnsEnabled: props.storageAccount.isHnsEnabled,
       });
     }
 
