@@ -36,6 +36,10 @@ export class PostgresqlFlexibleServer extends Construct {
           skuName: props.skuName,
           administratorLogin: props.administratorLogin,
           administratorPassword: props.administratorPassword,
+          authentication : {
+            activeDirectoryAuthEnabled: true,
+            passwordAuthEnabled: true,
+          },
           version: props.version,
           zone: '2',
         },
