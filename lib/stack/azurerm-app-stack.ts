@@ -29,6 +29,8 @@ import { LinuxFunctionApp } from '../construct/azurerm/linux-function-app';
 import { FunctionAppFunction } from '../construct/azurerm/function-app-function';
 import { FunctionAppFlexConsumption } from '../construct/azurerm/function-app-flex-consumption';
 import { ApiManagement } from '../construct/azurerm/api-management';
+import { ServiceBusNamespace } from '../construct/azurerm/service-bus-namespace';
+import { ServiceBusQueue } from '../construct/azurerm/service-bus-queue';
 
 // const pythonFunctionCode = `
 // import logging
@@ -161,6 +163,13 @@ export interface AzurermAppStackProps {
     publisherEmail: string;
     publisherName: string;
     skuName: string;
+  };
+  serviceBusNamespace?: {
+    location: string;
+    sku: string;
+  };
+  serviceBusQueue?: {
+    name: string;
   };
 }
 
@@ -355,6 +364,13 @@ export const azurermAppStackProps: AzurermAppStackProps = {
     publisherEmail: 'admin@example.com',
     publisherName: 'Admin',
     skuName: 'Consumption_0',
+  },
+  serviceBusNamespace: {
+    location: 'japaneast',
+    sku: 'Standard',
+  },
+  serviceBusQueue: {
+    name: 'my-service-bus-queue',
   },
 };
 
@@ -618,6 +634,28 @@ export class AzurermAppStack extends TerraformStack {
         publisherEmail: props.apiManagement.publisherEmail,
         publisherName: props.apiManagement.publisherName,
         skuName: props.apiManagement.skuName,
+      });
+    }
+
+    let serviceBusNamespace: ServiceBusNamespace | undefined = undefined;
+    if (props.serviceBusNamespace) {
+      serviceBusNamespace = new ServiceBusNamespace(
+        this,
+        `ServiceBusNamespace`,
+        {
+          name: convertName(`sbn-${props.name}`, 50),
+          location: props.serviceBusNamespace.location,
+          tags: props.tags,
+          resourceGroupName: resourceGroup.resourceGroup.name,
+          sku: props.serviceBusNamespace.sku,
+        },
+      );
+    }
+
+    if (props.serviceBusQueue && serviceBusNamespace) {
+      new ServiceBusQueue(this, `ServiceBusQueue`, {
+        name: props.serviceBusQueue.name,
+        namespaceId: serviceBusNamespace.serviceBusNamespace.id,
       });
     }
   }
