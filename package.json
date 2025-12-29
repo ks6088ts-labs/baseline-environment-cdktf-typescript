@@ -20,7 +20,7 @@
     "node": ">=18.0"
   },
   "dependencies": {
-    "@cdktf/provider-aws": "^21.15.0",
+    "@cdktf/provider-aws": "^21.17.0",
     "@cdktf/provider-azuread": "14.2.0",
     "@cdktf/provider-azurerm": "14.18.0",
     "@cdktf/provider-github": "^15.1.1",
