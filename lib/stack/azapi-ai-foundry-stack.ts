@@ -46,6 +46,17 @@ export const azapiAiFoundryStackProps: AzapiAiFoundryStackProps = {
       location: 'eastus2',
       deployments: [
         {
+          name: 'gpt-5.2',
+          model: {
+            name: 'gpt-5.2',
+            version: '2025-12-11',
+          },
+          sku: {
+            name: 'GlobalStandard',
+            capacity: 1000,
+          },
+        },
+        {
           name: 'gpt-5',
           model: {
             name: 'gpt-5',
@@ -119,7 +130,7 @@ export const azapiAiFoundryStackProps: AzapiAiFoundryStackProps = {
           },
           sku: {
             name: 'GlobalStandard',
-            capacity: 450,
+            capacity: 250,
           },
         },
         {
