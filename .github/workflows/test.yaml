@@ -59,7 +59,7 @@ jobs:
       AWS_REGION: ${{ github.event.inputs.awsRegion || 'ap-northeast-1' }}
       TF_BACKEND: ${{ github.event.inputs.tfBackend || 'local' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # to retrieve git tags
       - name: Setup Terraform
