@@ -79,7 +79,7 @@ export const azurermDataStackProps: AzurermDataStackProps = {
     version: '17',
   },
   databricksWorkspace: {
-    sku: 'standard',
+    sku: 'premium', // to use coding agent ref. https://devblogs.microsoft.com/all-things-azure/getting-started-with-claude-3-7-sonnet-on-azure-databricks/
   },
 };
 
