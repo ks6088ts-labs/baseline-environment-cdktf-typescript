@@ -18,8 +18,8 @@ importers:
         specifier: 14.18.0
         version: 14.18.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-github':
-        specifier: ^15.1.1
-        version: 15.1.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^15.1.3
+        version: 15.1.3(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-google':
         specifier: ^16.12.0
         version: 16.12.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
@@ -272,8 +272,8 @@ packages:
   '@cdktf/provider-generator@0.21.0':
     resolution: {integrity: sha512-N/IehJ6lZlVaNxP/0sxg0AeLJIhgcW3+Bk6m71UzoDAZFPBzW00k6nmSAlQiE0c5L92hHgLksfEL8VNbiPKmSw==}
 
-  '@cdktf/provider-github@15.1.1':
-    resolution: {integrity: sha512-hgFRkbXMqjMBDnjVKXmfndjOzqTtA5XEwYu5GohZ9zB3Kr/cjQD2Mgo6fW8S+LL3yb5gl51duT5FT0fokoT50A==}
+  '@cdktf/provider-github@15.1.3':
+    resolution: {integrity: sha512-IiitX1+H+8t0YpEfaHG48rRrocOs7l523pkqRXc/n9ptVz1FKIYpQKv6YHEE7akIi9DIEgu5d5eO/VUgCNeuBQ==}
     engines: {node: '>= 20.9.0'}
     peerDependencies:
       cdktf: ^0.21.0
@@ -3058,7 +3058,7 @@ snapshots:
       - debug
       - supports-color
 
-  '@cdktf/provider-github@15.1.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-github@15.1.3(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
